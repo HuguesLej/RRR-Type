@@ -13,7 +13,7 @@
 class ControlSystem : public ASystem
 {
     public:
-        ControlSystem(Registry &registry) : ASystem(registry)
+        ControlSystem(std::shared_ptr<Registry> &registry) : ASystem(registry)
         {
         }
         ~ControlSystem() = default;

@@ -13,7 +13,7 @@
 class PositionSystem : public ASystem
 {
     public:
-        PositionSystem(Registry &registry) : ASystem(registry)
+        PositionSystem(std::shared_ptr<Registry> &registry) : ASystem(registry)
         {
         }
         ~PositionSystem() = default;

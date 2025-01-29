@@ -15,9 +15,8 @@
 class ASystem
 {
     public:
-        ASystem(Registry &registry)
+        ASystem(std::shared_ptr<Registry> &registry) : _registry(registry)
         {
-            _registry = std::make_shared<Registry>(registry);
         }
         virtual ~ASystem() = default;
 

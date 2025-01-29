@@ -13,7 +13,7 @@
 class DrawSystem : public ASystem
 {
     public:
-        DrawSystem(Registry &registry) : ASystem(registry)
+        DrawSystem(std::shared_ptr<Registry> &registry) : ASystem(registry)
         {
         }
         ~DrawSystem() = default;
