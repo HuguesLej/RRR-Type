@@ -9,8 +9,8 @@
     #define ASYSTEM_HPP_
 
     #include <memory>
-    #include "Components.hpp"
-    #include "Registry.hpp"
+    #include "../Components/Components.hpp"
+    #include "../Registry.hpp"
 
 class ASystem
 {

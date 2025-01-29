@@ -6,9 +6,9 @@
 */
 
 #include <iostream>
-#include "ControlSystem.hpp"
-#include "DrawSystem.hpp"
-#include "PositionSystem.hpp"
+#include "Systems/ControlSystem.hpp"
+#include "Systems/DrawSystem.hpp"
+#include "Systems/PositionSystem.hpp"
 
 int main(void)
 {

@@ -13,7 +13,7 @@
     #include <typeindex>
     #include <unordered_map>
     #include "Entity.hpp"
-    #include "SparseArray.hpp"
+    #include "Components/ComponentsContainer.hpp"
 
 class Registry
 {
@@ -23,12 +23,12 @@ class Registry
 
 
         template <typename Component>
-        SparseArray<Component> &registerComponent()
+        ComponentsContainer<Component> &registerComponent()
         {
             auto type = std::type_index(typeid(Component));
 
             if (_componentsArray.find(type) == _componentsArray.end()) {
-                _componentsArray[type] = SparseArray<Component>();
+                _componentsArray[type] = ComponentsContainer<Component>();
 
                 _eraseFunctions[type] = [](Registry &registry, Entity const &entity) {
                     auto &array = registry.getComponents<Component>();
@@ -36,29 +36,29 @@ class Registry
                 };
             }
 
-            return std::any_cast<SparseArray<Component> &>(_componentsArray[type]);
+            return std::any_cast<ComponentsContainer<Component> &>(_componentsArray[type]);
         }
 
 
         template <typename Component>
-        SparseArray<Component> &getComponents()
+        ComponentsContainer<Component> &getComponents()
         {
             auto type = std::type_index(typeid(Component));
 
             if (_componentsArray.find(type) == _componentsArray.end()) {
-                _componentsArray[type] = SparseArray<Component>();
+                _componentsArray[type] = ComponentsContainer<Component>();
             }
 
-            return std::any_cast<SparseArray<Component> &>(_componentsArray[type]);
+            return std::any_cast<ComponentsContainer<Component> &>(_componentsArray[type]);
         }
 
 
         template <typename Component>
-        SparseArray<Component> const &getComponents() const
+        ComponentsContainer<Component> const &getComponents() const
         {
             auto type = std::type_index(typeid(Component));
 
-            return std::any_cast<SparseArray<Component> const &>(_componentsArray.find(type)->second);
+            return std::any_cast<ComponentsContainer<Component> const &>(_componentsArray.find(type)->second);
         }
 
 
