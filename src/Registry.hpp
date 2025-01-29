@@ -64,10 +64,6 @@ class Registry
 
         Entity spawnEntity()
         {
-            for (auto &[type, array] : _componentsArray) {
-                auto &components = std::any_cast<SparseArray<std::any> &>(array);
-                components.push_back(std::nullopt);
-            }
             return _nextEntity++;
         }
 
@@ -85,6 +81,9 @@ class Registry
         {
             auto &array = getComponents<Component>();
 
+            if (to >= array.size()) {
+                array.resize(to + 1);
+            }
             array[to] = std::move(c);
             return array[to].value();
         }
@@ -95,6 +94,9 @@ class Registry
         {
             auto &array = getComponents<Component>();
 
+            if (to >= array.size()) {
+                array.resize(to + 1);
+            }
             array[to] = Component(std::forward<Params>(p)...);
             return array[to].value();
         }
