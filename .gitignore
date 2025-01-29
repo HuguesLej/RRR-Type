@@ -1,0 +1,19 @@
+# Ignore unneeded directories
+tmp/
+.vscode/
+
+# Ignore build files except the .gitkeep file
+build/*
+!build/.gitkeep
+
+# Ignore bin files except the .gitkeep file
+bin/*
+!bin/.gitkeep
+
+# Ignore vcpkg installed files
+vcpkg_installed
+vcpkg
+
+# Ignore binary files
+r-type_client
+r-type_server

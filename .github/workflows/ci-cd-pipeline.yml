@@ -1,0 +1,95 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+
+      - name: Cache vcpkg dependencies (Linux)
+        if: runner.os != 'Windows'
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/vcpkg
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('./vcpkg.json') }}
+          restore-keys: |
+            ${{ runner.os }}-vcpkg-
+
+      - name: Cache vcpkg dependencies (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/cache@v3
+        with:
+          path: C:\Users\runneradmin\AppData\Local\vcpkg
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('.\vcpkg.json') }}
+          restore-keys: |
+            ${{ runner.os }}-vcpkg-
+
+
+      - name: Install cmake and dev libraries (Linux)
+        if: runner.os != 'Windows'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake \
+            libx11-dev \
+            libxrandr-dev \
+            libxcursor-dev \
+            libxi-dev \
+            libudev-dev \
+            libgl1-mesa-dev
+
+      - name: Install cmake (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+
+
+      - name: Setup vcpkg (Linux)
+        if: runner.os != 'Windows'
+        run: |
+          git submodule update --init --recursive
+          cd ./vcpkg && ./bootstrap-vcpkg.sh
+          cd ..
+
+      - name: Setup vcpkg (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          git submodule update --init --recursive
+          cd .\vcpkg && .\bootstrap-vcpkg.bat
+          cd ..
+
+
+      - name: Install dependencies (Linux)
+        if: runner.os != 'Windows'
+        run: |
+          ./vcpkg/vcpkg install
+
+      - name: Install dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          .\vcpkg\vcpkg install
+
+
+      - name: Build (Linux)
+        if: runner.os != 'Windows'
+        run: |
+          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_PREFIX_PATH="${{ github.workspace }}/vcpkg_installed/x64-linux"
+          cmake --build build
+
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          Invoke-Expression "cmake -DCMAKE_TOOLCHAIN_FILE=`"$env:GITHUB_WORKSPACE/vcpkg/scripts/buildsystems/vcpkg.cmake`" -DCMAKE_PREFIX_PATH=`"$env:GITHUB_WORKSPACE/vcpkg_installed`" -B `"$env:GITHUB_WORKSPACE/build`" -S `"$env:GITHUB_WORKSPACE`""
+          Invoke-Expression "cmake --build `"$env:GITHUB_WORKSPACE/build`""

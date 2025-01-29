@@ -1,0 +1,17 @@
+{
+    "dependencies": [
+        "asio",
+        "sfml"
+    ],
+    "builtin-baseline": "678323514f7826dd7c37cd3f7821b1f52316eb6c",
+    "overrides": [
+        {
+            "name": "asio",
+            "version": "1.28.0"
+        },
+        {
+            "name": "sfml",
+            "version": "2.6.1"
+        }
+    ]
+}
