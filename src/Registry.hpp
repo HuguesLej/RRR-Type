@@ -10,6 +10,7 @@
 
     #include <algorithm>
     #include <any>
+    #include <exception>
     #include <functional>
     #include <memory>
     #include <typeindex>
@@ -23,6 +24,24 @@ class ASystem;
 class Registry
 {
     public:
+
+        class SystemError : public std::exception
+        {
+            public:
+                SystemError(std::string const &systemType) {
+                    _msg = "System has already been added to the registry: " + systemType;
+                }
+                ~SystemError() = default;
+
+                const char *what() const noexcept override
+                {
+                    return _msg.c_str();
+                }
+
+            private:
+                std::string _msg;
+        };
+
         Registry() = default;
         ~Registry() = default;
 
@@ -125,7 +144,7 @@ class Registry
             });
 
             if (it != _systems.end()) {
-                return;
+                throw SystemError(typeid(*system).name());
             }
 
             _systems.push_back(std::move(system));

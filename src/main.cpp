@@ -14,9 +14,13 @@ int main(void)
 {
     Registry registry;
 
-    registry.addSystem(std::make_unique<PositionSystem>());
-    registry.addSystem(std::make_unique<DrawSystem>());
-    registry.addSystem(std::make_unique<ControlSystem>());
+    try {
+        registry.addSystem(std::make_unique<ControlSystem>());
+        registry.addSystem(std::make_unique<DrawSystem>());
+        registry.addSystem(std::make_unique<ControlSystem>());
+    } catch (std::exception const &e) {
+        std::cerr << e.what() << std::endl;
+    }
 
     registry.registerComponent<comp::Position>();
     registry.registerComponent<comp::Velocity>();
