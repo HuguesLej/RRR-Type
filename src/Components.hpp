@@ -14,20 +14,26 @@ namespace comp
     {
         float x;
         float y;
+
+        Position(float x = 0, float y = 0) : x(x), y(y) {}
     };
 
     struct Velocity
     {
         float x;
         float y;
+
+        Velocity(float x = 0, float y = 0) : x(x), y(y) {}
     };
 
     struct Drawable
     {
+        Drawable() = default;
     };
 
     struct Controllable
     {
+        Controllable() = default;
     };
 }
 
