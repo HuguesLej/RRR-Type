@@ -9,19 +9,18 @@
     #define POSITIONSYSTEM_HPP_
 
     #include "ASystem.hpp"
+    #include "../Registry.hpp"
 
 class PositionSystem : public ASystem
 {
     public:
-        PositionSystem(std::shared_ptr<Registry> &registry) : ASystem(registry)
-        {
-        }
+        PositionSystem() = default;
         ~PositionSystem() = default;
 
-        void update(float deltaTime) override
+        void update(Registry &registry, float deltaTime) override
         {
-            auto &positions = _registry->getComponents<comp::Position>();
-            auto &velocities = _registry->getComponents<comp::Velocity>();
+            auto &positions = registry.getComponents<comp::Position>();
+            auto &velocities = registry.getComponents<comp::Velocity>();
 
             for (std::size_t i = 0; i < positions.size(); i++) {
                 if (positions[i] && velocities[i]) {

@@ -9,19 +9,18 @@
     #define CONTROLSYSTEM_HPP_
 
     #include "ASystem.hpp"
+    #include "../Registry.hpp"
 
 class ControlSystem : public ASystem
 {
     public:
-        ControlSystem(std::shared_ptr<Registry> &registry) : ASystem(registry)
-        {
-        }
+        ControlSystem() = default;
         ~ControlSystem() = default;
 
-        void update(float deltaTime) override
+        void update(Registry &registry, float deltaTime) override
         {
-            auto &velocities = _registry->getComponents<comp::Velocity>();
-            auto &controllables = _registry->getComponents<comp::Controllable>();
+            auto &velocities = registry.getComponents<comp::Velocity>();
+            auto &controllables = registry.getComponents<comp::Controllable>();
 
             for (std::size_t i = 0; i < velocities.size(); i++) {
                 if (velocities[i] && controllables[i]) {

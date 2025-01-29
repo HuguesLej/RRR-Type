@@ -8,12 +8,17 @@
 #ifndef REGISTRY_HPP_
     #define REGISTRY_HPP_
 
+    #include <algorithm>
     #include <any>
     #include <functional>
+    #include <memory>
     #include <typeindex>
     #include <unordered_map>
     #include "Entity.hpp"
     #include "Components/ComponentsContainer.hpp"
+    #include "Systems/ASystem.hpp"
+
+class ASystem;
 
 class Registry
 {
@@ -113,10 +118,33 @@ class Registry
         }
 
 
+        void addSystem(std::unique_ptr<ASystem> system)
+        {
+            auto it = std::find_if(_systems.begin(), _systems.end(), [&system] (const auto &existingSystem) {
+                return typeid(*existingSystem) == typeid(*system);
+            });
+
+            if (it != _systems.end()) {
+                return;
+            }
+
+            _systems.push_back(std::move(system));
+        }
+
+
+        void updateSystems(float deltaTime)
+        {
+            for (auto &system : _systems) {
+                system->update(*this, deltaTime);
+            }
+        }
+
+
     private:
         Entity _nextEntity = 0;
         std::unordered_map<std::type_index, std::any> _componentsArray;
         std::unordered_map<std::type_index, std::function<void (Registry &, Entity const &)>> _eraseFunctions;
+        std::vector<std::unique_ptr<ASystem>> _systems;
 };
 
 #endif /* !REGISTRY_HPP_ */
