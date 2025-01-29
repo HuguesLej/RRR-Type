@@ -20,8 +20,8 @@ class DrawSystem : public ASystem
 
         void update(float deltaTime) override
         {
-            auto &positions = _registry->getComponents<Position>();
-            auto &drawables = _registry->getComponents<Drawable>();
+            auto &positions = _registry->getComponents<comp::Position>();
+            auto &drawables = _registry->getComponents<comp::Drawable>();
 
             for (std::size_t i = 0; i < positions.size(); i++) {
                 if (positions[i] && drawables[i]) {

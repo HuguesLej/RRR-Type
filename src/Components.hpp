@@ -8,24 +8,27 @@
 #ifndef COMPONENTS_HPP_
     #define COMPONENTS_HPP_
 
-struct Position
+namespace comp
 {
-    float x;
-    float y;
-};
+    struct Position
+    {
+        float x;
+        float y;
+    };
 
-struct Velocity
-{
-    float x;
-    float y;
-};
+    struct Velocity
+    {
+        float x;
+        float y;
+    };
 
-struct Drawable
-{
-};
+    struct Drawable
+    {
+    };
 
-struct Controllable
-{
-};
+    struct Controllable
+    {
+    };
+}
 
 #endif /* !COMPONENTS_HPP_ */

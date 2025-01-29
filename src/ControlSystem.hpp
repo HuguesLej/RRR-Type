@@ -20,8 +20,8 @@ class ControlSystem : public ASystem
 
         void update(float deltaTime) override
         {
-            auto &velocities = _registry->getComponents<Velocity>();
-            auto &controllables = _registry->getComponents<Controllable>();
+            auto &velocities = _registry->getComponents<comp::Velocity>();
+            auto &controllables = _registry->getComponents<comp::Controllable>();
 
             for (std::size_t i = 0; i < velocities.size(); i++) {
                 if (velocities[i] && controllables[i]) {

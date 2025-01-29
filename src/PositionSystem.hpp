@@ -20,8 +20,8 @@ class PositionSystem : public ASystem
 
         void update(float deltaTime) override
         {
-            auto &positions = _registry->getComponents<Position>();
-            auto &velocities = _registry->getComponents<Velocity>();
+            auto &positions = _registry->getComponents<comp::Position>();
+            auto &velocities = _registry->getComponents<comp::Velocity>();
 
             for (std::size_t i = 0; i < positions.size(); i++) {
                 if (positions[i] && velocities[i]) {
