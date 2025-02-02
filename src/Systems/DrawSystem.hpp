@@ -22,10 +22,30 @@ class DrawSystem : public ASystem
             auto &positions = manager.getComponents<comp::Position>();
             auto &drawables = manager.getComponents<comp::Drawable>();
 
-            for (std::size_t i = 0; i < positions.size(); i++) {
-                if (positions[i] && drawables[i]) {
-                    // Draw the entity
+            try {
+
+                auto &animables = manager.getComponents<comp::Animable>();
+
+                for (std::size_t i = 0; i < positions.size(); i++) {
+                    if (positions[i] && drawables[i]) {
+                        if (animables[i]) {
+                            graphical->drawSprite(positions[i].value(), drawables[i].value(), animables[i].value());
+                        } else {
+                            graphical->drawSprite(positions[i].value(), drawables[i].value());
+                        }
+                    }
                 }
+
+            } catch (std::exception const &e) {
+
+                (void) e;
+
+                for (std::size_t i = 0; i < positions.size(); i++) {
+                    if (positions[i] && drawables[i]) {
+                        graphical->drawSprite(positions[i].value(), drawables[i].value());
+                    }
+                }
+
             }
         }
 };

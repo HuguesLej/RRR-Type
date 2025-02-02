@@ -8,6 +8,8 @@
 #ifndef COMPONENTS_HPP_
     #define COMPONENTS_HPP_
 
+    #include <cstdint>
+
 namespace comp
 {
     struct Position
@@ -28,7 +30,21 @@ namespace comp
 
     struct Drawable
     {
-        Drawable() = default;
+        std::uint32_t textureId;
+        float scaleX;
+        float scaleY;
+        float rotation;
+
+        Drawable(std::uint32_t textureId, float scaleX = 1.0, float scaleY = 1.0, float rotation = 0)
+            : textureId(textureId), scaleX(scaleX), scaleY(scaleY), rotation(rotation) {};
+    };
+
+    struct Animable
+    {
+        std::uint32_t framesNumber;
+        std::uint32_t currentFrame;
+
+        Animable(std::uint32_t framesNumber) : framesNumber(framesNumber), currentFrame(0) {};
     };
 
     struct Controllable
