@@ -99,6 +99,7 @@ class SFMLGraphical : public IGraphical
         void clearTextures() override
         {
             _textures.clear();
+            _textures.shrink_to_fit();
         }
 
 
