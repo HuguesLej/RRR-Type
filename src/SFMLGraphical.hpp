@@ -138,15 +138,27 @@ class SFMLGraphical : public IGraphical
         sf::RenderWindow _window;
         std::vector<sf::Texture> _textures;
 
+
         void updateEvents() override
         {
             sf::Event event;
 
             while (_window.pollEvent(event)) {
-                if (event.type == sf::Event::Closed)
-                    closeWindow();
+                switch (event.type) {
+
+                    case sf::Event::Closed:
+                        closeWindow();
+                        break;
+
+                    case sf::Event::Resized:
+                        sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+                        _window.setView(sf::View(visibleArea));
+                        break;
+
+                }
             }
         }
+
 };
 
 #endif /* !SFMLGRAPHICAL_HPP_ */
