@@ -96,6 +96,11 @@ class SFMLGraphical : public IGraphical
             return indices;
         }
 
+        void clearTextures() override
+        {
+            _textures.clear();
+        }
+
 
         void drawSprite(comp::Position const &position, comp::Drawable const &drawable, comp::Animable &animable) override
         {
