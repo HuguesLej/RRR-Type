@@ -19,6 +19,7 @@
     #include "Components/ComponentsRegistry.hpp"
     #include "Systems/ASystem.hpp"
     #include "Systems/SystemsRegistry.hpp"
+    #include "IGraphical.hpp"
 
 class ASystem;
 
@@ -29,7 +30,8 @@ class RegistryManager
         class SystemError : public std::exception
         {
             public:
-                SystemError(std::string const &systemType) {
+                SystemError(std::string const &systemType)
+                {
                     _msg = "System has already been added to the registry: " + systemType;
                 }
                 ~SystemError() = default;
@@ -54,7 +56,8 @@ class RegistryManager
                     ALREADY_REGISTERED = 1
                 };
 
-                ComponentError(Type type, std::string const &componentType) {
+                ComponentError(Type type, std::string const &componentType)
+                {
                     if (type == ALREADY_REGISTERED) {
                         _msg = "Component type has already been registered: " + componentType;
                     } else {
@@ -72,7 +75,9 @@ class RegistryManager
                 std::string _msg;
         };
 
-        RegistryManager() = default;
+        RegistryManager(std::shared_ptr<IGraphical> graphical) : _graphical(graphical)
+        {
+        }
         ~RegistryManager() = default;
 
 
@@ -186,10 +191,10 @@ class RegistryManager
         }
 
 
-        void updateSystems(float deltaTime)
+        void updateSystems(float elapsedSeconds)
         {
             for (auto &system : _systems) {
-                system->update(*this, deltaTime);
+                system->update(*this, _graphical, elapsedSeconds);
             }
         }
 
@@ -199,6 +204,7 @@ class RegistryManager
         std::unordered_map<std::type_index, std::any> _componentsRegistriesMap;
         std::unordered_map<std::type_index, std::function<void (RegistryManager &, Entity const &)>> _eraseFunctions;
         SystemsRegistry _systems;
+        std::shared_ptr<IGraphical> _graphical;
 };
 
 #endif /* !REGISTRY_MANAGER_HPP_ */

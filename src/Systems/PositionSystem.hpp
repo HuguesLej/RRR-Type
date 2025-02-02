@@ -17,15 +17,15 @@ class PositionSystem : public ASystem
         PositionSystem() = default;
         ~PositionSystem() = default;
 
-        void update(RegistryManager &manager, float deltaTime) override
+        void update(RegistryManager &manager, std::shared_ptr<IGraphical> &graphical, float elapsedSeconds) override
         {
             auto &positions = manager.getComponents<comp::Position>();
             auto &velocities = manager.getComponents<comp::Velocity>();
 
             for (std::size_t i = 0; i < positions.size(); i++) {
                 if (positions[i] && velocities[i]) {
-                    positions[i]->x += velocities[i]->x * deltaTime;
-                    positions[i]->y += velocities[i]->y * deltaTime;
+                    positions[i]->x += velocities[i]->x * elapsedSeconds;
+                    positions[i]->y += velocities[i]->y * elapsedSeconds;
                 }
             }
         }
