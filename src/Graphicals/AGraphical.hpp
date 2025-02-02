@@ -32,7 +32,7 @@ class AGraphical
         virtual void drawSprite(comp::Position const &position, comp::Drawable const &drawable, comp::Animable &animable) = 0;
         virtual void drawSprite(comp::Position const &position, comp::Drawable const &drawable) = 0;
 
-        virtual bool isKeyPressed(Keys key)
+        bool isKeyPressed(Keys key)
         {
             return _keysState[key];
         }

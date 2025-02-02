@@ -24,8 +24,30 @@ class ControlSystem : public ASystem
 
             for (std::size_t i = 0; i < velocities.size(); i++) {
                 if (velocities[i] && controllables[i]) {
-                    // Define velocity based on input
+
+                    updateVelocity(graphical, controllables[i]->left, velocities[i]->negX, -controllables[i]->maxVelocity);
+                    updateVelocity(graphical, controllables[i]->right, velocities[i]->posX, controllables[i]->maxVelocity);
+                    updateVelocity(graphical, controllables[i]->up, velocities[i]->negY, -controllables[i]->maxVelocity);
+                    updateVelocity(graphical, controllables[i]->down, velocities[i]->posY, controllables[i]->maxVelocity);
+
+                    // Add jump
+
                 }
+            }
+        }
+
+    private:
+
+        void updateVelocity(std::shared_ptr<AGraphical> &graphical, Keys key, float &velocity, float maxVelocity)
+        {
+            if (key == Keys::Unknown) {
+                return;
+            }
+
+            if (graphical->isKeyPressed(key)) {
+                velocity = maxVelocity;
+            } else {
+                velocity = 0;
             }
         }
 };
