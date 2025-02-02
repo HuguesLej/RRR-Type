@@ -9,7 +9,7 @@
     #define DRAWSYSTEM_HPP_
 
     #include "ASystem.hpp"
-    #include "../Registry.hpp"
+    #include "../RegistryManager.hpp"
 
 class DrawSystem : public ASystem
 {
@@ -17,10 +17,10 @@ class DrawSystem : public ASystem
         DrawSystem() = default;
         ~DrawSystem() = default;
 
-        void update(Registry &registry, float deltaTime) override
+        void update(RegistryManager &manager, float deltaTime) override
         {
-            auto &positions = registry.getComponents<comp::Position>();
-            auto &drawables = registry.getComponents<comp::Drawable>();
+            auto &positions = manager.getComponents<comp::Position>();
+            auto &drawables = manager.getComponents<comp::Drawable>();
 
             for (std::size_t i = 0; i < positions.size(); i++) {
                 if (positions[i] && drawables[i]) {

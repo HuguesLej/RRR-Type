@@ -9,7 +9,7 @@
     #define CONTROLSYSTEM_HPP_
 
     #include "ASystem.hpp"
-    #include "../Registry.hpp"
+    #include "../RegistryManager.hpp"
 
 class ControlSystem : public ASystem
 {
@@ -17,10 +17,10 @@ class ControlSystem : public ASystem
         ControlSystem() = default;
         ~ControlSystem() = default;
 
-        void update(Registry &registry, float deltaTime) override
+        void update(RegistryManager &manager, float deltaTime) override
         {
-            auto &velocities = registry.getComponents<comp::Velocity>();
-            auto &controllables = registry.getComponents<comp::Controllable>();
+            auto &velocities = manager.getComponents<comp::Velocity>();
+            auto &controllables = manager.getComponents<comp::Controllable>();
 
             for (std::size_t i = 0; i < velocities.size(); i++) {
                 if (velocities[i] && controllables[i]) {

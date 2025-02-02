@@ -9,7 +9,7 @@
     #define POSITIONSYSTEM_HPP_
 
     #include "ASystem.hpp"
-    #include "../Registry.hpp"
+    #include "../RegistryManager.hpp"
 
 class PositionSystem : public ASystem
 {
@@ -17,10 +17,10 @@ class PositionSystem : public ASystem
         PositionSystem() = default;
         ~PositionSystem() = default;
 
-        void update(Registry &registry, float deltaTime) override
+        void update(RegistryManager &manager, float deltaTime) override
         {
-            auto &positions = registry.getComponents<comp::Position>();
-            auto &velocities = registry.getComponents<comp::Velocity>();
+            auto &positions = manager.getComponents<comp::Position>();
+            auto &velocities = manager.getComponents<comp::Velocity>();
 
             for (std::size_t i = 0; i < positions.size(); i++) {
                 if (positions[i] && velocities[i]) {

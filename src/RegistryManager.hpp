@@ -2,11 +2,11 @@
 ** EPITECH PROJECT, 2025
 ** RRR-Type
 ** File description:
-** Registry
+** RegistryManager
 */
 
-#ifndef REGISTRY_HPP_
-    #define REGISTRY_HPP_
+#ifndef REGISTRY_MANAGER_HPP_
+    #define REGISTRY_MANAGER_HPP_
 
     #include <algorithm>
     #include <any>
@@ -16,12 +16,13 @@
     #include <typeindex>
     #include <unordered_map>
     #include "Entity.hpp"
-    #include "Components/ComponentsContainer.hpp"
+    #include "Components/ComponentsRegistry.hpp"
     #include "Systems/ASystem.hpp"
+    #include "Systems/SystemsRegistry.hpp"
 
 class ASystem;
 
-class Registry
+class RegistryManager
 {
     public:
 
@@ -42,47 +43,76 @@ class Registry
                 std::string _msg;
         };
 
-        Registry() = default;
-        ~Registry() = default;
+
+        class ComponentError : public std::exception
+        {
+            public:
+
+                enum Type
+                {
+                    NOT_REGISTERED = 0,
+                    ALREADY_REGISTERED = 1
+                };
+
+                ComponentError(Type type, std::string const &componentType) {
+                    if (type == ALREADY_REGISTERED) {
+                        _msg = "Component type has already been registered: " + componentType;
+                    } else {
+                        _msg = "Component type has not been registered: " + componentType;
+                    }
+                }
+                ~ComponentError() = default;
+
+                const char *what() const noexcept override
+                {
+                    return _msg.c_str();
+                }
+
+            private:
+                std::string _msg;
+        };
+
+        RegistryManager() = default;
+        ~RegistryManager() = default;
 
 
         template <typename Component>
-        ComponentsContainer<Component> &registerComponent()
+        ComponentsRegistry<Component> &registerComponent()
         {
             auto type = std::type_index(typeid(Component));
 
-            if (_componentsArray.find(type) == _componentsArray.end()) {
-                _componentsArray[type] = ComponentsContainer<Component>();
+            if (_componentsRegistriesMap.find(type) == _componentsRegistriesMap.end()) {
+                _componentsRegistriesMap[type] = ComponentsRegistry<Component>();
 
-                _eraseFunctions[type] = [](Registry &registry, Entity const &entity) {
-                    auto &array = registry.getComponents<Component>();
+                _eraseFunctions[type] = [](RegistryManager &manager, Entity const &entity) {
+                    auto &array = manager.getComponents<Component>();
                     array[entity] = std::nullopt;
                 };
             }
 
-            return std::any_cast<ComponentsContainer<Component> &>(_componentsArray[type]);
+            return std::any_cast<ComponentsRegistry<Component> &>(_componentsRegistriesMap[type]);
         }
 
 
         template <typename Component>
-        ComponentsContainer<Component> &getComponents()
+        ComponentsRegistry<Component> &getComponents()
         {
             auto type = std::type_index(typeid(Component));
 
-            if (_componentsArray.find(type) == _componentsArray.end()) {
-                _componentsArray[type] = ComponentsContainer<Component>();
+            if (_componentsRegistriesMap.find(type) == _componentsRegistriesMap.end()) {
+                _componentsRegistriesMap[type] = ComponentsRegistry<Component>();
             }
 
-            return std::any_cast<ComponentsContainer<Component> &>(_componentsArray[type]);
+            return std::any_cast<ComponentsRegistry<Component> &>(_componentsRegistriesMap[type]);
         }
 
 
         template <typename Component>
-        ComponentsContainer<Component> const &getComponents() const
+        ComponentsRegistry<Component> const &getComponents() const
         {
             auto type = std::type_index(typeid(Component));
 
-            return std::any_cast<ComponentsContainer<Component> const &>(_componentsArray.find(type)->second);
+            return std::any_cast<ComponentsRegistry<Component> const &>(_componentsRegistriesMap.find(type)->second);
         }
 
 
@@ -94,7 +124,7 @@ class Registry
 
         void killEntity(Entity const &entity)
         {
-            for (auto &[type, _] : _componentsArray) {
+            for (auto &[type, _] : _componentsRegistriesMap) {
                 _eraseFunctions[type](*this, entity);
             }
         }
@@ -161,10 +191,9 @@ class Registry
 
     private:
         Entity _nextEntity = 0;
-        std::unordered_map<std::type_index, std::any> _componentsArray;
-        std::unordered_map<std::type_index, std::function<void (Registry &, Entity const &)>> _eraseFunctions;
-        std::vector<std::unique_ptr<ASystem>> _systems;
+        std::unordered_map<std::type_index, std::any> _componentsRegistriesMap;
+        std::unordered_map<std::type_index, std::function<void (RegistryManager &, Entity const &)>> _eraseFunctions;
+        SystemsRegistry _systems;
 };
 
-#endif /* !REGISTRY_HPP_ */
-
+#endif /* !REGISTRY_MANAGER_HPP_ */

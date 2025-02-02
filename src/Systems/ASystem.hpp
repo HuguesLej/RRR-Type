@@ -10,14 +10,14 @@
 
     #include "../Components/Components.hpp"
 
-class Registry;
+class RegistryManager;
 
 class ASystem
 {
     public:
         virtual ~ASystem() = default;
 
-        virtual void update(Registry &registry, float deltaTime) = 0;
+        virtual void update(RegistryManager &manager, float deltaTime) = 0;
 };
 
 #endif /* !ASYSTEM_HPP_ */
