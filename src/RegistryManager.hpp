@@ -75,7 +75,7 @@ class RegistryManager
                 std::string _msg;
         };
 
-        RegistryManager(std::shared_ptr<IGraphical> graphical) : _graphical(graphical)
+        RegistryManager(std::shared_ptr<IGraphical> graphical = nullptr) : _graphical(graphical)
         {
         }
         ~RegistryManager() = default;

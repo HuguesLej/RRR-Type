@@ -14,12 +14,14 @@
 class SFMLGraphical : public IGraphical
 {
     public:
-        SFMLGraphical(std::string windowName)
+        SFMLGraphical(std::string windowName = "SFML Window")
         {
             // _window.create(sf::VideoMode::getDesktopMode(), windowName, sf::Style::Fullscreen);
             _window.create(sf::VideoMode(800, 600), windowName, sf::Style::Default);
             _window.setFramerateLimit(60);
         }
+        SFMLGraphical(const SFMLGraphical &) = delete;
+        SFMLGraphical &operator=(const SFMLGraphical &) = delete;
         ~SFMLGraphical() = default;
 
         void beginFrame()

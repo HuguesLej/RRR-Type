@@ -8,8 +8,9 @@
 #ifndef ASYSTEM_HPP_
     #define ASYSTEM_HPP_
 
+    #include <memory>
     #include "../Components/Components.hpp"
-    #include "IGraphical.hpp"
+    #include "../IGraphical.hpp"
 
 class RegistryManager;
 
