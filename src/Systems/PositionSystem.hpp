@@ -17,7 +17,7 @@ class PositionSystem : public ASystem
         PositionSystem() = default;
         ~PositionSystem() = default;
 
-        void update(RegistryManager &manager, std::shared_ptr<IGraphical> &graphical, float elapsedSeconds) override
+        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedSeconds) override
         {
             auto &positions = manager.getComponents<comp::Position>();
             auto &velocities = manager.getComponents<comp::Velocity>();

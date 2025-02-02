@@ -10,9 +10,9 @@
 
     #include <exception>
     #include <SFML/Graphics.hpp>
-    #include "IGraphical.hpp"
+    #include "AGraphical.hpp"
 
-class SFMLGraphical : public IGraphical
+class SFMLGraphical : public AGraphical
 {
     public:
 
@@ -138,6 +138,7 @@ class SFMLGraphical : public IGraphical
         sf::RenderWindow _window;
         std::vector<sf::Texture> _textures;
         std::unordered_map<sf::Keyboard::Key, Keys> _keysMap = {
+            {sf::Keyboard::Unknown, Keys::Unknown},
             {sf::Keyboard::A, Keys::A},
             {sf::Keyboard::B, Keys::B},
             {sf::Keyboard::C, Keys::C},

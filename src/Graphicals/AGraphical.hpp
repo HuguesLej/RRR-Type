@@ -2,11 +2,11 @@
 ** EPITECH PROJECT, 2025
 ** RRR-Type [WSL: Ubuntu]
 ** File description:
-** IGraphical
+** AGraphical
 */
 
-#ifndef IGRAPHICAL_HPP_
-    #define IGRAPHICAL_HPP_
+#ifndef AGRAPHICAL_HPP_
+    #define AGRAPHICAL_HPP_
 
     #include <cstdint>
     #include <unordered_map>
@@ -14,10 +14,10 @@
     #include "../Components/Components.hpp"
     #include "../Keys.hpp"
 
-class IGraphical
+class AGraphical
 {
     public:
-        virtual ~IGraphical() = default;
+        virtual ~AGraphical() = default;
 
         virtual void openWindow(std::string const &windowName) = 0;
         virtual void closeWindow() = 0;
@@ -32,8 +32,14 @@ class IGraphical
         virtual void drawSprite(comp::Position const &position, comp::Drawable const &drawable, comp::Animable &animable) = 0;
         virtual void drawSprite(comp::Position const &position, comp::Drawable const &drawable) = 0;
 
+        virtual bool isKeyPressed(Keys key)
+        {
+            return _keysState[key];
+        }
+
     protected:
         std::unordered_map<Keys, bool> _keysState = {
+            {Unknown, false},
             {A, false},
             {B, false},
             {C, false},
@@ -146,4 +152,4 @@ class IGraphical
         virtual void updateEvents() = 0;
 };
 
-#endif /* !IGRAPHICAL_HPP_ */
+#endif /* !AGRAPHICAL_HPP_ */

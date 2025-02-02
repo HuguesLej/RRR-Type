@@ -19,7 +19,7 @@
     #include "Components/ComponentsRegistry.hpp"
     #include "Systems/ASystem.hpp"
     #include "Systems/SystemsRegistry.hpp"
-    #include "Graphicals/IGraphical.hpp"
+    #include "Graphicals/AGraphical.hpp"
 
 class ASystem;
 
@@ -75,7 +75,7 @@ class RegistryManager
                 std::string _msg;
         };
 
-        RegistryManager(std::shared_ptr<IGraphical> graphical = nullptr) : _graphical(graphical)
+        RegistryManager(std::shared_ptr<AGraphical> graphical = nullptr) : _graphical(graphical)
         {
         }
         ~RegistryManager() = default;
@@ -204,7 +204,7 @@ class RegistryManager
         std::unordered_map<std::type_index, std::any> _componentsRegistriesMap;
         std::unordered_map<std::type_index, std::function<void (RegistryManager &, Entity const &)>> _eraseFunctions;
         SystemsRegistry _systems;
-        std::shared_ptr<IGraphical> _graphical;
+        std::shared_ptr<AGraphical> _graphical;
 };
 
 #endif /* !REGISTRY_MANAGER_HPP_ */

@@ -17,7 +17,7 @@ class ControlSystem : public ASystem
         ControlSystem() = default;
         ~ControlSystem() = default;
 
-        void update(RegistryManager &manager, std::shared_ptr<IGraphical> &graphical, float elapsedSeconds) override
+        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedSeconds) override
         {
             auto &velocities = manager.getComponents<comp::Velocity>();
             auto &controllables = manager.getComponents<comp::Controllable>();
