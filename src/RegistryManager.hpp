@@ -81,14 +81,15 @@ class RegistryManager
         {
             auto type = std::type_index(typeid(Component));
 
-            if (_componentsRegistriesMap.find(type) == _componentsRegistriesMap.end()) {
-                _componentsRegistriesMap[type] = ComponentsRegistry<Component>();
-
-                _eraseFunctions[type] = [](RegistryManager &manager, Entity const &entity) {
-                    auto &array = manager.getComponents<Component>();
-                    array[entity] = std::nullopt;
-                };
+            if (_componentsRegistriesMap.find(type) != _componentsRegistriesMap.end()) {
+                throw ComponentError(ComponentError::ALREADY_REGISTERED, typeid(Component).name());
             }
+
+            _componentsRegistriesMap[type] = ComponentsRegistry<Component>();
+            _eraseFunctions[type] = [](RegistryManager &manager, Entity const &entity) {
+                auto &array = manager.getComponents<Component>();
+                array[entity] = std::nullopt;
+            };
 
             return std::any_cast<ComponentsRegistry<Component> &>(_componentsRegistriesMap[type]);
         }
@@ -100,7 +101,7 @@ class RegistryManager
             auto type = std::type_index(typeid(Component));
 
             if (_componentsRegistriesMap.find(type) == _componentsRegistriesMap.end()) {
-                _componentsRegistriesMap[type] = ComponentsRegistry<Component>();
+                throw ComponentError(ComponentError::NOT_REGISTERED, typeid(Component).name());
             }
 
             return std::any_cast<ComponentsRegistry<Component> &>(_componentsRegistriesMap[type]);
@@ -111,6 +112,10 @@ class RegistryManager
         ComponentsRegistry<Component> const &getComponents() const
         {
             auto type = std::type_index(typeid(Component));
+
+            if (_componentsRegistriesMap.find(type) == _componentsRegistriesMap.end()) {
+                throw ComponentError(ComponentError::NOT_REGISTERED, typeid(Component).name());
+            }
 
             return std::any_cast<ComponentsRegistry<Component> const &>(_componentsRegistriesMap.find(type)->second);
         }
