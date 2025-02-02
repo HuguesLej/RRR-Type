@@ -28,6 +28,7 @@ int main(void)
     try {
         registryManager.addSystem(std::make_unique<PositionSystem>());
         registryManager.addSystem(std::make_unique<DrawSystem>());
+        registryManager.addSystem(std::make_unique<ControlSystem>());
     } catch (std::exception const &e) {
         std::cerr << e.what() << std::endl;
         return 84;
@@ -38,6 +39,7 @@ int main(void)
         registryManager.registerComponent<comp::Velocity>();
         registryManager.registerComponent<comp::Drawable>();
         registryManager.registerComponent<comp::Animable>();
+        registryManager.registerComponent<comp::Controllable>();
     } catch (std::exception const &e) {
         std::cerr << e.what() << std::endl;
         return 84;
@@ -47,9 +49,10 @@ int main(void)
 
     try {
         registryManager.addComponent(e1, comp::Position{0, 0});
-        registryManager.addComponent(e1, comp::Velocity{1, 0});
+        registryManager.addComponent(e1, comp::Velocity{0, 0});
         registryManager.addComponent(e1, comp::Drawable{0});
         registryManager.addComponent(e1, comp::Animable{11});
+        registryManager.addComponent(e1, comp::Controllable{Keys::Q, Keys::D, Keys::Z, Keys::S, Keys::Space, 1});
     } catch (std::exception const &e) {
         std::cerr << e.what() << std::endl;
         return 84;
