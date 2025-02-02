@@ -10,7 +10,7 @@
 
     #include <cstdint>
     #include <vector>
-    #include "Components/Components.hpp"
+    #include "../Components/Components.hpp"
 
 class IGraphical
 {

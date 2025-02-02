@@ -10,7 +10,7 @@
 
     #include <memory>
     #include "../Components/Components.hpp"
-    #include "../IGraphical.hpp"
+    #include "../Graphicals/IGraphical.hpp"
 
 class RegistryManager;
 

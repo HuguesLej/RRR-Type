@@ -9,7 +9,7 @@
 #include "Systems/ControlSystem.hpp"
 #include "Systems/DrawSystem.hpp"
 #include "Systems/PositionSystem.hpp"
-#include "SFMLGraphical.hpp"
+#include "Graphicals/SFMLGraphical.hpp"
 
 int main(void)
 {

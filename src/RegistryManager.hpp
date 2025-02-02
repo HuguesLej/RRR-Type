@@ -19,7 +19,7 @@
     #include "Components/ComponentsRegistry.hpp"
     #include "Systems/ASystem.hpp"
     #include "Systems/SystemsRegistry.hpp"
-    #include "IGraphical.hpp"
+    #include "Graphicals/IGraphical.hpp"
 
 class ASystem;
 
