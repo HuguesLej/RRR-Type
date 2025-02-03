@@ -31,12 +31,15 @@ class DrawSystem : public ASystem
                     auto &animables = manager.getComponents<comp::Animable>();
 
                     for (std::size_t i = 0; i < positions.size(); i++) {
-                        if (positions[i] && drawables[i]) {
-                            if (animables[i]) {
-                                graphical->drawSprite(positions[i].value(), drawables[i].value(), animables[i].value());
-                            } else {
-                                graphical->drawSprite(positions[i].value(), drawables[i].value());
-                            }
+
+                        if (!positions[i] || drawables.size() <= i || !drawables[i]) {
+                            continue;
+                        }
+
+                        if (animables.size() > i && animables[i]) {
+                            graphical->drawSprite(positions[i].value(), drawables[i].value(), animables[i].value());
+                        } else {
+                            graphical->drawSprite(positions[i].value(), drawables[i].value());
                         }
                     }
 
@@ -45,9 +48,12 @@ class DrawSystem : public ASystem
                     (void) e;
 
                     for (std::size_t i = 0; i < positions.size(); i++) {
-                        if (positions[i] && drawables[i]) {
-                            graphical->drawSprite(positions[i].value(), drawables[i].value());
+
+                        if (!positions[i] || drawables.size() <= i || !drawables[i]) {
+                            continue;
                         }
+
+                        graphical->drawSprite(positions[i].value(), drawables[i].value());
                     }
 
                 }
