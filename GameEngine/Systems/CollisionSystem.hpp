@@ -37,6 +37,10 @@ class CollisionSystem : public ASystem
 
             for (size_t i = 0; i < positions.size(); i++) {
                 if (positions[i] && colliders[i]) {
+                    colliders[i]->collidePosX = false;
+                    colliders[i]->collideNegX = false;
+                    colliders[i]->collidePosY = false;
+                    colliders[i]->collideNegY = false;
 
                     for (size_t j = 0; j < positions.size(); j++) {
                         if (i == j) {
@@ -69,11 +73,6 @@ class CollisionSystem : public ASystem
                                 // colliders[i]->collideNegX = isCollidingOnFace(hbI.minX, hbI.minY, hbI.minX, hbI.maxY, hbJ);
                                 // colliders[i]->collidePosY = isCollidingOnFace(hbI.minX, hbI.maxY, hbI.maxX, hbI.maxY, hbJ);
                                 // colliders[i]->collideNegY = isCollidingOnFace(hbI.minX, hbI.minY, hbI.maxX, hbI.minY, hbJ);
-
-                                colliders[i]->collidePosX = false;
-                                colliders[i]->collideNegX = false;
-                                colliders[i]->collidePosY = false;
-                                colliders[i]->collideNegY = false;
 
                                 bool overlapX = hbI.minX <= hbJ.maxX && hbI.maxX >= hbJ.minX;
                                 bool overlapY = hbI.minY <= hbJ.maxY && hbI.maxY >= hbJ.minY;
