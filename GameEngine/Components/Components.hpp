@@ -81,9 +81,9 @@ namespace comp
 
     struct Gravity
     {
-        float gravityVelocity;
+        float velocity;
 
-        Gravity(float gravityVelocity = 0) : gravityVelocity(gravityVelocity) {}
+        Gravity(float velocity = 0) : velocity(velocity) {}
     };
 }
 
