@@ -21,33 +21,40 @@ class DrawSystem : public ASystem
         {
             (void) elapsedSeconds;
 
-            auto &positions = manager.getComponents<comp::Position>();
-            auto &drawables = manager.getComponents<comp::Drawable>();
-
             try {
 
-                auto &animables = manager.getComponents<comp::Animable>();
+                auto &positions = manager.getComponents<comp::Position>();
+                auto &drawables = manager.getComponents<comp::Drawable>();
 
-                for (std::size_t i = 0; i < positions.size(); i++) {
-                    if (positions[i] && drawables[i]) {
-                        if (animables[i]) {
-                            graphical->drawSprite(positions[i].value(), drawables[i].value(), animables[i].value());
-                        } else {
+                try {
+
+                    auto &animables = manager.getComponents<comp::Animable>();
+
+                    for (std::size_t i = 0; i < positions.size(); i++) {
+                        if (positions[i] && drawables[i]) {
+                            if (animables[i]) {
+                                graphical->drawSprite(positions[i].value(), drawables[i].value(), animables[i].value());
+                            } else {
+                                graphical->drawSprite(positions[i].value(), drawables[i].value());
+                            }
+                        }
+                    }
+
+                } catch (RegistryManager::ComponentError const &e) {
+
+                    (void) e;
+
+                    for (std::size_t i = 0; i < positions.size(); i++) {
+                        if (positions[i] && drawables[i]) {
                             graphical->drawSprite(positions[i].value(), drawables[i].value());
                         }
                     }
+
                 }
 
-            } catch (std::exception const &e) {
-
+            } catch (RegistryManager::ComponentError const &e) {
                 (void) e;
-
-                for (std::size_t i = 0; i < positions.size(); i++) {
-                    if (positions[i] && drawables[i]) {
-                        graphical->drawSprite(positions[i].value(), drawables[i].value());
-                    }
-                }
-
+                throw ASystem::SystemError("DrawSystem", std::vector<std::string>{"Position", "Drawable"});
             }
         }
 };

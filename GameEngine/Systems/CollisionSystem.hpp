@@ -22,88 +22,96 @@ class CollisionSystem : public ASystem
         void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedSeconds) override
         {
             (void) graphical;
+            (void) elapsedSeconds;
 
-            auto &positions = manager.getComponents<comp::Position>();
-            auto &velocities = manager.getComponents<comp::Velocity>();
-            auto &colliders = manager.getComponents<comp::Collider>();
+            try {
 
-            for (size_t i = 0; i < positions.size(); i++) {
-                if (!positions[i] || !colliders[i]) {
-                    continue;
-                }
+                auto &positions = manager.getComponents<comp::Position>();
+                auto &velocities = manager.getComponents<comp::Velocity>();
+                auto &colliders = manager.getComponents<comp::Collider>();
 
-                colliders[i]->collidePosX = false;
-                colliders[i]->collideNegX = false;
-                colliders[i]->collidePosY = false;
-                colliders[i]->collideNegY = false;
-
-                for (size_t j = 0; j < positions.size(); j++) {
-                    if (i == j) {
+                for (size_t i = 0; i < positions.size(); i++) {
+                    if (!positions[i] || !colliders[i]) {
                         continue;
                     }
 
-                    if (!positions[j] || !colliders[j]) {
-                        continue;
-                    }
+                    colliders[i]->collidePosX = false;
+                    colliders[i]->collideNegX = false;
+                    colliders[i]->collidePosY = false;
+                    colliders[i]->collideNegY = false;
 
-                    auto layerI = std::find(colliders[j]->collidingLayers.begin(), colliders[j]->collidingLayers.end(), colliders[i]->layer);
-                    auto layerJ = std::find(colliders[i]->collidingLayers.begin(), colliders[i]->collidingLayers.end(), colliders[j]->layer);
+                    for (size_t j = 0; j < positions.size(); j++) {
+                        if (i == j) {
+                            continue;
+                        }
 
-                    if (layerI == colliders[j]->collidingLayers.end() && layerJ == colliders[i]->collidingLayers.end()) {
-                        continue;
-                    }
+                        if (!positions[j] || !colliders[j]) {
+                            continue;
+                        }
 
-                    HitBox hbI(
-                        positions[i]->x - colliders[i]->width / 2,
-                        positions[i]->y - colliders[i]->height / 2,
-                        positions[i]->x + colliders[i]->width / 2,
-                        positions[i]->y + colliders[i]->height / 2
-                    );
-                    HitBox hbJ(
-                        positions[j]->x - colliders[j]->width / 2,
-                        positions[j]->y - colliders[j]->height / 2,
-                        positions[j]->x + colliders[j]->width / 2,
-                        positions[j]->y + colliders[j]->height / 2
-                    );
+                        auto layerI = std::find(colliders[j]->collidingLayers.begin(), colliders[j]->collidingLayers.end(), colliders[i]->layer);
+                        auto layerJ = std::find(colliders[i]->collidingLayers.begin(), colliders[i]->collidingLayers.end(), colliders[j]->layer);
 
-                    CollisionFace collisionFace = findCollidingFace(hbI, hbJ);
+                        if (layerI == colliders[j]->collidingLayers.end() && layerJ == colliders[i]->collidingLayers.end()) {
+                            continue;
+                        }
 
-                    switch (collisionFace) {
-                        case CollisionFace::POSX:
-                            colliders[i]->collidePosX = true;
-                            break;
-                        case CollisionFace::NEGX:
-                            colliders[i]->collideNegX = true;
-                            break;
-                        case CollisionFace::POSY:
-                            colliders[i]->collidePosY = true;
-                            break;
-                        case CollisionFace::NEGY:
-                            colliders[i]->collideNegY = true;
-                            break;
-                        default:
-                            break;
-                    }
+                        HitBox hbI(
+                            positions[i]->x - colliders[i]->width / 2,
+                            positions[i]->y - colliders[i]->height / 2,
+                            positions[i]->x + colliders[i]->width / 2,
+                            positions[i]->y + colliders[i]->height / 2
+                        );
+                        HitBox hbJ(
+                            positions[j]->x - colliders[j]->width / 2,
+                            positions[j]->y - colliders[j]->height / 2,
+                            positions[j]->x + colliders[j]->width / 2,
+                            positions[j]->y + colliders[j]->height / 2
+                        );
 
-                    if (velocities.size() > i && velocities[i]) {
+                        CollisionFace collisionFace = findCollidingFace(hbI, hbJ);
+
                         switch (collisionFace) {
                             case CollisionFace::POSX:
-                                positions[i]->x = hbJ.minX - colliders[i]->width / 2;
+                                colliders[i]->collidePosX = true;
                                 break;
                             case CollisionFace::NEGX:
-                                positions[i]->x = hbJ.maxX + colliders[i]->width / 2;
+                                colliders[i]->collideNegX = true;
                                 break;
                             case CollisionFace::POSY:
-                                positions[i]->y = hbJ.minY - colliders[i]->height / 2;
+                                colliders[i]->collidePosY = true;
                                 break;
                             case CollisionFace::NEGY:
-                                positions[i]->y = hbJ.maxY + colliders[i]->height / 2;
+                                colliders[i]->collideNegY = true;
                                 break;
                             default:
                                 break;
                         }
+
+                        if (velocities.size() > i && velocities[i]) {
+                            switch (collisionFace) {
+                                case CollisionFace::POSX:
+                                    positions[i]->x = hbJ.minX - colliders[i]->width / 2;
+                                    break;
+                                case CollisionFace::NEGX:
+                                    positions[i]->x = hbJ.maxX + colliders[i]->width / 2;
+                                    break;
+                                case CollisionFace::POSY:
+                                    positions[i]->y = hbJ.minY - colliders[i]->height / 2;
+                                    break;
+                                case CollisionFace::NEGY:
+                                    positions[i]->y = hbJ.maxY + colliders[i]->height / 2;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
                     }
                 }
+
+            } catch (RegistryManager::ComponentError const &e) {
+                (void) e;
+                throw ASystem::SystemError("CollisionSystem", std::vector<std::string>{"Position", "Velocity", "Collider"});
             }
         }
 

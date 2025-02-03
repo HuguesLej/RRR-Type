@@ -21,20 +21,27 @@ class ControlSystem : public ASystem
         {
             (void) elapsedSeconds;
 
-            auto &velocities = manager.getComponents<comp::Velocity>();
-            auto &controllables = manager.getComponents<comp::Controllable>();
+            try {
 
-            for (std::size_t i = 0; i < velocities.size(); i++) {
-                if (velocities[i] && controllables[i]) {
+                auto &velocities = manager.getComponents<comp::Velocity>();
+                auto &controllables = manager.getComponents<comp::Controllable>();
 
-                    updateVelocity(graphical, controllables[i]->left, velocities[i]->negX, -controllables[i]->maxVelocity);
-                    updateVelocity(graphical, controllables[i]->right, velocities[i]->posX, controllables[i]->maxVelocity);
-                    updateVelocity(graphical, controllables[i]->up, velocities[i]->negY, -controllables[i]->maxVelocity);
-                    updateVelocity(graphical, controllables[i]->down, velocities[i]->posY, controllables[i]->maxVelocity);
+                for (std::size_t i = 0; i < velocities.size(); i++) {
+                    if (velocities[i] && controllables[i]) {
 
-                    // Add jump
+                        updateVelocity(graphical, controllables[i]->left, velocities[i]->negX, -controllables[i]->maxVelocity);
+                        updateVelocity(graphical, controllables[i]->right, velocities[i]->posX, controllables[i]->maxVelocity);
+                        updateVelocity(graphical, controllables[i]->up, velocities[i]->negY, -controllables[i]->maxVelocity);
+                        updateVelocity(graphical, controllables[i]->down, velocities[i]->posY, controllables[i]->maxVelocity);
 
+                        // Add jump
+
+                    }
                 }
+
+            } catch (RegistryManager::ComponentError const &e) {
+                (void) e;
+                throw ASystem::SystemError("ControlSystem", std::vector<std::string>{"Velocity", "Controllable"});
             }
         }
 
