@@ -9,6 +9,7 @@
     #define COMPONENTS_HPP_
 
     #include <cstdint>
+    #include <vector>
     #include "../Keys.hpp"
 
 namespace comp
@@ -61,6 +62,17 @@ namespace comp
 
         Controllable(Keys left, Keys right, Keys up, Keys down, Keys jump, float maxVelocity = 0)
             : left(left), right(right), up(up), down(down), jump(jump), maxVelocity(maxVelocity) {}
+    };
+
+    struct Collider
+    {
+        float width;
+        float height;
+        std::uint32_t layer;
+        std::vector<std::uint32_t> collidingLayers;
+
+        Collider(float width, float height, std::uint32_t layer, std::vector<std::uint32_t> collidingLayers)
+            : width(width), height(height), layer(layer), collidingLayers(collidingLayers) {}
     };
 }
 
