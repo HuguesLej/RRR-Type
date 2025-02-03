@@ -19,6 +19,8 @@ class ControlSystem : public ASystem
 
         void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedSeconds) override
         {
+            (void) elapsedSeconds;
+
             auto &velocities = manager.getComponents<comp::Velocity>();
             auto &controllables = manager.getComponents<comp::Controllable>();
 

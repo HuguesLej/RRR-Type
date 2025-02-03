@@ -19,6 +19,8 @@ class DrawSystem : public ASystem
 
         void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedSeconds) override
         {
+            (void) elapsedSeconds;
+
             auto &positions = manager.getComponents<comp::Position>();
             auto &drawables = manager.getComponents<comp::Drawable>();
 

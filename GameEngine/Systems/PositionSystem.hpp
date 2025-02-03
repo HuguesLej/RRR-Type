@@ -20,6 +20,8 @@ class PositionSystem : public ASystem
 
         void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedSeconds) override
         {
+            (void) graphical;
+
             auto &positions = manager.getComponents<comp::Position>();
             auto &velocities = manager.getComponents<comp::Velocity>();
 

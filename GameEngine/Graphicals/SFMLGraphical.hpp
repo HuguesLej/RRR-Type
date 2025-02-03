@@ -299,6 +299,11 @@ class SFMLGraphical : public AGraphical
                         }
                         break;
                     }
+
+                    default: {
+                        break;
+                    }
+
                 }
             }
         }
