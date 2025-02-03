@@ -70,6 +70,10 @@ namespace comp
         float height;
         std::uint32_t layer;
         std::vector<std::uint32_t> collidingLayers;
+        bool collidePosX = false;
+        bool collideNegX = false;
+        bool collidePosY = false;
+        bool collideNegY = false;
 
         Collider(float width, float height, std::uint32_t layer, std::vector<std::uint32_t> collidingLayers)
             : width(width), height(height), layer(layer), collidingLayers(collidingLayers) {}
