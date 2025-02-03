@@ -78,6 +78,13 @@ namespace comp
         Collider(float width, float height, std::uint32_t layer, std::vector<std::uint32_t> collidingLayers)
             : width(width), height(height), layer(layer), collidingLayers(collidingLayers) {}
     };
+
+    struct Gravity
+    {
+        float gravityVelocity;
+
+        Gravity(float gravityVelocity = 0) : gravityVelocity(gravityVelocity) {}
+    };
 }
 
 #endif /* !COMPONENTS_HPP_ */
