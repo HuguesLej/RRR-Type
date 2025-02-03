@@ -85,6 +85,13 @@ namespace comp
 
         Gravity(float velocity = 0) : velocity(velocity) {}
     };
+
+    struct Jumpable
+    {
+        float velocity;
+
+        Jumpable(float velocity = 0) : velocity(velocity) {}
+    };
 }
 
 #endif /* !COMPONENTS_HPP_ */
