@@ -52,17 +52,22 @@ install_cmake() {
 
 
 install() {
+    echo -e "${CYAN}Searching for CMake...${NC}"
     install_cmake
     if [ $? -ne 0 ]; then
         return 1
     fi
+    echo -e "${LIGHT_GREEN}CMake is installed.${NC}"
 
+    echo -e "${CYAN}Updating the submodules...${NC}"
     git submodule update --init --recursive
     if [ $? -ne 0 ]; then
         echo -e "${LIGHT_RED}Failed to update the submodules.${NC}"
         return 1
     fi
+    echo -e "${LIGHT_GREEN}Submodules are updated.${NC}"
 
+    echo -e "${CYAN}Bootstrapping vcpkg...${NC}"
     if [ ! -f "vcpkg/vcpkg" ]; then
         cd vcpkg
         ./bootstrap-vcpkg.sh
@@ -72,12 +77,15 @@ install() {
         fi
         cd ..
     fi
+    echo -e "${LIGHT_GREEN}vcpkg is bootstrapped.${NC}"
 
+    echo -e "${CYAN}Installing the dependencies with vcpkg...${NC}"
     ./vcpkg/vcpkg install
     if [ $? -ne 0 ] || [ ! -d "vcpkg_installed" ]; then
         echo -e "${LIGHT_RED}Failed to install the dependencies with vcpkg.${NC}"
         return 1
     fi
+    echo -e "${LIGHT_GREEN}Dependencies are installed.${NC}"
 
     mkdir -p bin
     mkdir -p build
@@ -93,6 +101,7 @@ install() {
         echo -e "${LIGHT_RED}Failed to configure CMake.${NC}"
         return 1
     fi
+    echo -e "${LIGHT_GREEN}CMake is configured.${NC}"
 
     echo -e "${CYAN}Building the project...${NC}"
     cmake --build build
@@ -100,6 +109,7 @@ install() {
         echo -e "${LIGHT_RED}Failed to build the project.${NC}"
         return 1
     fi
+    echo -e "${LIGHT_GREEN}Project is built.${NC}"
 
     return 0
 }
