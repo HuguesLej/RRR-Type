@@ -43,7 +43,7 @@ find_package(asio CONFIG REQUIRED)
 
 # Find all game engine source files
 file(GLOB_RECURSE GAME_ENGINE_SRC
-    ${CMAKE_SOURCE_DIR}/ECS/*.cpp
+    ${CMAKE_SOURCE_DIR}/GameEngine/*.cpp
 )
 
 # Add game engine library

@@ -9,6 +9,7 @@
 #include "Systems/ControlSystem.hpp"
 #include "Systems/DrawSystem.hpp"
 #include "Systems/PositionSystem.hpp"
+#include "Systems/CollisionSystem.hpp"
 #include "Graphicals/SFMLGraphical.hpp"
 
 int main(void)
@@ -18,7 +19,8 @@ int main(void)
 
     try {
         graphical->addTextures({
-            "assets/sprites/MainCharacters/MaskDude/Idle.png"
+            "assets/sprites/MainCharacters/MaskDude/Idle.png",
+            "assets/sprites/Terrain/Iron/Iron1.png"
         });
     } catch (std::exception const &e) {
         std::cerr << e.what() << std::endl;
@@ -29,6 +31,7 @@ int main(void)
         registryManager.addSystem(std::make_unique<PositionSystem>());
         registryManager.addSystem(std::make_unique<DrawSystem>());
         registryManager.addSystem(std::make_unique<ControlSystem>());
+        registryManager.addSystem(std::make_unique<CollisionSystem>());
     } catch (std::exception const &e) {
         std::cerr << e.what() << std::endl;
         return 84;
@@ -40,19 +43,26 @@ int main(void)
         registryManager.registerComponent<comp::Drawable>();
         registryManager.registerComponent<comp::Animable>();
         registryManager.registerComponent<comp::Controllable>();
+        registryManager.registerComponent<comp::Collider>();
     } catch (std::exception const &e) {
         std::cerr << e.what() << std::endl;
         return 84;
     }
 
-    Entity e1 = registryManager.spawnEntity();
+    Entity character = registryManager.spawnEntity();
+    Entity block = registryManager.spawnEntity();
 
     try {
-        registryManager.addComponent(e1, comp::Position{0, 0});
-        registryManager.addComponent(e1, comp::Velocity{0, 0});
-        registryManager.addComponent(e1, comp::Drawable{0});
-        registryManager.addComponent(e1, comp::Animable{11});
-        registryManager.addComponent(e1, comp::Controllable{Keys::Q, Keys::D, Keys::Z, Keys::S, Keys::Space, 1});
+        registryManager.addComponent(character, comp::Position{100, 100});
+        registryManager.addComponent(character, comp::Velocity{0, 0});
+        registryManager.addComponent(character, comp::Drawable{0});
+        registryManager.addComponent(character, comp::Animable{11});
+        registryManager.addComponent(character, comp::Controllable{Keys::Q, Keys::D, Keys::Z, Keys::S, Keys::Space, 1});
+        registryManager.addComponent(character, comp::Collider{32, 32, 1, {1}});
+
+        registryManager.addComponent(block, comp::Position{50, 50});
+        registryManager.addComponent(block, comp::Drawable{1});
+        registryManager.addComponent(block, comp::Collider{45, 14, 1, {1}});
     } catch (std::exception const &e) {
         std::cerr << e.what() << std::endl;
         return 84;

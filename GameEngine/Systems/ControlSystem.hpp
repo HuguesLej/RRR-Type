@@ -19,11 +19,18 @@ class ControlSystem : public ASystem
 
         void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedSeconds) override
         {
-            auto &velocities = manager.getComponents<comp::Velocity>();
-            auto &controllables = manager.getComponents<comp::Controllable>();
+            (void) elapsedSeconds;
 
-            for (std::size_t i = 0; i < velocities.size(); i++) {
-                if (velocities[i] && controllables[i]) {
+            try {
+
+                auto &velocities = manager.getComponents<comp::Velocity>();
+                auto &controllables = manager.getComponents<comp::Controllable>();
+
+                for (std::size_t i = 0; i < velocities.size(); i++) {
+
+                    if (!velocities[i] || controllables.size() <= i || !controllables[i]) {
+                        continue;
+                    }
 
                     updateVelocity(graphical, controllables[i]->left, velocities[i]->negX, -controllables[i]->maxVelocity);
                     updateVelocity(graphical, controllables[i]->right, velocities[i]->posX, controllables[i]->maxVelocity);
@@ -33,6 +40,10 @@ class ControlSystem : public ASystem
                     // Add jump
 
                 }
+
+            } catch (RegistryManager::ComponentError const &e) {
+                (void) e;
+                throw ASystem::SystemError("ControlSystem", std::vector<std::string>{"Velocity", "Controllable"});
             }
         }
 
