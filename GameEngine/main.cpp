@@ -18,7 +18,8 @@ int main(void)
 
     try {
         graphical->addTextures({
-            "assets/sprites/MainCharacters/MaskDude/Idle.png"
+            "assets/sprites/MainCharacters/MaskDude/Idle.png",
+            "assets/sprites/Terrain/Iron/Iron1.png"
         });
     } catch (std::exception const &e) {
         std::cerr << e.what() << std::endl;
@@ -45,14 +46,18 @@ int main(void)
         return 84;
     }
 
-    Entity e1 = registryManager.spawnEntity();
+    Entity character = registryManager.spawnEntity();
+    Entity block = registryManager.spawnEntity();
 
     try {
-        registryManager.addComponent(e1, comp::Position{0, 0});
-        registryManager.addComponent(e1, comp::Velocity{0, 0});
-        registryManager.addComponent(e1, comp::Drawable{0});
-        registryManager.addComponent(e1, comp::Animable{11});
-        registryManager.addComponent(e1, comp::Controllable{Keys::Q, Keys::D, Keys::Z, Keys::S, Keys::Space, 1});
+        registryManager.addComponent(character, comp::Position{100, 100});
+        registryManager.addComponent(character, comp::Velocity{0, 0});
+        registryManager.addComponent(character, comp::Drawable{0});
+        registryManager.addComponent(character, comp::Animable{11});
+        registryManager.addComponent(character, comp::Controllable{Keys::Q, Keys::D, Keys::Z, Keys::S, Keys::Space, 1});
+
+        registryManager.addComponent(block, comp::Position{22.5, 7});
+        registryManager.addComponent(block, comp::Drawable{1});
     } catch (std::exception const &e) {
         std::cerr << e.what() << std::endl;
         return 84;

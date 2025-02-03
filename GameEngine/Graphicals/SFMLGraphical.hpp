@@ -112,25 +112,15 @@ class SFMLGraphical : public AGraphical
 
             animable.currentFrame = (animable.currentFrame + 1) % animable.framesNumber;
 
-            sprite.setTexture(_textures[drawable.textureId]);
-            sprite.setTextureRect(rect);
-            sprite.setPosition(position.x, position.y);
-            sprite.setScale(drawable.scaleX, drawable.scaleY);
-            sprite.setRotation(drawable.rotation);
-
-            _window.draw(sprite);
+            drawSprite(sprite, rect, position, drawable);
         }
 
         void drawSprite(comp::Position const &position, comp::Drawable const &drawable) override
         {
             sf::Sprite sprite;
+            sf::IntRect rect(0, 0, _textures[drawable.textureId].getSize().x, _textures[drawable.textureId].getSize().y);
 
-            sprite.setTexture(_textures[drawable.textureId]);
-            sprite.setPosition(position.x, position.y);
-            sprite.setScale(drawable.scaleX, drawable.scaleY);
-            sprite.setRotation(drawable.rotation);
-
-            _window.draw(sprite);
+            drawSprite(sprite, rect, position, drawable);
         }
 
 
@@ -306,6 +296,19 @@ class SFMLGraphical : public AGraphical
 
                 }
             }
+        }
+
+
+        void drawSprite(sf::Sprite &sprite, sf::IntRect &textureRect, comp::Position const &position, comp::Drawable const &drawable)
+        {
+            sprite.setTexture(_textures[drawable.textureId]);
+            sprite.setTextureRect(textureRect);
+            sprite.setOrigin(textureRect.width / 2, textureRect.height / 2);
+            sprite.setPosition(position.x, position.y);
+            sprite.setScale(drawable.scaleX, drawable.scaleY);
+            sprite.setRotation(drawable.rotation);
+
+            _window.draw(sprite);
         }
 
 };
