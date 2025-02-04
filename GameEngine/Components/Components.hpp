@@ -94,6 +94,31 @@ namespace comp
 
         Jumpable(float velocity = 0, float durationMs = 0) : velocity(velocity), durationMs(durationMs) {}
     };
+
+    struct Health
+    {
+        std::uint32_t health;
+        std::uint32_t maxHealth;
+
+        Health(std::uint32_t maxHealth = 1, std::uint32_t health = 1) : health(health), maxHealth(maxHealth) {
+            if (health > maxHealth) {
+                this->health = maxHealth;
+            }
+            if (health == 0) {
+                this->health = 1;
+            }
+            if (maxHealth == 0) {
+                this->maxHealth = 1;
+            }
+        }
+    };
+
+    struct Attack
+    {
+        std::uint32_t collisionDamages;
+
+        Attack(std::uint32_t collisionDamages = 0) : collisionDamages(collisionDamages) {}
+    };
 }
 
 #endif /* !COMPONENTS_HPP_ */
