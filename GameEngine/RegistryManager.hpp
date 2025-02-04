@@ -191,10 +191,10 @@ class RegistryManager
         }
 
 
-        void updateSystems(float elapsedSeconds)
+        void updateSystems(float elapsedMs)
         {
             for (auto &system : _systems) {
-                system->update(*this, _graphical, elapsedSeconds);
+                system->update(*this, _graphical, elapsedMs);
             }
         }
 

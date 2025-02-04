@@ -17,9 +17,9 @@ class ControlSystem : public ASystem
         ControlSystem() = default;
         ~ControlSystem() = default;
 
-        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedSeconds) override
+        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedMs) override
         {
-            (void) elapsedSeconds;
+            (void) elapsedMs;
 
             try {
 
@@ -32,9 +32,9 @@ class ControlSystem : public ASystem
                         continue;
                     }
 
-                    updateVelocity(graphical, controllables[i]->left, velocities[i]->negX, -controllables[i]->maxVelocity);
+                    updateVelocity(graphical, controllables[i]->left, velocities[i]->negX, controllables[i]->maxVelocity);
                     updateVelocity(graphical, controllables[i]->right, velocities[i]->posX, controllables[i]->maxVelocity);
-                    updateVelocity(graphical, controllables[i]->up, velocities[i]->negY, -controllables[i]->maxVelocity);
+                    updateVelocity(graphical, controllables[i]->up, velocities[i]->negY, controllables[i]->maxVelocity);
                     updateVelocity(graphical, controllables[i]->down, velocities[i]->posY, controllables[i]->maxVelocity);
 
                     // Add jump

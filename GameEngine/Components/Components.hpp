@@ -29,7 +29,7 @@ namespace comp
         float negY;
         float posY;
 
-        Velocity(float x = 0, float y = 0) : negX(-x), posX(x), negY(-y), posY(y) {}
+        Velocity(float x = 0, float y = 0) : negX(x), posX(x), negY(y), posY(y) {}
     };
 
     struct Drawable
@@ -68,16 +68,56 @@ namespace comp
     {
         float width;
         float height;
+
         std::uint32_t layer;
         std::vector<std::uint32_t> collidingLayers;
+
         bool collidePosX = false;
         bool collideNegX = false;
         bool collidePosY = false;
         bool collideNegY = false;
 
-        Collider(float width, float height, std::uint32_t layer, std::vector<std::uint32_t> collidingLayers)
-            : width(width), height(height), layer(layer), collidingLayers(collidingLayers) {}
+        std::uint32_t collisionGivenDamage;
+        std::uint32_t collisionTakenDamage = 0;
+
+        Collider(float width, float height, std::uint32_t layer, std::vector<std::uint32_t> collidingLayers, std::uint32_t collisionGivenDamage = 0)
+            : width(width), height(height), layer(layer), collidingLayers(collidingLayers), collisionGivenDamage(collisionGivenDamage) {}
     };
+
+    struct Gravity
+    {
+        float velocity;
+
+        Gravity(float velocity = 0) : velocity(velocity) {}
+    };
+
+    struct Jumpable
+    {
+        float velocity;
+        float durationMs;
+        float elapsedTimeMs = 0;
+
+        Jumpable(float velocity = 0, float durationMs = 0) : velocity(velocity), durationMs(durationMs) {}
+    };
+
+    struct Health
+    {
+        std::uint32_t health;
+        std::uint32_t maxHealth;
+
+        Health(std::uint32_t maxHealth = 1, std::uint32_t health = 1) : health(health), maxHealth(maxHealth) {
+            if (health > maxHealth) {
+                this->health = maxHealth;
+            }
+            if (health == 0) {
+                this->health = 1;
+            }
+            if (maxHealth == 0) {
+                this->maxHealth = 1;
+            }
+        }
+    };
+
 }
 
 #endif /* !COMPONENTS_HPP_ */

@@ -12,6 +12,7 @@
 
 enum Keys
 {
+    None,
     Unknown,
     A,
     B,
@@ -124,6 +125,7 @@ enum Keys
 std::ostream &operator<<(std::ostream &os, const Keys &key)
 {
     switch (key) {
+        case None: os << "None"; break;
         case Unknown: os << "Unknown"; break;
         case A: os << "A"; break;
         case B: os << "B"; break;

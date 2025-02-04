@@ -19,10 +19,10 @@ class CollisionSystem : public ASystem
         CollisionSystem() = default;
         ~CollisionSystem() = default;
 
-        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedSeconds) override
+        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedMs) override
         {
             (void) graphical;
-            (void) elapsedSeconds;
+            (void) elapsedMs;
 
             try {
 
@@ -40,6 +40,7 @@ class CollisionSystem : public ASystem
                     colliders[i]->collideNegX = false;
                     colliders[i]->collidePosY = false;
                     colliders[i]->collideNegY = false;
+                    colliders[i]->collisionTakenDamage = 0;
 
                     for (size_t j = 0; j < positions.size(); j++) {
 
@@ -108,6 +109,10 @@ class CollisionSystem : public ASystem
             );
 
             CollisionFace collisionFace = findCollidingFace(hb1, hb2);
+
+            if (collisionFace != CollisionFace::NONE) {
+                collider1.collisionTakenDamage += collider2.collisionGivenDamage;
+            }
 
             updateCollider(collider1, collisionFace);
 

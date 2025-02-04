@@ -17,7 +17,7 @@ class PositionSystem : public ASystem
         PositionSystem() = default;
         ~PositionSystem() = default;
 
-        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedSeconds) override
+        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedMs) override
         {
             (void) graphical;
 
@@ -30,56 +30,61 @@ class PositionSystem : public ASystem
 
                     auto &colliders = manager.getComponents<comp::Collider>();
 
-                    for (std::size_t i = 0; i < positions.size(); i++) {
-
-                        if (!positions[i] || velocities.size() <= i || !velocities[i]) {
-                            continue;
-                        }
-
-                        auto velPosX = velocities[i]->posX;
-                        auto velNegX = velocities[i]->negX;
-                        auto velPosY = velocities[i]->posY;
-                        auto velNegY = velocities[i]->negY;
-
-                        if (colliders.size() > i && colliders[i]) {
-
-                            if (colliders[i]->collidePosX) {
-                                velPosX = 0;
-                            }
-                            if (colliders[i]->collideNegX) {
-                                velNegX = 0;
-                            }
-                            if (colliders[i]->collidePosY) {
-                                velPosY = 0;
-                            }
-                            if (colliders[i]->collideNegY) {
-                                velNegY = 0;
-                            }
-
-                        }
-
-                        positions[i]->x += (velNegX + velPosX) * elapsedSeconds;
-                        positions[i]->y += (velNegY + velPosY) * elapsedSeconds;
-                    }
+                    handlePositions(positions, velocities, colliders, elapsedMs);
 
                 } catch (std::exception const &e) {
+
                     (void) e;
 
-                    for (std::size_t i = 0; i < positions.size(); i++) {
+                    auto tmpColliders = ComponentsRegistry<comp::Collider>();
+                    auto &colliders = tmpColliders;
 
-                        if (!positions[i] || velocities.size() <= i || !velocities[i]) {
-                            continue;
-                        }
+                    handlePositions(positions, velocities, colliders, elapsedMs);
 
-                        positions[i]->x += (velocities[i]->negX + velocities[i]->posX) * elapsedSeconds;
-                        positions[i]->y += (velocities[i]->negY + velocities[i]->posY) * elapsedSeconds;
-
-                    }
                 }
 
             } catch (RegistryManager::ComponentError const &e) {
                 (void) e;
                 throw ASystem::SystemError("PositionSystem", std::vector<std::string>{"Position", "Velocity"});
+            }
+        }
+
+    private:
+
+        void handlePositions(ComponentsRegistry<comp::Position> &positions, ComponentsRegistry<comp::Velocity> const &velocities,
+            ComponentsRegistry<comp::Collider> const &colliders, float const &elapsedMs)
+        {
+            for (std::size_t i = 0; i < positions.size(); i++) {
+
+                if (!positions[i] || velocities.size() <= i || !velocities[i]) {
+                    continue;
+                }
+
+                auto velPosX = velocities[i]->posX;
+                auto velNegX = velocities[i]->negX;
+                auto velPosY = velocities[i]->posY;
+                auto velNegY = velocities[i]->negY;
+
+                if (colliders.size() > i && colliders[i]) {
+
+                    if (colliders[i]->collidePosX) {
+                        velPosX = 0;
+                    }
+                    if (colliders[i]->collideNegX) {
+                        velNegX = 0;
+                    }
+                    if (colliders[i]->collidePosY) {
+                        velPosY = 0;
+                    }
+                    if (colliders[i]->collideNegY) {
+                        velNegY = 0;
+                    }
+
+                }
+
+                positions[i]->x += (velPosX - velNegX) * elapsedMs;
+                positions[i]->y += (velPosY - velNegY) * elapsedMs;
+
             }
         }
 };
