@@ -51,7 +51,6 @@ int main(void)
         registryManager.registerComponent<comp::Gravity>();
         registryManager.registerComponent<comp::Jumpable>();
         registryManager.registerComponent<comp::Health>();
-        registryManager.registerComponent<comp::Attack>();
     } catch (std::exception const &e) {
         std::cerr << e.what() << std::endl;
         return 84;
@@ -65,7 +64,7 @@ int main(void)
         registryManager.addComponent(character, comp::Velocity{0, 0});
         registryManager.addComponent(character, comp::Drawable{0});
         registryManager.addComponent(character, comp::Animable{11});
-        registryManager.addComponent(character, comp::Controllable{Keys::Q, Keys::D, Keys::Z, Keys::S, Keys::Space, 1});
+        registryManager.addComponent(character, comp::Controllable{Keys::Q, Keys::D, Keys::Z, Keys::S, Keys::Space, 1}); // Maybe move maxVelocity to Velocity component
         registryManager.addComponent(character, comp::Collider{32, 32, 1, {1}});
         registryManager.addComponent(character, comp::Gravity{1});
         registryManager.addComponent(character, comp::Jumpable{2, 10});

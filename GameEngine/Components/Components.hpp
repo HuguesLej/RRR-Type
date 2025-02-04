@@ -68,15 +68,20 @@ namespace comp
     {
         float width;
         float height;
+
         std::uint32_t layer;
         std::vector<std::uint32_t> collidingLayers;
+
         bool collidePosX = false;
         bool collideNegX = false;
         bool collidePosY = false;
         bool collideNegY = false;
 
-        Collider(float width, float height, std::uint32_t layer, std::vector<std::uint32_t> collidingLayers)
-            : width(width), height(height), layer(layer), collidingLayers(collidingLayers) {}
+        std::uint32_t collisionGivenDamage;
+        std::uint32_t collisionTakenDamage = 0;
+
+        Collider(float width, float height, std::uint32_t layer, std::vector<std::uint32_t> collidingLayers, std::uint32_t collisionGivenDamage = 0)
+            : width(width), height(height), layer(layer), collidingLayers(collidingLayers), collisionGivenDamage(collisionGivenDamage) {}
     };
 
     struct Gravity
@@ -113,12 +118,6 @@ namespace comp
         }
     };
 
-    struct Attack
-    {
-        std::uint32_t collisionDamages;
-
-        Attack(std::uint32_t collisionDamages = 0) : collisionDamages(collisionDamages) {}
-    };
 }
 
 #endif /* !COMPONENTS_HPP_ */
