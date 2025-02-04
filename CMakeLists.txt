@@ -29,6 +29,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     add_compile_options(/W4)
 endif()
 
+set(CMAKE_BUILD_TYPE Debug)
+
 
 
 # -------------------- Utility functions --------------------
@@ -109,6 +111,12 @@ target_link_libraries(${GAME_ENGINE} PRIVATE sfml-system sfml-network sfml-graph
 #     # Link against the Windows Sockets library for networking
 #     target_link_libraries(${SERVER} PRIVATE ws2_32)
 # endif()
+
+
+
+# Temp compilation
+add_executable(test main.cpp)
+target_link_libraries(test PRIVATE ${GAME_ENGINE} sfml-system sfml-network sfml-graphics sfml-window)
 
 
 
