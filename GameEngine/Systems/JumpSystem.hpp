@@ -17,7 +17,7 @@ class JumpSystem : public ASystem
         JumpSystem() = default;
         ~JumpSystem() = default;
 
-        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedMs) override
+        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, uint64_t elapsedMs) override
         {
             try {
 
@@ -46,7 +46,7 @@ class JumpSystem : public ASystem
     private:
 
         void handleJump(std::shared_ptr<AGraphical> &graphical, comp::Jumpable &jmp, comp::Velocity &vel, comp::Controllable const &ctrl,
-            comp::Collider const &coll, float const &elapsedMs)
+            comp::Collider const &coll, uint64_t const &elapsedMs)
         {
             if (jmp.elapsedTimeMs == 0) {
 

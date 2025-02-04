@@ -14,11 +14,13 @@
 #include "Systems/JumpSystem.hpp"
 #include "Systems/HealthSystem.hpp"
 #include "Graphicals/SFMLGraphical.hpp"
+#include "Timer.hpp"
 
 int main(void)
 {
     std::shared_ptr<SFMLGraphical> graphical = std::make_shared<SFMLGraphical>();
     RegistryManager registryManager(graphical);
+    Timer timer;
 
     try {
         graphical->addTextures({
@@ -68,11 +70,11 @@ int main(void)
         registryManager.addComponent(character, comp::Position{180, 150});
         registryManager.addComponent(character, comp::Velocity{0, 0});
         registryManager.addComponent(character, comp::Drawable{0});
-        registryManager.addComponent(character, comp::Animable{11});
+        registryManager.addComponent(character, comp::Animable{11, 100});
         registryManager.addComponent(character, comp::Controllable{Keys::Q, Keys::D, Keys::Z, Keys::S, Keys::Space, 1}); // Maybe move maxVelocity to Velocity component
         registryManager.addComponent(character, comp::Collider{32, 32, 1, {1}});
         registryManager.addComponent(character, comp::Gravity{1});
-        registryManager.addComponent(character, comp::Jumpable{2, 10});
+        registryManager.addComponent(character, comp::Jumpable{2, 300});
         registryManager.addComponent(character, comp::Health{1});
 
         registryManager.addComponent(block1, comp::Position{200, 200});
@@ -86,7 +88,7 @@ int main(void)
         registryManager.addComponent(enemy, comp::Position{265, 150});
         registryManager.addComponent(enemy, comp::Velocity{0, 0});
         registryManager.addComponent(enemy, comp::Drawable{2});
-        registryManager.addComponent(enemy, comp::Animable{9});
+        registryManager.addComponent(enemy, comp::Animable{9, 120});
         registryManager.addComponent(enemy, comp::Collider{30, 30, 1, {1}, 1});
         registryManager.addComponent(enemy, comp::Gravity{1});
         registryManager.addComponent(enemy, comp::Health{1});
@@ -96,16 +98,27 @@ int main(void)
     }
 
     graphical->openWindow("RRR-Type");
+    timer.start();
+
     while (graphical->isWindowOpen()) {
+
+        auto elapsedTimeMs = timer.getElapsedTimeMs();
         graphical->beginFrame();
-        try {
-            registryManager.updateSystems(1.0f);
-        } catch (std::exception const &e) {
-            std::cerr << e.what() << std::endl;
-            return 84;
+
+        if (elapsedTimeMs >= 10) {
+            timer.reset();
+
+            try {
+                registryManager.updateSystems(elapsedTimeMs);
+            } catch (std::exception const &e) {
+                std::cerr << e.what() << std::endl;
+                return 84;
+            }
         }
+
         graphical->endFrame();
     }
+
     graphical->closeWindow();
 
     return 0;

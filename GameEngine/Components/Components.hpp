@@ -8,7 +8,6 @@
 #ifndef COMPONENTS_HPP_
     #define COMPONENTS_HPP_
 
-    #include <cstdint>
     #include <vector>
     #include "../Keys.hpp"
 
@@ -34,21 +33,24 @@ namespace comp
 
     struct Drawable
     {
-        std::uint32_t textureId;
+        uint32_t textureId;
         float scaleX;
         float scaleY;
         float rotation;
 
-        Drawable(std::uint32_t textureId, float scaleX = 1.0, float scaleY = 1.0, float rotation = 0)
+        Drawable(uint32_t textureId, float scaleX = 1.0, float scaleY = 1.0, float rotation = 0)
             : textureId(textureId), scaleX(scaleX), scaleY(scaleY), rotation(rotation) {}
     };
 
     struct Animable
     {
-        std::uint32_t framesNumber;
-        std::uint32_t currentFrame;
+        uint32_t framesNumber;
+        uint32_t currentFrame = 0;
 
-        Animable(std::uint32_t framesNumber) : framesNumber(framesNumber), currentFrame(0) {}
+        uint64_t cooldownMs;
+        uint64_t elapsedTimeMs = 0;
+
+        Animable(uint32_t framesNumber, uint64_t cooldownMs = 0) : framesNumber(framesNumber), cooldownMs(cooldownMs) {}
     };
 
     struct Controllable
@@ -69,18 +71,18 @@ namespace comp
         float width;
         float height;
 
-        std::uint32_t layer;
-        std::vector<std::uint32_t> collidingLayers;
+        uint32_t layer;
+        std::vector<uint32_t> collidingLayers;
 
         bool collidePosX = false;
         bool collideNegX = false;
         bool collidePosY = false;
         bool collideNegY = false;
 
-        std::uint32_t collisionGivenDamage;
-        std::uint32_t collisionTakenDamage = 0;
+        uint32_t collisionGivenDamage;
+        uint32_t collisionTakenDamage = 0;
 
-        Collider(float width, float height, std::uint32_t layer, std::vector<std::uint32_t> collidingLayers, std::uint32_t collisionGivenDamage = 0)
+        Collider(float width, float height, uint32_t layer, std::vector<uint32_t> collidingLayers, uint32_t collisionGivenDamage = 0)
             : width(width), height(height), layer(layer), collidingLayers(collidingLayers), collisionGivenDamage(collisionGivenDamage) {}
     };
 
@@ -94,18 +96,18 @@ namespace comp
     struct Jumpable
     {
         float velocity;
-        float durationMs;
-        float elapsedTimeMs = 0;
+        uint64_t durationMs;
+        uint64_t elapsedTimeMs = 0;
 
-        Jumpable(float velocity = 0, float durationMs = 0) : velocity(velocity), durationMs(durationMs) {}
+        Jumpable(float velocity = 0, uint64_t durationMs = 0) : velocity(velocity), durationMs(durationMs) {}
     };
 
     struct Health
     {
-        std::uint32_t health;
-        std::uint32_t maxHealth;
+        uint32_t health;
+        uint32_t maxHealth;
 
-        Health(std::uint32_t maxHealth = 1, std::uint32_t health = 1) : health(health), maxHealth(maxHealth) {
+        Health(uint32_t maxHealth = 1, uint32_t health = 1) : health(health), maxHealth(maxHealth) {
             if (health > maxHealth) {
                 this->health = maxHealth;
             }

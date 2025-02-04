@@ -71,7 +71,7 @@ class SFMLGraphical : public AGraphical
         }
 
 
-        std::uint32_t addTexture(std::string const &path) override
+        uint32_t addTexture(std::string const &path) override
         {
             sf::Texture texture;
 
@@ -83,9 +83,9 @@ class SFMLGraphical : public AGraphical
             return _textures.size() - 1;
         }
 
-        std::vector<std::uint32_t> addTextures(std::vector<std::string> const &paths) override
+        std::vector<uint32_t> addTextures(std::vector<std::string> const &paths) override
         {
-            std::vector<std::uint32_t> indices;
+            std::vector<uint32_t> indices;
 
             for (auto const &path : paths) {
                 auto idx = addTexture(path);
@@ -103,14 +103,19 @@ class SFMLGraphical : public AGraphical
         }
 
 
-        void drawSprite(comp::Position const &position, comp::Drawable const &drawable, comp::Animable &animable) override
+        void drawSprite(comp::Position const &position, comp::Drawable const &drawable, comp::Animable &animable, uint64_t &elapsedMs) override
         {
             sf::Sprite sprite;
             sf::Vector2u textureSize = _textures[drawable.textureId].getSize();
             float rectWidth = textureSize.x / animable.framesNumber;
             sf::IntRect rect(rectWidth * animable.currentFrame, 0, rectWidth, textureSize.y);
 
-            animable.currentFrame = (animable.currentFrame + 1) % animable.framesNumber;
+            if (animable.elapsedTimeMs >= animable.cooldownMs) {
+                animable.currentFrame = (animable.currentFrame + 1) % animable.framesNumber;
+                animable.elapsedTimeMs = 0;
+            } else {
+                animable.elapsedTimeMs += elapsedMs;
+            }
 
             drawSprite(sprite, rect, position, drawable);
         }

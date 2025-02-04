@@ -17,7 +17,7 @@ class PositionSystem : public ASystem
         PositionSystem() = default;
         ~PositionSystem() = default;
 
-        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedMs) override
+        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, uint64_t elapsedMs) override
         {
             (void) graphical;
 
@@ -52,7 +52,7 @@ class PositionSystem : public ASystem
     private:
 
         void handlePositions(ComponentsRegistry<comp::Position> &positions, ComponentsRegistry<comp::Velocity> const &velocities,
-            ComponentsRegistry<comp::Collider> const &colliders, float const &elapsedMs)
+            ComponentsRegistry<comp::Collider> const &colliders, uint64_t const &elapsedMs)
         {
             for (std::size_t i = 0; i < positions.size(); i++) {
 
@@ -82,8 +82,8 @@ class PositionSystem : public ASystem
 
                 }
 
-                positions[i]->x += (velPosX - velNegX) * elapsedMs;
-                positions[i]->y += (velPosY - velNegY) * elapsedMs;
+                positions[i]->x += (velPosX - velNegX) * elapsedMs / 10;
+                positions[i]->y += (velPosY - velNegY) * elapsedMs / 10;
 
             }
         }

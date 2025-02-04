@@ -17,7 +17,7 @@ class HealthSystem : public ASystem
         HealthSystem() = default;
         ~HealthSystem() = default;
 
-        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedMs) override
+        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, uint64_t elapsedMs) override
         {
             (void) graphical;
             (void) elapsedMs;

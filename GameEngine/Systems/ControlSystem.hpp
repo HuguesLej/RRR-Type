@@ -17,7 +17,7 @@ class ControlSystem : public ASystem
         ControlSystem() = default;
         ~ControlSystem() = default;
 
-        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedMs) override
+        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, uint64_t elapsedMs) override
         {
             (void) elapsedMs;
 

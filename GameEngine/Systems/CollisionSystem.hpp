@@ -19,7 +19,7 @@ class CollisionSystem : public ASystem
         CollisionSystem() = default;
         ~CollisionSystem() = default;
 
-        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedMs) override
+        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, uint64_t elapsedMs) override
         {
             (void) graphical;
             (void) elapsedMs;
@@ -153,10 +153,6 @@ class CollisionSystem : public ASystem
             if (penetrationNegY >= 0 && penetrationNegY < minPenetration) {
                 minPenetration = penetrationNegY;
                 collisionFace = CollisionFace::NEGY;
-            }
-
-            if (minPenetration == 0) {
-                return CollisionFace::NONE;
             }
 
             return collisionFace;
