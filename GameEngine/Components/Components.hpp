@@ -29,7 +29,7 @@ namespace comp
         float negY;
         float posY;
 
-        Velocity(float x = 0, float y = 0) : negX(-x), posX(x), negY(-y), posY(y) {}
+        Velocity(float x = 0, float y = 0) : negX(x), posX(x), negY(y), posY(y) {}
     };
 
     struct Drawable
@@ -89,8 +89,10 @@ namespace comp
     struct Jumpable
     {
         float velocity;
+        float durationMs;
+        float elapsedTimeMs = 0;
 
-        Jumpable(float velocity = 0) : velocity(velocity) {}
+        Jumpable(float velocity = 0, float durationMs = 0) : velocity(velocity), durationMs(durationMs) {}
     };
 }
 

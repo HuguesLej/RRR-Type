@@ -20,6 +20,7 @@ class GravitySystem : public ASystem
         void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedMs) override
         {
             (void) elapsedMs;
+            (void) graphical;
 
             try {
 
@@ -33,10 +34,10 @@ class GravitySystem : public ASystem
                         continue;
                     }
 
-                    if (colliders[i]->collideNegY) {
-                        velocities[i]->negY = 0;
+                    if (colliders[i]->collidePosY) {
+                        velocities[i]->posY = 0;
                     } else {
-                        velocities[i]->negY = gravities[i]->velocity;
+                        velocities[i]->posY = gravities[i]->velocity;
                     }
 
                 }

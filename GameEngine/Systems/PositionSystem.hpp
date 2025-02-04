@@ -58,8 +58,8 @@ class PositionSystem : public ASystem
 
                         }
 
-                        positions[i]->x += (velNegX + velPosX) * elapsedMs;
-                        positions[i]->y += (velNegY + velPosY) * elapsedMs;
+                        positions[i]->x += (velPosX - velNegX) * elapsedMs;
+                        positions[i]->y += (velPosY - velNegY) * elapsedMs;
                     }
 
                 } catch (std::exception const &e) {
@@ -71,8 +71,8 @@ class PositionSystem : public ASystem
                             continue;
                         }
 
-                        positions[i]->x += (velocities[i]->negX + velocities[i]->posX) * elapsedMs;
-                        positions[i]->y += (velocities[i]->negY + velocities[i]->posY) * elapsedMs;
+                        positions[i]->x += (velocities[i]->posX - velocities[i]->negX) * elapsedMs;
+                        positions[i]->y += (velocities[i]->posY - velocities[i]->negY) * elapsedMs;
 
                     }
                 }
