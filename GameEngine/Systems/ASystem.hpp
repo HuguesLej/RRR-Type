@@ -44,7 +44,7 @@ class ASystem
 
         virtual ~ASystem() = default;
 
-        virtual void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedMs) = 0;
+        virtual void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, uint64_t elapsedMs) = 0;
 };
 
 #endif /* !ASYSTEM_HPP_ */

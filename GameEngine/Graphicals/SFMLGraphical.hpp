@@ -103,14 +103,19 @@ class SFMLGraphical : public AGraphical
         }
 
 
-        void drawSprite(comp::Position const &position, comp::Drawable const &drawable, comp::Animable &animable) override
+        void drawSprite(comp::Position const &position, comp::Drawable const &drawable, comp::Animable &animable, uint64_t &elapsedMs) override
         {
             sf::Sprite sprite;
             sf::Vector2u textureSize = _textures[drawable.textureId].getSize();
             float rectWidth = textureSize.x / animable.framesNumber;
             sf::IntRect rect(rectWidth * animable.currentFrame, 0, rectWidth, textureSize.y);
 
-            animable.currentFrame = (animable.currentFrame + 1) % animable.framesNumber;
+            if (animable.elapsedTimeMs >= animable.cooldownMs) {
+                animable.currentFrame = (animable.currentFrame + 1) % animable.framesNumber;
+                animable.elapsedTimeMs = 0;
+            } else {
+                animable.elapsedTimeMs += elapsedMs;
+            }
 
             drawSprite(sprite, rect, position, drawable);
         }

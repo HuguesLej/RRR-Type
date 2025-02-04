@@ -46,9 +46,12 @@ namespace comp
     struct Animable
     {
         std::uint32_t framesNumber;
-        std::uint32_t currentFrame;
+        std::uint32_t currentFrame = 0;
 
-        Animable(std::uint32_t framesNumber) : framesNumber(framesNumber), currentFrame(0) {}
+        uint64_t cooldownMs;
+        uint64_t elapsedTimeMs = 0;
+
+        Animable(std::uint32_t framesNumber, uint64_t cooldownMs = 0) : framesNumber(framesNumber), cooldownMs(cooldownMs) {}
     };
 
     struct Controllable
@@ -94,10 +97,10 @@ namespace comp
     struct Jumpable
     {
         float velocity;
-        float durationMs;
-        float elapsedTimeMs = 0;
+        uint64_t durationMs;
+        uint64_t elapsedTimeMs = 0;
 
-        Jumpable(float velocity = 0, float durationMs = 0) : velocity(velocity), durationMs(durationMs) {}
+        Jumpable(float velocity = 0, uint64_t durationMs = 0) : velocity(velocity), durationMs(durationMs) {}
     };
 
     struct Health
