@@ -9,6 +9,7 @@
     #define SFMLGRAPHICAL_HPP_
 
     #include <exception>
+    #include <memory>
     #include <SFML/Graphics.hpp>
 
     #include "AGraphical.hpp"
@@ -51,7 +52,7 @@ class SFMLGraphical : public AGraphical
 
     private:
         sf::RenderWindow _window;
-        std::vector<sf::Texture> _textures;
+        std::vector<std::shared_ptr<sf::Texture>> _textures;
 
         std::unordered_map<sf::Keyboard::Key, Keys> _keysMap = {
             {sf::Keyboard::Unknown, Keys::Unknown},

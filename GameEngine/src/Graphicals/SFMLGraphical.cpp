@@ -52,9 +52,9 @@ void SFMLGraphical::endFrame()
 
 uint32_t SFMLGraphical::addTexture(std::string const &path)
 {
-    sf::Texture texture;
+    auto texture = std::make_shared<sf::Texture>();
 
-    if (!texture.loadFromFile(path)) {
+    if (!texture->loadFromFile(path)) {
         throw TextureError(path);
     }
     _textures.push_back(texture);
@@ -85,7 +85,7 @@ void SFMLGraphical::clearTextures()
 void SFMLGraphical::drawSprite(comp::Position const &position, comp::Drawable const &drawable, comp::Animable &animable, uint64_t &elapsedMs)
 {
     sf::Sprite sprite;
-    sf::Vector2u textureSize = _textures[drawable.textureId].getSize();
+    sf::Vector2u textureSize = _textures[drawable.textureId]->getSize();
     float rectWidth = textureSize.x / animable.framesNumber;
     sf::IntRect rect(rectWidth * animable.currentFrame, 0, rectWidth, textureSize.y);
 
@@ -102,14 +102,14 @@ void SFMLGraphical::drawSprite(comp::Position const &position, comp::Drawable co
 void SFMLGraphical::drawSprite(comp::Position const &position, comp::Drawable const &drawable)
 {
     sf::Sprite sprite;
-    sf::IntRect rect(0, 0, _textures[drawable.textureId].getSize().x, _textures[drawable.textureId].getSize().y);
+    sf::IntRect rect(0, 0, _textures[drawable.textureId]->getSize().x, _textures[drawable.textureId]->getSize().y);
 
     drawSprite(sprite, rect, position, drawable);
 }
 
 void SFMLGraphical::drawSprite(sf::Sprite &sprite, sf::IntRect &textureRect, comp::Position const &position, comp::Drawable const &drawable)
 {
-    sprite.setTexture(_textures[drawable.textureId]);
+    sprite.setTexture(*_textures[drawable.textureId]);
     sprite.setTextureRect(textureRect);
     sprite.setOrigin(textureRect.width / 2, textureRect.height / 2);
     sprite.setPosition(position.x, position.y);
