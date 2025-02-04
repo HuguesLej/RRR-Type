@@ -71,7 +71,7 @@ class SFMLGraphical : public AGraphical
         }
 
 
-        std::uint32_t addTexture(std::string const &path) override
+        uint32_t addTexture(std::string const &path) override
         {
             sf::Texture texture;
 
@@ -83,9 +83,9 @@ class SFMLGraphical : public AGraphical
             return _textures.size() - 1;
         }
 
-        std::vector<std::uint32_t> addTextures(std::vector<std::string> const &paths) override
+        std::vector<uint32_t> addTextures(std::vector<std::string> const &paths) override
         {
-            std::vector<std::uint32_t> indices;
+            std::vector<uint32_t> indices;
 
             for (auto const &path : paths) {
                 auto idx = addTexture(path);

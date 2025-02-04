@@ -8,8 +8,6 @@
 #ifndef ENTITY_HPP_
     #define ENTITY_HPP_
 
-    #include <cstdint>
-
-using Entity = std::uint32_t;
+using Entity = uint32_t;
 
 #endif /* !ENTITY_HPP_ */
