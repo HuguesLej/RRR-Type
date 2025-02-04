@@ -29,6 +29,25 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     add_compile_options(/W4)
 endif()
 
+set(CMAKE_BUILD_TYPE Debug)
+
+
+
+# -------------------- Utility functions --------------------
+
+# Return a list containing a given directory and all its subdirectories (recursive)
+function(collect_subdirectories RESULT CUR_DIR)
+    file(GLOB CHILDREN ${CUR_DIR}/*)
+    set(DIR_LIST ${CUR_DIR})
+    foreach(CHILD ${CHILDREN})
+        if(IS_DIRECTORY ${CHILD})
+            collect_subdirectories(SUBDIR_LIST ${CHILD})
+            list(APPEND DIR_LIST ${SUBDIR_LIST})
+        endif()
+    endforeach()
+    set(${RESULT} ${DIR_LIST} PARENT_SCOPE)
+endfunction()
+
 
 
 # -------------------- vcpkg configuration --------------------
@@ -43,15 +62,18 @@ find_package(asio CONFIG REQUIRED)
 
 # Find all game engine source files
 file(GLOB_RECURSE GAME_ENGINE_SRC
-    ${CMAKE_SOURCE_DIR}/GameEngine/*.cpp
+    ${CMAKE_SOURCE_DIR}/GameEngine/src/*.cpp
 )
+
+# Find all game engine include directories
+collect_subdirectories(GAME_ENGINE_INC_DIRS ${CMAKE_SOURCE_DIR}/GameEngine/include)
 
 # Add game engine library
 add_library(${GAME_ENGINE} SHARED ${GAME_ENGINE_SRC})
 
-# Include directories for the game engine library
+# # Include directories for the game engine library
 target_include_directories(${GAME_ENGINE} PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${GAME_ENGINE_INC_DIRS}
 )
 
 # Link SFML libraries to the game engine library
@@ -89,6 +111,12 @@ target_link_libraries(${GAME_ENGINE} PRIVATE sfml-system sfml-network sfml-graph
 #     # Link against the Windows Sockets library for networking
 #     target_link_libraries(${SERVER} PRIVATE ws2_32)
 # endif()
+
+
+
+# Temp compilation
+add_executable(test main.cpp)
+target_link_libraries(test PRIVATE ${GAME_ENGINE} sfml-system sfml-network sfml-graphics sfml-window)
 
 
 

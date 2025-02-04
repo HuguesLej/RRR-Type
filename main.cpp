@@ -6,13 +6,13 @@
 */
 
 #include <iostream>
-#include "Systems/ControlSystem.hpp"
-#include "Systems/DrawSystem.hpp"
-#include "Systems/PositionSystem.hpp"
-#include "Systems/CollisionSystem.hpp"
-#include "Systems/GravitySystem.hpp"
-#include "Systems/JumpSystem.hpp"
-#include "Systems/HealthSystem.hpp"
+#include "ControlSystem.hpp"
+#include "DrawSystem.hpp"
+#include "PositionSystem.hpp"
+#include "CollisionSystem.hpp"
+#include "GravitySystem.hpp"
+#include "JumpSystem.hpp"
+#include "HealthSystem.hpp"
 #include "Graphicals/SFMLGraphical.hpp"
 #include "Timer.hpp"
 
@@ -27,6 +27,7 @@ int main(void)
             "assets/sprites/MainCharacters/MaskDude/Idle.png",
             "assets/sprites/Terrain/Iron/Iron1.png",
             "assets/sprites/Enemies/AngryPig/Idle.png",
+            "assets/sprites/Enemies/AngryPig/Idle.png"
         });
     } catch (std::exception const &e) {
         std::cerr << e.what() << std::endl;
