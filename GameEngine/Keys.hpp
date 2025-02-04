@@ -12,6 +12,7 @@
 
 enum Keys
 {
+    None,
     Unknown,
     A,
     B,

@@ -34,11 +34,15 @@ class AGraphical
 
         bool isKeyPressed(Keys key)
         {
+            if (key == Keys::None) {
+                return false;
+            }
             return _keysState[key];
         }
 
     protected:
         std::unordered_map<Keys, bool> _keysState = {
+            {None, false},
             {Unknown, false},
             {A, false},
             {B, false},
