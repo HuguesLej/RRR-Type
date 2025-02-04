@@ -17,9 +17,9 @@ class DrawSystem : public ASystem
         DrawSystem() = default;
         ~DrawSystem() = default;
 
-        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedSeconds) override
+        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedMs) override
         {
-            (void) elapsedSeconds;
+            (void) elapsedMs;
 
             try {
 

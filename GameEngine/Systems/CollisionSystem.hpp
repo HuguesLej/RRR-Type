@@ -19,10 +19,10 @@ class CollisionSystem : public ASystem
         CollisionSystem() = default;
         ~CollisionSystem() = default;
 
-        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedSeconds) override
+        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, float elapsedMs) override
         {
             (void) graphical;
-            (void) elapsedSeconds;
+            (void) elapsedMs;
 
             try {
 
