@@ -15,11 +15,12 @@
     #include <memory>
     #include <typeindex>
     #include <unordered_map>
+
     #include "Entity.hpp"
-    #include "Components/ComponentsRegistry.hpp"
-    #include "Systems/ASystem.hpp"
-    #include "Systems/SystemsRegistry.hpp"
-    #include "Graphicals/AGraphical.hpp"
+    #include "ComponentsRegistry.hpp"
+    #include "ASystem.hpp"
+    #include "SystemsRegistry.hpp"
+    #include "AGraphical.hpp"
 
 class ASystem;
 
@@ -30,16 +31,10 @@ class RegistryManager
         class SystemError : public std::exception
         {
             public:
-                SystemError(std::string const &systemType)
-                {
-                    _msg = "System has already been added to the registry: " + systemType;
-                }
+                SystemError(std::string const &systemType);
                 ~SystemError() = default;
 
-                const char *what() const noexcept override
-                {
-                    return _msg.c_str();
-                }
+                const char *what() const noexcept override;
 
             private:
                 std::string _msg;
@@ -56,29 +51,24 @@ class RegistryManager
                     ALREADY_REGISTERED = 1
                 };
 
-                ComponentError(Type type, std::string const &componentType)
-                {
-                    if (type == ALREADY_REGISTERED) {
-                        _msg = "Component type has already been registered: " + componentType;
-                    } else {
-                        _msg = "Component type has not been registered: " + componentType;
-                    }
-                }
+                ComponentError(Type type, std::string const &componentType);
                 ~ComponentError() = default;
 
-                const char *what() const noexcept override
-                {
-                    return _msg.c_str();
-                }
+                const char *what() const noexcept override;
 
             private:
                 std::string _msg;
         };
 
-        RegistryManager(std::shared_ptr<AGraphical> graphical = nullptr) : _graphical(graphical)
-        {
-        }
+
+        RegistryManager(std::shared_ptr<AGraphical> graphical = nullptr);
         ~RegistryManager() = default;
+
+        Entity spawnEntity();
+        void killEntity(Entity const &entity);
+
+        void addSystem(std::unique_ptr<ASystem> system);
+        void updateSystems(uint64_t elapsedMs);
 
 
         template <typename Component>
@@ -126,20 +116,6 @@ class RegistryManager
         }
 
 
-        Entity spawnEntity()
-        {
-            return _nextEntity++;
-        }
-
-
-        void killEntity(Entity const &entity)
-        {
-            for (auto &[type, _] : _componentsRegistriesMap) {
-                _eraseFunctions[type](*this, entity);
-            }
-        }
-
-
         template <typename Component>
         std::optional<Component> addComponent(Entity const &to, Component &&c)
         {
@@ -173,28 +149,6 @@ class RegistryManager
 
             if (from < array.size()) {
                 array[from] = std::nullopt;
-            }
-        }
-
-
-        void addSystem(std::unique_ptr<ASystem> system)
-        {
-            auto it = std::find_if(_systems.begin(), _systems.end(), [&system] (const auto &existingSystem) {
-                return typeid(*existingSystem) == typeid(*system);
-            });
-
-            if (it != _systems.end()) {
-                throw SystemError(typeid(*system).name());
-            }
-
-            _systems.push_back(std::move(system));
-        }
-
-
-        void updateSystems(uint64_t elapsedMs)
-        {
-            for (auto &system : _systems) {
-                system->update(*this, _graphical, elapsedMs);
             }
         }
 

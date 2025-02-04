@@ -10,6 +10,7 @@
 
     #include <exception>
     #include <SFML/Graphics.hpp>
+
     #include "AGraphical.hpp"
 
 class SFMLGraphical : public AGraphical
@@ -19,20 +20,15 @@ class SFMLGraphical : public AGraphical
         class TextureError : public std::exception
         {
             public:
-                TextureError(std::string const &path)
-                {
-                    _message = "Failed to load texture: " + path;
-                }
+                TextureError(std::string const &path);
                 ~TextureError() noexcept override = default;
 
-                const char *what() const noexcept override
-                {
-                    return _message.c_str();
-                }
+                const char *what() const noexcept override;
 
             private:
                 std::string _message;
         };
+
 
         SFMLGraphical() = default;
         SFMLGraphical(const SFMLGraphical &) = delete;
@@ -40,98 +36,23 @@ class SFMLGraphical : public AGraphical
         ~SFMLGraphical() = default;
 
 
-        void openWindow(std::string const &windowName) override
-        {
-            // _window.create(sf::VideoMode::getDesktopMode(), windowName, sf::Style::Fullscreen);
-            _window.create(sf::VideoMode(800, 600), windowName, sf::Style::Default);
-            _window.setFramerateLimit(60);
-        }
+        void openWindow(std::string const &windowName) override;
+        void closeWindow() override;
+        bool isWindowOpen() override;
+        void beginFrame() override;
+        void endFrame() override;
 
-        void closeWindow() override
-        {
-            if (isWindowOpen()) {
-                _window.close();
-            }
-        }
+        uint32_t addTexture(std::string const &path) override;
+        std::vector<uint32_t> addTextures(std::vector<std::string> const &paths) override;
+        void clearTextures() override;
 
-        bool isWindowOpen() override
-        {
-            return _window.isOpen();
-        }
-
-        void beginFrame()
-        {
-            _window.clear(sf::Color::Black);
-            updateEvents();
-        }
-
-        void endFrame()
-        {
-            _window.display();
-        }
-
-
-        uint32_t addTexture(std::string const &path) override
-        {
-            sf::Texture texture;
-
-            if (!texture.loadFromFile(path)) {
-                throw TextureError(path);
-            }
-            _textures.push_back(texture);
-
-            return _textures.size() - 1;
-        }
-
-        std::vector<uint32_t> addTextures(std::vector<std::string> const &paths) override
-        {
-            std::vector<uint32_t> indices;
-
-            for (auto const &path : paths) {
-                auto idx = addTexture(path);
-
-                indices.push_back(idx);
-            }
-
-            return indices;
-        }
-
-        void clearTextures() override
-        {
-            _textures.clear();
-            _textures.shrink_to_fit();
-        }
-
-
-        void drawSprite(comp::Position const &position, comp::Drawable const &drawable, comp::Animable &animable, uint64_t &elapsedMs) override
-        {
-            sf::Sprite sprite;
-            sf::Vector2u textureSize = _textures[drawable.textureId].getSize();
-            float rectWidth = textureSize.x / animable.framesNumber;
-            sf::IntRect rect(rectWidth * animable.currentFrame, 0, rectWidth, textureSize.y);
-
-            if (animable.elapsedTimeMs >= animable.cooldownMs) {
-                animable.currentFrame = (animable.currentFrame + 1) % animable.framesNumber;
-                animable.elapsedTimeMs = 0;
-            } else {
-                animable.elapsedTimeMs += elapsedMs;
-            }
-
-            drawSprite(sprite, rect, position, drawable);
-        }
-
-        void drawSprite(comp::Position const &position, comp::Drawable const &drawable) override
-        {
-            sf::Sprite sprite;
-            sf::IntRect rect(0, 0, _textures[drawable.textureId].getSize().x, _textures[drawable.textureId].getSize().y);
-
-            drawSprite(sprite, rect, position, drawable);
-        }
-
+        void drawSprite(comp::Position const &position, comp::Drawable const &drawable, comp::Animable &animable, uint64_t &elapsedMs) override;
+        void drawSprite(comp::Position const &position, comp::Drawable const &drawable) override;
 
     private:
         sf::RenderWindow _window;
         std::vector<sf::Texture> _textures;
+
         std::unordered_map<sf::Keyboard::Key, Keys> _keysMap = {
             {sf::Keyboard::Unknown, Keys::Unknown},
             {sf::Keyboard::A, Keys::A},
@@ -245,77 +166,9 @@ class SFMLGraphical : public AGraphical
         };
 
 
-        void updateEvents() override
-        {
-            sf::Event event;
+        void drawSprite(sf::Sprite &sprite, sf::IntRect &textureRect, comp::Position const &position, comp::Drawable const &drawable);
 
-            while (_window.pollEvent(event)) {
-                switch (event.type) {
-
-                    case sf::Event::Closed: {
-                        closeWindow();
-                        break;
-                    }
-
-                    case sf::Event::Resized: {
-                        sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-                        _window.setView(sf::View(visibleArea));
-                        break;
-                    }
-
-                    case sf::Event::KeyPressed: {
-                        auto key = _keysMap.find(event.key.code);
-                        if (key != _keysMap.end()) {
-                            _keysState[key->second] = true;
-                        }
-                        break;
-                    }
-
-                    case sf::Event::KeyReleased: {
-                        auto key = _keysMap.find(event.key.code);
-                        if (key != _keysMap.end()) {
-                            _keysState[key->second] = false;
-                        }
-                        break;
-                    }
-
-                    case sf::Event::MouseButtonPressed: {
-                        auto key = _mouseMap.find(event.mouseButton.button);
-                        if (key != _mouseMap.end()) {
-                            _keysState[key->second] = true;
-                        }
-                        break;
-                    }
-
-                    case sf::Event::MouseButtonReleased: {
-                        auto key = _mouseMap.find(event.mouseButton.button);
-                        if (key != _mouseMap.end()) {
-                            _keysState[key->second] = false;
-                        }
-                        break;
-                    }
-
-                    default: {
-                        break;
-                    }
-
-                }
-            }
-        }
-
-
-        void drawSprite(sf::Sprite &sprite, sf::IntRect &textureRect, comp::Position const &position, comp::Drawable const &drawable)
-        {
-            sprite.setTexture(_textures[drawable.textureId]);
-            sprite.setTextureRect(textureRect);
-            sprite.setOrigin(textureRect.width / 2, textureRect.height / 2);
-            sprite.setPosition(position.x, position.y);
-            sprite.setScale(drawable.scaleX, drawable.scaleY);
-            sprite.setRotation(drawable.rotation);
-
-            _window.draw(sprite);
-        }
-
+        void updateEvents() override;
 };
 
 #endif /* !SFMLGRAPHICAL_HPP_ */

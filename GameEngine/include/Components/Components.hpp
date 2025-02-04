@@ -8,8 +8,9 @@
 #ifndef COMPONENTS_HPP_
     #define COMPONENTS_HPP_
 
+    #include <cstdint>
     #include <vector>
-    #include "../Keys.hpp"
+    #include "Keys.hpp"
 
 namespace comp
 {

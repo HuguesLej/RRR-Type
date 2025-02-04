@@ -10,8 +10,9 @@
 
     #include <unordered_map>
     #include <vector>
-    #include "../Components/Components.hpp"
-    #include "../Keys.hpp"
+
+    #include "Components.hpp"
+    #include "Keys.hpp"
 
 class AGraphical
 {
@@ -31,13 +32,7 @@ class AGraphical
         virtual void drawSprite(comp::Position const &position, comp::Drawable const &drawable, comp::Animable &animable, uint64_t &elapsedMs) = 0;
         virtual void drawSprite(comp::Position const &position, comp::Drawable const &drawable) = 0;
 
-        bool isKeyPressed(Keys key)
-        {
-            if (key == Keys::None) {
-                return false;
-            }
-            return _keysState[key];
-        }
+        bool isKeyPressed(Keys key);
 
     protected:
         std::unordered_map<Keys, bool> _keysState = {

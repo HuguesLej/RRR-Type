@@ -10,6 +10,7 @@
 
     #include <memory>
     #include <vector>
+
     #include "ASystem.hpp"
 
 using SystemsRegistry = std::vector<std::unique_ptr<ASystem>>;
