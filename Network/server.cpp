@@ -12,6 +12,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <thread>
 #include <unordered_set>
 
 std::string make_daytime_string()
@@ -112,8 +113,22 @@ int main(void)
 
         // UDPServer server(io, "10.19.255.82", 12345);
         UDPServer server(io, "192.168.1.17", 12345);
+        std::vector<std::thread> workers;
+        size_t maxThreads = std::thread::hardware_concurrency();
 
-        io.run();
+        if (maxThreads > 4) {
+            maxThreads = 4;
+        }
+
+        for (size_t i = 0; i < maxThreads; i++) {
+            workers.emplace_back([&io] {
+                io.run();
+            });
+        }
+
+        for (auto &w : workers) {
+            w.join();
+        }
 
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
