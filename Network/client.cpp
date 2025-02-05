@@ -86,6 +86,10 @@ class UDPClient
 
             startTimer();
         }
+
+        void handleSend(const std::error_code &, std::size_t)
+        {
+        }
 };
 
 
