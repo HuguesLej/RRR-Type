@@ -28,6 +28,8 @@ class UDPServer
             : _socket(io, asio::ip::udp::endpoint(asio::ip::make_address(ip), port)), _timer(io, asio::chrono::seconds(0)),
             _recvStrand(asio::make_strand(io)), _sendStrand(asio::make_strand(io))
         {
+            std::cerr << "Server is running on " << ip << ":" << std::to_string(port) << std::endl;
+
             startReceive();
             startTimer();
         }
@@ -110,8 +112,6 @@ int main(void)
 
         // UDPServer server(io, "10.19.255.82", 12345);
         UDPServer server(io, "192.168.1.17", 12345);
-
-        std::cerr << "Server is running on " << "10.19.255.82" << ":" << 12345 << std::endl;
 
         io.run();
 

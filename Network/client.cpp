@@ -23,7 +23,8 @@ class UDPClient
             _socket.open(asio::ip::udp::v4());
 
             startReceive();
-            startTimer();
+            // startTimer();
+            startSend();
         }
 
     private:
@@ -84,11 +85,14 @@ class UDPClient
                 )
             );
 
-            startTimer();
+            // startTimer();
         }
 
-        void handleSend(const std::error_code &, std::size_t)
+        void handleSend(const std::error_code &error, std::size_t)
         {
+            if (!error) {
+                startSend();
+            }
         }
 };
 
