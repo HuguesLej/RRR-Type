@@ -7,7 +7,7 @@
     "overrides": [
         {
             "name": "asio",
-            "version": "1.28.0"
+            "version": "1.30.2"
         },
         {
             "name": "sfml",
