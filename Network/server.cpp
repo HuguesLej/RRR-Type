@@ -12,6 +12,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <unordered_set>
 
 std::string make_daytime_string()
 {
@@ -24,9 +25,11 @@ class UDPServer
 {
     public:
         UDPServer(asio::io_context &io, std::string ip, uint16_t port)
-            : _socket(io, asio::ip::udp::endpoint(asio::ip::make_address(ip), port))
+            : _socket(io, asio::ip::udp::endpoint(asio::ip::make_address(ip), port)), _timer(io, asio::chrono::seconds(0)),
+            _recvStrand(asio::make_strand(io)), _sendStrand(asio::make_strand(io))
         {
             startReceive();
+            startTimer();
         }
 
     private:
@@ -34,12 +37,22 @@ class UDPServer
         asio::ip::udp::endpoint _endpoint;
         std::array<char, 128> _recvBuff = {{0}};
 
+        std::unordered_set<asio::ip::udp::endpoint> _clients;
+
+        asio::steady_timer _timer;
+
+        asio::strand<asio::io_context::executor_type> _recvStrand;
+        asio::strand<asio::io_context::executor_type> _sendStrand;
+
         void startReceive()
         {
             _socket.async_receive_from(
                 asio::buffer(_recvBuff),
                 _endpoint,
-                std::bind(&UDPServer::handleReceive, this, asio::placeholders::error, asio::placeholders::bytes_transferred)
+                asio::bind_executor(
+                    _recvStrand,
+                    std::bind(&UDPServer::handleReceive, this, asio::placeholders::error, asio::placeholders::bytes_transferred)
+                )
             );
         }
 
@@ -47,17 +60,41 @@ class UDPServer
         {
             if (!error) {
                 std::cerr << "Received: " << _recvBuff.data() << std::endl;
+                _recvBuff.fill(0);
 
-                std::shared_ptr<std::string> msg(new std::string(make_daytime_string()));
-
-                _socket.async_send_to(
-                    asio::buffer(*msg),
-                    _endpoint,
-                    std::bind(&UDPServer::handleSend, this, msg, asio::placeholders::error, asio::placeholders::bytes_transferred)
-                );
+                _clients.insert(_endpoint);
 
                 startReceive();
             }
+        }
+
+        void startTimer()
+        {
+            _timer.expires_after(asio::chrono::seconds(5));
+            _timer.async_wait(
+                asio::bind_executor(
+                    _sendStrand,
+                    std::bind(&UDPServer::startSend, this)
+                )
+            );
+        }
+
+        void startSend()
+        {
+            std::shared_ptr<std::string> msg(new std::string(make_daytime_string()));
+
+            for (const auto &client : _clients) {
+                _socket.async_send_to(
+                    asio::buffer(*msg),
+                    client,
+                    asio::bind_executor(
+                        _sendStrand,
+                        std::bind(&UDPServer::handleSend, this, msg, asio::placeholders::error, asio::placeholders::bytes_transferred)
+                    )
+                );
+            }
+
+            startTimer();
         }
 
         void handleSend(std::shared_ptr<std::string>, const std::error_code &, std::size_t)
