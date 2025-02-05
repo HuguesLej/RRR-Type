@@ -60,24 +60,24 @@ find_package(asio CONFIG REQUIRED)
 
 # -------------------- Game engine library compilation --------------------
 
-# Find all game engine source files
-file(GLOB_RECURSE GAME_ENGINE_SRC
-    ${CMAKE_SOURCE_DIR}/GameEngine/src/*.cpp
-)
+# # Find all game engine source files
+# file(GLOB_RECURSE GAME_ENGINE_SRC
+#     ${CMAKE_SOURCE_DIR}/GameEngine/src/*.cpp
+# )
 
-# Find all game engine include directories
-collect_subdirectories(GAME_ENGINE_INC_DIRS ${CMAKE_SOURCE_DIR}/GameEngine/include)
+# # Find all game engine include directories
+# collect_subdirectories(GAME_ENGINE_INC_DIRS ${CMAKE_SOURCE_DIR}/GameEngine/include)
 
-# Add game engine library
-add_library(${GAME_ENGINE} SHARED ${GAME_ENGINE_SRC})
+# # Add game engine library
+# add_library(${GAME_ENGINE} SHARED ${GAME_ENGINE_SRC})
 
-# # Include directories for the game engine library
-target_include_directories(${GAME_ENGINE} PUBLIC
-    ${GAME_ENGINE_INC_DIRS}
-)
+# # # Include directories for the game engine library
+# target_include_directories(${GAME_ENGINE} PUBLIC
+#     ${GAME_ENGINE_INC_DIRS}
+# )
 
-# Link SFML libraries to the game engine library
-target_link_libraries(${GAME_ENGINE} PRIVATE sfml-system sfml-network sfml-graphics sfml-window)
+# # Link SFML libraries to the game engine library
+# target_link_libraries(${GAME_ENGINE} PRIVATE sfml-system sfml-network sfml-graphics sfml-window)
 
 
 
@@ -115,9 +115,14 @@ target_link_libraries(${GAME_ENGINE} PRIVATE sfml-system sfml-network sfml-graph
 
 
 # Temp compilation
-add_executable(test main.cpp)
-target_link_libraries(test PRIVATE ${GAME_ENGINE} sfml-system sfml-network sfml-graphics sfml-window)
+# add_executable(game_test main.cpp)
+# target_link_libraries(game_test PRIVATE ${GAME_ENGINE} sfml-system sfml-network sfml-graphics sfml-window)
 
+add_executable(server_test Network/server.cpp)
+target_link_libraries(server_test PRIVATE asio::asio)
+
+add_executable(client_test Network/client.cpp)
+target_link_libraries(client_test PRIVATE asio::asio)
 
 
 # # -------------------- Client compilation and linking --------------------
