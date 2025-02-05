@@ -7,6 +7,62 @@
 
 #include <asio.hpp>
 #include <iostream>
+#include <istream>
+
+class UDPClient
+{
+    public:
+        UDPClient(asio::io_context &io, std::string ip, uint16_t port)
+            : _socket(io), _endpoint(asio::ip::make_address(ip), port)
+        {
+            _socket.open(asio::ip::udp::v4());
+            startSending();
+            _uniqueId = std::rand() % 10;
+        }
+
+    private:
+        asio::ip::udp::socket _socket;
+        asio::ip::udp::endpoint _endpoint;
+        std::array<char, 128> _recvBuff = {{0}};
+        uint8_t _uniqueId;
+
+        void startSending()
+        {
+            // std::string msg = "Hello from client " + std::to_string(_uniqueId);
+            std::string msg;
+
+            while (msg.empty()) {
+                std::getline(std::cin, msg);
+            }
+
+            _socket.async_send_to(
+                asio::buffer(msg),
+                _endpoint,
+                std::bind(&UDPClient::handleSend, this, asio::placeholders::error, asio::placeholders::bytes_transferred)
+            );
+        }
+
+        void handleSend(const std::error_code &error, std::size_t bytes_transferred)
+        {
+            if (!error) {
+                _socket.async_receive_from(
+                    asio::buffer(_recvBuff),
+                    _endpoint,
+                    std::bind(&UDPClient::handleReceive, this, asio::placeholders::error, asio::placeholders::bytes_transferred)
+                );
+            }
+        }
+
+        void handleReceive(const std::error_code &error, std::size_t)
+        {
+            if (!error) {
+                std::cerr << "Received: " << _recvBuff.data() << std::endl;
+                _recvBuff.fill(0);
+                startSending();
+            }
+        }
+};
+
 
 int main(int ac, char **av)
 {
@@ -16,24 +72,12 @@ int main(int ac, char **av)
     }
 
     asio::io_context io;
-    asio::ip::udp::resolver resolver(io);
 
     try {
 
-        asio::ip::udp::endpoint receiverEndpoint = *resolver.resolve(asio::ip::udp::endpoint(asio::ip::make_address(av[1]), std::stoi(av[2]))).begin();
-        asio::ip::udp::socket socket(io);
+        UDPClient client(io, av[1], std::stoi(av[2]));
 
-        socket.open(asio::ip::udp::v4());
-
-        std::array<char, 13> sendBuff = {{'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!', '\0'}};
-
-        socket.send_to(asio::buffer(sendBuff), receiverEndpoint);
-
-        std::array<char, 128> recvBuff = {{0}};
-        asio::ip::udp::endpoint senderEndpoint;
-        size_t len = socket.receive_from(asio::buffer(recvBuff), senderEndpoint);
-
-        std::cerr << "Received: " << recvBuff.data() << std::endl;
+        io.run();
 
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
