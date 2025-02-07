@@ -46,7 +46,7 @@ namespace comp
 
         private:
             Drawable() : textureId(0), scaleX(1.0), scaleY(1.0), rotation(0) {}
-            friend class ComponentsSerializer;
+            friend ComponentsSerializer;
     };
 
     struct Animable
@@ -61,7 +61,7 @@ namespace comp
 
         private:
             Animable() : framesNumber(0), cooldownMs(0) {}
-            friend class ComponentsSerializer;
+            friend ComponentsSerializer;
     };
 
     struct Controllable
@@ -78,7 +78,7 @@ namespace comp
 
         private:
             Controllable() : left(Keys::None), right(Keys::None), up(Keys::None), down(Keys::None), jump(Keys::None), maxVelocity(0) {}
-            friend class ComponentsSerializer;
+            friend ComponentsSerializer;
     };
 
     struct Collider
@@ -102,7 +102,7 @@ namespace comp
 
         private:
             Collider() : width(0), height(0), layer(0), collisionGivenDamage(0) {}
-            friend class ComponentsSerializer;
+            friend ComponentsSerializer;
     };
 
     struct Gravity
