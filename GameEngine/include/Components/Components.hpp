@@ -41,6 +41,10 @@ namespace comp
 
         Drawable(uint32_t textureId, float scaleX = 1.0, float scaleY = 1.0, float rotation = 0)
             : textureId(textureId), scaleX(scaleX), scaleY(scaleY), rotation(rotation) {}
+
+        private:
+            Drawable() : textureId(0), scaleX(1.0), scaleY(1.0), rotation(0) {}
+            friend class ComponentsSerializer;
     };
 
     struct Animable
@@ -52,19 +56,27 @@ namespace comp
         uint64_t elapsedTimeMs = 0;
 
         Animable(uint32_t framesNumber, uint64_t cooldownMs = 0) : framesNumber(framesNumber), cooldownMs(cooldownMs) {}
+
+        private:
+            Animable() : framesNumber(0), cooldownMs(0) {}
+            friend class ComponentsSerializer;
     };
 
     struct Controllable
     {
-        Keys left = Keys::Unknown;
-        Keys right = Keys::Unknown;
-        Keys up = Keys::Unknown;
-        Keys down = Keys::Unknown;
-        Keys jump = Keys::Unknown;
+        Keys left = Keys::None;
+        Keys right = Keys::None;
+        Keys up = Keys::None;
+        Keys down = Keys::None;
+        Keys jump = Keys::None;
         float maxVelocity;
 
         Controllable(Keys left, Keys right, Keys up, Keys down, Keys jump, float maxVelocity = 0)
             : left(left), right(right), up(up), down(down), jump(jump), maxVelocity(maxVelocity) {}
+
+        private:
+            Controllable() : left(Keys::None), right(Keys::None), up(Keys::None), down(Keys::None), jump(Keys::None), maxVelocity(0) {}
+            friend class ComponentsSerializer;
     };
 
     struct Collider
@@ -85,6 +97,10 @@ namespace comp
 
         Collider(float width, float height, uint32_t layer, std::vector<uint32_t> collidingLayers, uint32_t collisionGivenDamage = 0)
             : width(width), height(height), layer(layer), collidingLayers(collidingLayers), collisionGivenDamage(collisionGivenDamage) {}
+
+        private:
+            Collider() : width(0), height(0), layer(0), collisionGivenDamage(0) {}
+            friend class ComponentsSerializer;
     };
 
     struct Gravity
