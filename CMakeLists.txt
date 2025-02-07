@@ -13,6 +13,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set(SERVER ${PROJECT_NAME}_server)
 set(CLIENT ${PROJECT_NAME}_client)
 set(GAME_ENGINE GameEngine)
+set(NETWORK Network)
 
 if(WIN32)
     add_definitions(-D_WIN32_WINNT=0x0A00)
@@ -58,6 +59,34 @@ find_package(asio CONFIG REQUIRED)
 
 
 
+# -------------------- Network library compilation --------------------
+
+# Find all network source files
+file(GLOB_RECURSE NETWORK_SRC
+    ${CMAKE_SOURCE_DIR}/Network/src/*.cpp
+)
+
+# Find all network include directories
+collect_subdirectories(NETWORK_INC_DIRS ${CMAKE_SOURCE_DIR}/Network/include)
+
+# Add network library
+add_library(${NETWORK} SHARED ${NETWORK_SRC})
+
+# Include directories for the network library
+target_include_directories(${NETWORK} PUBLIC
+    ${NETWORK_INC_DIRS}
+)
+
+# Link Asio library to the network library
+target_link_libraries(${NETWORK} PRIVATE asio::asio)
+
+# Link against the Windows Sockets library for networking
+if(WIN32)
+    target_link_libraries(${NETWORK} PRIVATE ws2_32)
+endif()
+
+
+
 # -------------------- Game engine library compilation --------------------
 
 # Find all game engine source files
@@ -71,13 +100,25 @@ collect_subdirectories(GAME_ENGINE_INC_DIRS ${CMAKE_SOURCE_DIR}/GameEngine/inclu
 # Add game engine library
 add_library(${GAME_ENGINE} SHARED ${GAME_ENGINE_SRC})
 
-# # Include directories for the game engine library
+# Include directories for the game engine library
 target_include_directories(${GAME_ENGINE} PUBLIC
     ${GAME_ENGINE_INC_DIRS}
 )
 
-# Link SFML libraries to the game engine library
-target_link_libraries(${GAME_ENGINE} PRIVATE sfml-system sfml-network sfml-graphics sfml-window)
+# Link SFML and network library to the game engine library
+target_link_libraries(${GAME_ENGINE} PRIVATE ${NETWORK} sfml-system sfml-network sfml-graphics sfml-window)
+
+
+
+# -------------------- Temp compilation --------------------
+# add_executable(game_test main.cpp)
+# target_link_libraries(game_test PRIVATE ${GAME_ENGINE} sfml-system sfml-network sfml-graphics sfml-window)
+
+# add_executable(server_test Network/server.cpp)
+# target_link_libraries(server_test PRIVATE asio::asio)
+
+# add_executable(client_test Network/client.cpp)
+# target_link_libraries(client_test PRIVATE asio::asio)
 
 
 
@@ -111,12 +152,6 @@ target_link_libraries(${GAME_ENGINE} PRIVATE sfml-system sfml-network sfml-graph
 #     # Link against the Windows Sockets library for networking
 #     target_link_libraries(${SERVER} PRIVATE ws2_32)
 # endif()
-
-
-
-# Temp compilation
-add_executable(test main.cpp)
-target_link_libraries(test PRIVATE ${GAME_ENGINE} sfml-system sfml-network sfml-graphics sfml-window)
 
 
 
