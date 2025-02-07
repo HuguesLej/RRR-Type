@@ -12,6 +12,8 @@
     #include <vector>
     #include "Keys.hpp"
 
+class ComponentsSerializer;
+
 namespace comp
 {
     struct Position
