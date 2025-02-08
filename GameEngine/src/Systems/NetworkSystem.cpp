@@ -30,7 +30,7 @@ void NetworkSystem::handleServerUpdate(RegistryManager &manager, std::shared_ptr
 
         auto &controllables = manager.getComponents<comp::Controllable>();
 
-        networkCommunication->startSend(controllables);
+        networkCommunication->setSendData(controllables);
         handlePacketsReceiving(manager, networkCommunication);
 
     } catch (RegistryManager::ComponentError const &e) {
@@ -50,7 +50,7 @@ void NetworkSystem::handleClientUpdate(RegistryManager &manager, std::shared_ptr
             continue;
         }
 
-        networkCommunication->startSend(registry.second);
+        networkCommunication->setSendData(registry.second);
         handlePacketsReceiving(manager, networkCommunication);
     }
 }
