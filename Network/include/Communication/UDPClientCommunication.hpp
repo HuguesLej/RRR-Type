@@ -16,7 +16,7 @@ class UDPClientCommunication : public ACommunication
 {
     public:
         UDPClientCommunication(asio::io_context &io, std::string ip, uint16_t port);
-        ~UDPClientCommunication() = default;
+        ~UDPClientCommunication();
 
         bool isServer() override;
 
