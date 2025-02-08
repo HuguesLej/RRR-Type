@@ -8,7 +8,7 @@
 #include "UDPServerCommunication.hpp"
 
 UDPServerCommunication::UDPServerCommunication(asio::io_context &io, std::string ip, uint16_t port)
-    : _socket(io, asio::ip::udp::endpoint(asio::ip::make_address(ip), port)), _recvStrand(asio::make_strand(io)), _sendStrand(asio::make_strand(io))
+    : ACommunication(io, ip, port)
 {
     std::cerr << "Server is running on " << ip << ":" << std::to_string(port) << std::endl;
 

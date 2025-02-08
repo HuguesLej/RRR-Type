@@ -8,7 +8,7 @@
 #include "UDPClientCommunication.hpp"
 
 UDPClientCommunication::UDPClientCommunication(asio::io_context &io, std::string ip, uint16_t port)
-    : _socket(io), _endpoint(asio::ip::make_address(ip), port), _recvStrand(asio::make_strand(io)), _sendStrand(asio::make_strand(io))
+    : ACommunication(io, ip, port)
 {
     _socket.open(asio::ip::udp::v4());
 

@@ -19,6 +19,7 @@
 class ACommunication
 {
     public:
+        ACommunication(asio::io_context &io, std::string ip, uint16_t port);
         virtual ~ACommunication() = default;
 
         std::optional<std::any> getRecvData();

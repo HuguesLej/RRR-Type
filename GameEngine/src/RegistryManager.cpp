@@ -77,7 +77,7 @@ void RegistryManager::addSystem(std::unique_ptr<ASystem> system)
 void RegistryManager::updateSystems(uint64_t elapsedMs)
 {
     for (auto &system : _systems) {
-        system->update(*this, _graphical, elapsedMs);
+        system->update(*this, _graphical, _networkCommunication, elapsedMs);
     }
 }
 
@@ -94,10 +94,10 @@ void RegistryManager::replaceComponent(ComponentsRegistry<std::any> registry)
             continue;
         }
 
-        auto type = std::type_index(component.type());
+        auto type = std::type_index(typeid(component));
 
         if (_componentsRegistriesMap.find(type) == _componentsRegistriesMap.end()) {
-            throw ComponentError(ComponentError::NOT_REGISTERED, component.type().name());
+            throw ComponentError(ComponentError::NOT_REGISTERED, typeid(component).name());
         }
 
         _componentsRegistriesMap[type] = registry;

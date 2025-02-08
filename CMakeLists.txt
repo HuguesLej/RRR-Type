@@ -78,11 +78,11 @@ target_include_directories(${NETWORK} PUBLIC
 )
 
 # Link Asio library to the network library
-target_link_libraries(${NETWORK} PRIVATE asio::asio)
+target_link_libraries(${NETWORK} PUBLIC asio::asio)
 
 # Link against the Windows Sockets library for networking
 if(WIN32)
-    target_link_libraries(${NETWORK} PRIVATE ws2_32)
+    target_link_libraries(${NETWORK} PUBLIC ws2_32)
 endif()
 
 
@@ -106,7 +106,7 @@ target_include_directories(${GAME_ENGINE} PUBLIC
 )
 
 # Link SFML and network library to the game engine library
-target_link_libraries(${GAME_ENGINE} PRIVATE ${NETWORK} sfml-system sfml-network sfml-graphics sfml-window)
+target_link_libraries(${GAME_ENGINE} PUBLIC ${NETWORK} sfml-system sfml-network sfml-graphics sfml-window)
 
 
 

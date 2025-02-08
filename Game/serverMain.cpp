@@ -20,40 +20,38 @@
 
 void registerSystemsAndComponents(RegistryManager &registryManager)
 {
-    try {
-        registryManager.addSystem(std::make_unique<CollisionSystem>());
-        registryManager.addSystem(std::make_unique<GravitySystem>());
-        registryManager.addSystem(std::make_unique<HealthSystem>());
-        registryManager.addSystem(std::make_unique<JumpSystem>());
-        registryManager.addSystem(std::make_unique<PositionSystem>());
-        registryManager.addSystem(std::make_unique<NetworkSystem>());
-    } catch (std::exception const &e) {
-        std::cerr << e.what() << std::endl;
-        return 84;
-    }
+    registryManager.addSystem(std::make_unique<CollisionSystem>());
+    registryManager.addSystem(std::make_unique<GravitySystem>());
+    registryManager.addSystem(std::make_unique<HealthSystem>());
+    registryManager.addSystem(std::make_unique<JumpSystem>());
+    registryManager.addSystem(std::make_unique<PositionSystem>());
+    registryManager.addSystem(std::make_unique<NetworkSystem>());
 
-    try {
-        registryManager.registerComponent<comp::Animable>();
-        registryManager.registerComponent<comp::Collider>();
-        registryManager.registerComponent<comp::Controllable>();
-        registryManager.registerComponent<comp::Drawable>();
-        registryManager.registerComponent<comp::Gravity>();
-        registryManager.registerComponent<comp::Health>();
-        registryManager.registerComponent<comp::Jumpable>();
-        registryManager.registerComponent<comp::Position>();
-        registryManager.registerComponent<comp::Velocity>();
-    } catch (std::exception const &e) {
-        std::cerr << e.what() << std::endl;
-        return 84;
-    }
+    registryManager.registerComponent<comp::Animable>();
+    registryManager.registerComponent<comp::Collider>();
+    registryManager.registerComponent<comp::Controllable>();
+    registryManager.registerComponent<comp::Drawable>();
+    registryManager.registerComponent<comp::Gravity>();
+    registryManager.registerComponent<comp::Health>();
+    registryManager.registerComponent<comp::Jumpable>();
+    registryManager.registerComponent<comp::Position>();
+    registryManager.registerComponent<comp::Velocity>();
 }
 
-int main(void)
+int main(int ac, char **av)
 {
-    std::shared_ptr<UDPServerCommunication> server = std::make_shared<UDPServerCommunication>();
+    asio::io_context io;
+    std::shared_ptr<UDPServerCommunication> server = std::make_shared<UDPServerCommunication>(io, "192.168.1.17", 12345);
     RegistryManager registryManager(server);
 
-    registerSystemsAndComponents(registryManager);
+    try {
+        registerSystemsAndComponents(registryManager);
+    } catch (std::exception const &e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
+    }
+
+    Timer timer;
 
     Entity character = registryManager.spawnEntity();
     Entity block1 = registryManager.spawnEntity();
