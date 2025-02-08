@@ -36,8 +36,7 @@ void JumpSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &g
     }
 }
 
-void JumpSystem::handleJump(comp::Jumpable &jmp, comp::Velocity &vel, comp::Controllable const &ctrl,
-    comp::Collider const &coll, uint64_t const &elapsedMs)
+void JumpSystem::handleJump(comp::Jumpable &jmp, comp::Velocity &vel, comp::Controllable const &ctrl, comp::Collider const &coll, uint64_t const &elapsedMs)
 {
     if (jmp.elapsedTimeMs == 0) {
 

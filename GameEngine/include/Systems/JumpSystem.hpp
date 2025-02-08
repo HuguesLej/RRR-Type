@@ -20,8 +20,7 @@ class JumpSystem : public ASystem
         void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &networkCommunication, uint64_t elapsedMs) override;
 
     private:
-        void handleJump(std::shared_ptr<AGraphical> &graphical, comp::Jumpable &jmp, comp::Velocity &vel, comp::Controllable const &ctrl,
-            comp::Collider const &coll, uint64_t const &elapsedMs);
+        void handleJump(comp::Jumpable &jmp, comp::Velocity &vel, comp::Controllable const &ctrl, comp::Collider const &coll, uint64_t const &elapsedMs);
 };
 
 #endif /* !JUMPSYSTEM_HPP_ */
