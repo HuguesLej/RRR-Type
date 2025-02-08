@@ -82,28 +82,33 @@ void ComponentsSerializer::deserializeComponent(std::istringstream &iss, comp::A
 
 void ComponentsSerializer::serializeComponent(std::ostringstream &oss, const comp::Controllable &component)
 {
-    oss << static_cast<int>(component.left) << " ";
-    oss << static_cast<int>(component.right) << " ";
-    oss << static_cast<int>(component.up) << " ";
-    oss << static_cast<int>(component.down) << " ";
-    oss << static_cast<int>(component.jump) << " ";
+    oss << static_cast<int>(component.left.first) << " " << component.left.second << " ";
+    oss << static_cast<int>(component.right.first) << " " << component.right.second << " ";
+    oss << static_cast<int>(component.up.first) << " " << component.up.second << " ";
+    oss << static_cast<int>(component.down.first) << " " << component.down.second << " ";
+    oss << static_cast<int>(component.jump.first) << " " << component.jump.second << " ";
     oss << component.maxVelocity << " ";
 }
 
 void ComponentsSerializer::deserializeComponent(std::istringstream &iss, comp::Controllable &component)
 {
-    int left;
-    int right;
-    int up;
-    int down;
-    int jump;
+    int leftKey;
+    int rightKey;
+    int upKey;
+    int downKey;
+    int jumpKey;
+    bool leftBool;
+    bool rightBool;
+    bool upBool;
+    bool downBool;
+    bool jumpBool;
 
-    iss >> left >> right >> up >> down >> jump >> component.maxVelocity;
-    component.left = static_cast<Keys>(left);
-    component.right = static_cast<Keys>(right);
-    component.up = static_cast<Keys>(up);
-    component.down = static_cast<Keys>(down);
-    component.jump = static_cast<Keys>(jump);
+    iss >> leftKey >> leftBool >> rightKey >> rightBool >> upKey >> upBool >> downKey >> downBool >> jumpKey >> jumpBool >> component.maxVelocity;
+    component.left = {static_cast<Keys>(leftKey), leftBool};
+    component.right = {static_cast<Keys>(rightKey), rightBool};
+    component.up = {static_cast<Keys>(upKey), upBool};
+    component.down = {static_cast<Keys>(downKey), downBool};
+    component.jump = {static_cast<Keys>(jumpKey), jumpBool};
 }
 
 

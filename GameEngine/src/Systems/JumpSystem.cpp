@@ -9,6 +9,7 @@
 
 void JumpSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &networkCommunication, uint64_t elapsedMs)
 {
+    (void) graphical;
     (void) networkCommunication;
 
     try {
@@ -25,7 +26,7 @@ void JumpSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &g
                 continue;
             }
 
-            handleJump(graphical, jumpables[i].value(), velocities[i].value(), controllables[i].value(), colliders[i].value(), elapsedMs);
+            handleJump(jumpables[i].value(), velocities[i].value(), controllables[i].value(), colliders[i].value(), elapsedMs);
 
         }
 
@@ -35,12 +36,11 @@ void JumpSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &g
     }
 }
 
-void JumpSystem::handleJump(std::shared_ptr<AGraphical> &graphical, comp::Jumpable &jmp, comp::Velocity &vel, comp::Controllable const &ctrl,
-    comp::Collider const &coll, uint64_t const &elapsedMs)
+void JumpSystem::handleJump(comp::Jumpable &jmp, comp::Velocity &vel, comp::Controllable const &ctrl, comp::Collider const &coll, uint64_t const &elapsedMs)
 {
     if (jmp.elapsedTimeMs == 0) {
 
-        if (coll.collidePosY && graphical->isKeyPressed(ctrl.jump)) {
+        if (coll.collidePosY && ctrl.jump.second) {
             vel.negY = jmp.velocity;
             jmp.elapsedTimeMs += elapsedMs;
 
