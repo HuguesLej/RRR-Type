@@ -25,6 +25,8 @@ class ACommunication
 
         virtual bool isServer() = 0;
 
+        virtual void startSend(const std::any &data) = 0;
+
     protected:
         asio::ip::udp::socket _socket;
         asio::ip::udp::endpoint _endpoint;
@@ -38,10 +40,10 @@ class ACommunication
         std::vector<std::thread> _workers;
 
     private:
+        virtual void handleSend(const std::error_code &error, std::size_t) = 0;
+
         virtual void startReceive() = 0;
         virtual void handleReceive(const std::error_code &error, std::size_t) = 0;
-        virtual void startSend(const std::any &data) = 0;
-        virtual void handleSend(const std::error_code &error, std::size_t) = 0;
 };
 
 #endif /* !ACOMMUNICATION_HPP_ */

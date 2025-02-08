@@ -21,13 +21,15 @@ class UDPServerCommunication : public ACommunication
 
         bool isServer() override;
 
+        void startSend(const std::any &data) override;
+
     private:
         std::unordered_set<asio::ip::udp::endpoint> _clients;
 
+        void handleSend(const std::error_code &error, std::size_t) override;
+
         void startReceive() override;
         void handleReceive(const std::error_code &error, std::size_t) override;
-        void startSend(const std::any &data) override;
-        void handleSend(const std::error_code &error, std::size_t) override;
 };
 
 #endif /* !UDP_SERVER_COMMUNICATION_HPP_ */
