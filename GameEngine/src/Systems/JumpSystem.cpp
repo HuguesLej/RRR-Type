@@ -7,8 +7,10 @@
 
 #include "JumpSystem.hpp"
 
-void JumpSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, uint64_t elapsedMs)
+void JumpSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &networkCommunication, uint64_t elapsedMs)
 {
+    (void) networkCommunication;
+
     try {
 
         auto &jumpables = manager.getComponents<comp::Jumpable>();

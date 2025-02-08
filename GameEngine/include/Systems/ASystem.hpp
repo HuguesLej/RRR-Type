@@ -13,6 +13,7 @@
 
     #include "Components.hpp"
     #include "AGraphical.hpp"
+    #include "ACommunication.hpp"
 
 class RegistryManager;
 
@@ -34,7 +35,7 @@ class ASystem
 
         virtual ~ASystem() = default;
 
-        virtual void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, uint64_t elapsedMs) = 0;
+        virtual void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &networkCommunication, uint64_t elapsedMs) = 0;
 };
 
 #endif /* !ASYSTEM_HPP_ */

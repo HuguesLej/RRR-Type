@@ -7,9 +7,10 @@
 
 #include "PositionSystem.hpp"
 
-void PositionSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, uint64_t elapsedMs)
+void PositionSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &networkCommunication, uint64_t elapsedMs)
 {
     (void) graphical;
+    (void) networkCommunication;
 
     try {
 

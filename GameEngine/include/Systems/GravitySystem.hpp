@@ -17,7 +17,7 @@ class GravitySystem : public ASystem
         GravitySystem() = default;
         ~GravitySystem() = default;
 
-        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, uint64_t elapsedMs) override;
+        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &networkCommunication, uint64_t elapsedMs) override;
 };
 
 #endif /* !GRAVITYSYSTEM_HPP_ */

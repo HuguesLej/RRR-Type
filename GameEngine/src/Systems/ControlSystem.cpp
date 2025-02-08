@@ -7,8 +7,9 @@
 
 #include "ControlSystem.hpp"
 
-void ControlSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, uint64_t elapsedMs)
+void ControlSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &networkCommunication, uint64_t elapsedMs)
 {
+    (void) networkCommunication;
     (void) elapsedMs;
 
     try {
