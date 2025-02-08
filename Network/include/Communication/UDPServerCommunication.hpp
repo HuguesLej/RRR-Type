@@ -8,7 +8,6 @@
 #ifndef UDP_SERVER_COMMUNICATION_HPP_
     #define UDP_SERVER_COMMUNICATION_HPP_
 
-    #include <iostream>
     #include <unordered_set>
 
     #include "ACommunication.hpp"
@@ -21,11 +20,14 @@ class UDPServerCommunication : public ACommunication
 
         bool isServer() override;
 
-        void startSend(const std::any &data) override;
-
     private:
+        asio::ip::udp::socket _socket;
+        asio::ip::udp::endpoint _endpoint;
+
         std::unordered_set<asio::ip::udp::endpoint> _clients;
 
+        void startSend() override;
+        void sendData() override;
         void handleSend(const std::error_code &error, std::size_t) override;
 
         void startReceive() override;

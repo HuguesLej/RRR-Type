@@ -8,8 +8,6 @@
 #ifndef UDP_CLIENT_COMMUNICATION_HPP_
     #define UDP_CLIENT_COMMUNICATION_HPP_
 
-    #include <iostream>
-
     #include "ACommunication.hpp"
 
 class UDPClientCommunication : public ACommunication
@@ -20,9 +18,12 @@ class UDPClientCommunication : public ACommunication
 
         bool isServer() override;
 
-        void startSend(const std::any &data) override;
-
     private:
+        asio::ip::udp::socket _socket;
+        asio::ip::udp::endpoint _endpoint;
+
+        void startSend() override;
+        void sendData() override;
         void handleSend(const std::error_code &error, std::size_t) override;
 
         void startReceive() override;

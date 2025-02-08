@@ -10,6 +10,7 @@
 
     #include <asio.hpp>
     #include <any>
+    #include <iostream>
     #include <optional>
     #include <thread>
     #include <vector>
@@ -19,28 +20,32 @@
 class ACommunication
 {
     public:
-        ACommunication(asio::io_context &io, std::string ip, uint16_t port);
+        ACommunication(asio::io_context &io);
         virtual ~ACommunication() = default;
+
+        void setSendData(const std::any &data);
 
         std::optional<std::any> getRecvData();
 
         virtual bool isServer() = 0;
 
-        virtual void startSend(const std::any &data) = 0;
-
     protected:
-        asio::ip::udp::socket _socket;
-        asio::ip::udp::endpoint _endpoint;
-
-        std::vector<uint8_t> _recvBuff;
-        std::vector<std::vector<uint8_t>> _recvPackets;
-
         asio::strand<asio::io_context::executor_type> _recvStrand;
         asio::strand<asio::io_context::executor_type> _sendStrand;
+
+        asio::steady_timer _timer;
+
+        std::vector<uint8_t> _sendBuff;
+
+        std::string _recvStr;
+        std::vector<uint8_t> _recvBuff;
+        std::vector<std::vector<uint8_t>> _recvPackets;
 
         std::vector<std::thread> _workers;
 
     private:
+        virtual void startSend() = 0;
+        virtual void sendData() = 0;
         virtual void handleSend(const std::error_code &error, std::size_t) = 0;
 
         virtual void startReceive() = 0;

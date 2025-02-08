@@ -8,9 +8,14 @@
 #include "UDPServerCommunication.hpp"
 
 UDPServerCommunication::UDPServerCommunication(asio::io_context &io, std::string ip, uint16_t port)
-    : ACommunication(io, ip, port)
+    : ACommunication(io), _socket(io, asio::ip::udp::endpoint(asio::ip::make_address(ip), port))
 {
     std::cerr << "Server is running on " << ip << ":" << std::to_string(port) << std::endl;
+
+    _recvBuff.resize(1024);
+
+    startReceive();
+    startSend();
 
     size_t maxThreads = std::thread::hardware_concurrency();
 
@@ -23,8 +28,6 @@ UDPServerCommunication::UDPServerCommunication(asio::io_context &io, std::string
             io.run();
         }));
     }
-
-    startReceive();
 }
 
 UDPServerCommunication::~UDPServerCommunication()
@@ -53,6 +56,7 @@ void UDPServerCommunication::startReceive()
 
 void UDPServerCommunication::handleReceive(const std::error_code &error, std::size_t)
 {
+    std::cerr << "Received data from " << _endpoint.address().to_string() << ":" << std::to_string(_endpoint.port()) << std::endl;
     if (!error) {
         _recvPackets.push_back(_recvBuff);
 
@@ -62,25 +66,43 @@ void UDPServerCommunication::handleReceive(const std::error_code &error, std::si
     }
 }
 
-void UDPServerCommunication::startSend(const std::any &data)
+void UDPServerCommunication::startSend()
 {
-    auto serializedData = SerializerManager::serialize(data);
+    _timer.expires_after(std::chrono::milliseconds(1));
+    _timer.async_wait(asio::bind_executor(
+        _sendStrand,
+        std::bind(&UDPServerCommunication::sendData, this)
+    ));
+}
 
-    for (const auto &client : _clients) {
-        _socket.async_send_to(
-            asio::buffer(serializedData),
-            client,
-            asio::bind_executor(
-                _sendStrand,
-                std::bind(&UDPServerCommunication::handleSend, this, asio::placeholders::error, asio::placeholders::bytes_transferred)
-            )
-        );
+void UDPServerCommunication::sendData()
+{
+    if (_sendBuff.empty()) {
+        startSend();
+    } else {
+        auto sendData = std::string(_sendBuff.begin(), _sendBuff.end());
+        _sendBuff.clear();
+
+        for (const auto &client : _clients) {
+            std::cerr << "Sending data to " << _endpoint.address().to_string() << ":" << std::to_string(_endpoint.port()) << std::endl;
+            _socket.async_send_to(
+                asio::buffer(sendData),
+                client,
+                asio::bind_executor(
+                    _sendStrand,
+                    std::bind(&UDPServerCommunication::handleSend, this, asio::placeholders::error, asio::placeholders::bytes_transferred)
+                )
+            );
+        }
     }
 }
 
 void UDPServerCommunication::handleSend(const std::error_code &error, std::size_t)
 {
-    if (error) {
+    if (!error) {
+        std::cerr << "Sent" << std::endl;
+        startSend();
+    } else {
         std::cerr << "Error while sending data: " << error.message() << std::endl;
     }
 }

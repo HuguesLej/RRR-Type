@@ -7,9 +7,17 @@
 
 #include "ACommunication.hpp"
 
-ACommunication::ACommunication(asio::io_context &io, std::string ip, uint16_t port)
-    : _socket(io), _endpoint(asio::ip::make_address(ip), port), _recvStrand(asio::make_strand(io)), _sendStrand(asio::make_strand(io))
+ACommunication::ACommunication(asio::io_context &io) : _recvStrand(asio::make_strand(io)), _sendStrand(asio::make_strand(io)), _timer(io)
 {
+}
+
+void ACommunication::setSendData(const std::any &data)
+{
+    try {
+        _sendBuff = SerializerManager::serialize(data);
+    } catch (const SerializerManager::Error &e) {
+        std::cerr << e.what() << std::endl;
+    }
 }
 
 std::optional<std::any> ACommunication::getRecvData()
@@ -20,5 +28,11 @@ std::optional<std::any> ACommunication::getRecvData()
 
     auto data = _recvPackets.front();
     _recvPackets.erase(_recvPackets.begin());
-    return SerializerManager::deserialize(data);
+
+    try {
+        return SerializerManager::deserialize(data);
+    } catch (const SerializerManager::Error &e) {
+        std::cerr << e.what() << std::endl;
+        return std::nullopt;
+    }
 }

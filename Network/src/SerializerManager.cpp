@@ -6,14 +6,26 @@
 */
 
 #include "SerializerManager.hpp"
+#include <iostream>
 
 std::unordered_map<std::type_index,
     std::pair<std::function<std::vector<uint8_t>(const std::any &)>, std::function<std::any(const std::vector<uint8_t> &)>>> SerializerManager::_serializers;
 
 
+SerializerManager::Error::Error(Operation const op, std::string const dataTypeName)
+{
+    _msg = "Unknown component type on ";
+    if (op == Operation::Serialize) {
+        _msg += "serialize";
+    } else {
+        _msg += "deserialize";
+    }
+    _msg += ": " + dataTypeName;
+}
+
 const char *SerializerManager::Error::what() const noexcept
 {
-    return "Unknown component type";
+    return _msg.c_str();
 }
 
 
@@ -28,7 +40,7 @@ std::vector<uint8_t> SerializerManager::serialize(const std::any &data)
     auto it = _serializers.find(std::type_index(data.type()));
 
     if (it == _serializers.end()) {
-        throw Error();
+        throw Error(Error::Operation::Serialize, data.type().name());
     }
 
     std::string typeName = data.type().name() + std::string(" ");
@@ -54,7 +66,7 @@ std::any SerializerManager::deserialize(const std::vector<uint8_t> &data)
     }
 
     if (!deserializer) {
-        throw Error();
+        throw Error(Error::Operation::Deserialize, typeName);
     }
 
     std::vector<uint8_t> serializedData((std::istreambuf_iterator<char>(iss)), std::istreambuf_iterator<char>());

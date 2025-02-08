@@ -24,10 +24,18 @@ class SerializerManager
         class Error : public std::exception
         {
             public:
-                Error() = default;
+                enum class Operation {
+                    Serialize = 0,
+                    Deserialize = 1
+                };
+
+                Error(Operation const op, std::string const dataTypeName);
                 ~Error() = default;
 
                 const char *what() const noexcept override;
+
+            private:
+                std::string _msg;
         };
 
         SerializerManager() = delete;
