@@ -35,10 +35,10 @@ class ACommunication
 
         asio::steady_timer _timer;
 
-        std::vector<uint8_t> _sendBuff;
+        std::string _sendBuff;
+        std::vector<std::vector<uint8_t>> _sendPackets;
 
-        std::string _recvStr;
-        std::vector<uint8_t> _recvBuff;
+        std::string _recvBuff;
         std::vector<std::vector<uint8_t>> _recvPackets;
 
         std::vector<std::thread> _workers;
@@ -46,7 +46,7 @@ class ACommunication
     private:
         virtual void startSend() = 0;
         virtual void sendData() = 0;
-        virtual void handleSend(const std::error_code &error, std::size_t) = 0;
+        virtual void handleSend(const std::error_code &error, std::size_t, std::shared_ptr<std::atomic<size_t>>) = 0;
 
         virtual void startReceive() = 0;
         virtual void handleReceive(const std::error_code &error, std::size_t) = 0;

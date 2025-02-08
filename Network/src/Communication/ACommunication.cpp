@@ -14,7 +14,8 @@ ACommunication::ACommunication(asio::io_context &io) : _recvStrand(asio::make_st
 void ACommunication::setSendData(const std::any &data)
 {
     try {
-        _sendBuff = SerializerManager::serialize(data);
+        auto packet = SerializerManager::serialize(data);
+        _sendPackets.push_back(packet);
     } catch (const SerializerManager::Error &e) {
         std::cerr << e.what() << std::endl;
     }

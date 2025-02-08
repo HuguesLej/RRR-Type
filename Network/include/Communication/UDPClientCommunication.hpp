@@ -24,7 +24,7 @@ class UDPClientCommunication : public ACommunication
 
         void startSend() override;
         void sendData() override;
-        void handleSend(const std::error_code &error, std::size_t) override;
+        void handleSend(const std::error_code &error, std::size_t, std::shared_ptr<std::atomic<size_t>>) override;
 
         void startReceive() override;
         void handleReceive(const std::error_code &error, std::size_t) override;
