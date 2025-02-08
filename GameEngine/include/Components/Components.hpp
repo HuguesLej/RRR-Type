@@ -66,18 +66,18 @@ namespace comp
 
     struct Controllable
     {
-        Keys left = Keys::None;
-        Keys right = Keys::None;
-        Keys up = Keys::None;
-        Keys down = Keys::None;
-        Keys jump = Keys::None;
+        std::pair<Keys, bool> left;
+        std::pair<Keys, bool> right;
+        std::pair<Keys, bool> up;
+        std::pair<Keys, bool> down;
+        std::pair<Keys, bool> jump;
         float maxVelocity;
 
         Controllable(Keys left, Keys right, Keys up, Keys down, Keys jump, float maxVelocity = 0)
-            : left(left), right(right), up(up), down(down), jump(jump), maxVelocity(maxVelocity) {}
+            : left({left, false}), right({right, false}), up({up, false}), down({down, false}), jump({jump, false}), maxVelocity(maxVelocity) {}
 
         private:
-            Controllable() : left(Keys::None), right(Keys::None), up(Keys::None), down(Keys::None), jump(Keys::None), maxVelocity(0) {}
+            Controllable() : left({Keys::None, false}), right({Keys::None, false}), up({Keys::None, false}), down({Keys::None, false}), jump({Keys::None, false}), maxVelocity(0) {}
             friend ComponentsSerializer;
     };
 

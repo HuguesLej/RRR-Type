@@ -38,15 +38,17 @@ void ControlSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical>
     }
 }
 
-void ControlSystem::updateVelocity(std::shared_ptr<AGraphical> &graphical, Keys key, float &velocity, float maxVelocity)
+void ControlSystem::updateVelocity(std::shared_ptr<AGraphical> const &graphical, std::pair<Keys, bool> &key, float &velocity, float const maxVelocity)
 {
     if (key == Keys::Unknown) {
         return;
     }
 
-    if (graphical->isKeyPressed(key)) {
+    if (graphical->isKeyPressed(key.first)) {
+        key.second = true;
         velocity = maxVelocity;
     } else {
+        key.second = false;
         velocity = 0;
     }
 }
