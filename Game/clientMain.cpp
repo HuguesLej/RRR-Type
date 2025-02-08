@@ -21,11 +21,13 @@
 void registerSystemsAndComponents(RegistryManager &registryManager)
 {
     registryManager.addSystem(std::make_unique<CollisionSystem>());
+    registryManager.addSystem(std::make_unique<ControlSystem>());
+    registryManager.addSystem(std::make_unique<DrawSystem>());
     registryManager.addSystem(std::make_unique<GravitySystem>());
     registryManager.addSystem(std::make_unique<HealthSystem>());
     registryManager.addSystem(std::make_unique<JumpSystem>());
-    registryManager.addSystem(std::make_unique<PositionSystem>());
     registryManager.addSystem(std::make_unique<NetworkSystem>());
+    registryManager.addSystem(std::make_unique<PositionSystem>());
 
     registryManager.registerComponent<comp::Animable>();
     registryManager.registerComponent<comp::Collider>();
