@@ -17,7 +17,7 @@ class ControlSystem : public ASystem
         ControlSystem() = default;
         ~ControlSystem() = default;
 
-        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, uint64_t elapsedMs) override;
+        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &networkCommunication, uint64_t elapsedMs) override;
 
     private:
         void updateVelocity(std::shared_ptr<AGraphical> &graphical, Keys key, float &velocity, float maxVelocity);

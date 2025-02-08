@@ -7,8 +7,10 @@
 
 #include "DrawSystem.hpp"
 
-void DrawSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, uint64_t elapsedMs)
+void DrawSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &networkCommunication, uint64_t elapsedMs)
 {
+    (void) networkCommunication;
+
     try {
 
         auto &positions = manager.getComponents<comp::Position>();

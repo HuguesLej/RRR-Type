@@ -34,7 +34,15 @@ const char *RegistryManager::ComponentError::what() const noexcept
 }
 
 
-RegistryManager::RegistryManager(std::shared_ptr<AGraphical> graphical) : _graphical(graphical)
+RegistryManager::RegistryManager(std::shared_ptr<AGraphical> graphical, std::shared_ptr<ACommunication> networkCommunication) : _graphical(graphical), _networkCommunication(networkCommunication)
+{
+}
+
+RegistryManager::RegistryManager(std::shared_ptr<AGraphical> graphical) : _graphical(graphical), _networkCommunication(nullptr)
+{
+}
+
+RegistryManager::RegistryManager(std::shared_ptr<ACommunication> networkCommunication) : _graphical(nullptr), _networkCommunication(networkCommunication)
 {
 }
 
@@ -69,6 +77,30 @@ void RegistryManager::addSystem(std::unique_ptr<ASystem> system)
 void RegistryManager::updateSystems(uint64_t elapsedMs)
 {
     for (auto &system : _systems) {
-        system->update(*this, _graphical, elapsedMs);
+        system->update(*this, _graphical, _networkCommunication, elapsedMs);
+    }
+}
+
+
+const std::unordered_map<std::type_index, std::any> &RegistryManager::getComponentsRegistries() const
+{
+    return _componentsRegistriesMap;
+}
+
+void RegistryManager::replaceComponent(ComponentsRegistry<std::any> registry)
+{
+    for (auto &component : registry) {
+        if (!component.has_value()) {
+            continue;
+        }
+
+        auto type = std::type_index(typeid(component));
+
+        if (_componentsRegistriesMap.find(type) == _componentsRegistriesMap.end()) {
+            throw ComponentError(ComponentError::NOT_REGISTERED, typeid(component).name());
+        }
+
+        _componentsRegistriesMap[type] = registry;
+        break;
     }
 }

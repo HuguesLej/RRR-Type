@@ -18,9 +18,13 @@ class NetworkSystem : public ASystem
         NetworkSystem();
         ~NetworkSystem() = default;
 
-        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, uint64_t elapsedMs) override;
+        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &networkCommunication, uint64_t elapsedMs) override;
 
     private:
+        void handleServerUpdate(RegistryManager &manager, std::shared_ptr<ACommunication> &networkCommunication);
+        void handleClientUpdate(RegistryManager &manager, std::shared_ptr<ACommunication> &networkCommunication);
+
+        void handlePacketsReceiving(RegistryManager &manager, std::shared_ptr<ACommunication> &networkCommunication);
 };
 
 #endif /* !NETWORKSYSTEM_HPP_ */

@@ -1,11 +1,12 @@
 /*
 ** EPITECH PROJECT, 2025
-** RRR-Type
+** RRR-Type [WSL: Ubuntu]
 ** File description:
-** main
+** serverMain
 */
 
-#include <iostream>
+#include "UDPServerCommunication.hpp"
+#include "RegistryManager.hpp"
 #include "ControlSystem.hpp"
 #include "DrawSystem.hpp"
 #include "PositionSystem.hpp"
@@ -13,54 +14,44 @@
 #include "GravitySystem.hpp"
 #include "JumpSystem.hpp"
 #include "HealthSystem.hpp"
-#include "Graphicals/SFMLGraphical.hpp"
+#include "NetworkSystem.hpp"
+#include "SFMLGraphical.hpp"
 #include "Timer.hpp"
 
-int main(void)
+void registerSystemsAndComponents(RegistryManager &registryManager)
 {
-    std::shared_ptr<SFMLGraphical> graphical = std::make_shared<SFMLGraphical>();
-    RegistryManager registryManager(graphical);
+    registryManager.addSystem(std::make_unique<CollisionSystem>());
+    registryManager.addSystem(std::make_unique<GravitySystem>());
+    registryManager.addSystem(std::make_unique<HealthSystem>());
+    registryManager.addSystem(std::make_unique<JumpSystem>());
+    registryManager.addSystem(std::make_unique<PositionSystem>());
+    registryManager.addSystem(std::make_unique<NetworkSystem>());
+
+    registryManager.registerComponent<comp::Animable>();
+    registryManager.registerComponent<comp::Collider>();
+    registryManager.registerComponent<comp::Controllable>();
+    registryManager.registerComponent<comp::Drawable>();
+    registryManager.registerComponent<comp::Gravity>();
+    registryManager.registerComponent<comp::Health>();
+    registryManager.registerComponent<comp::Jumpable>();
+    registryManager.registerComponent<comp::Position>();
+    registryManager.registerComponent<comp::Velocity>();
+}
+
+int main(int ac, char **av)
+{
+    asio::io_context io;
+    std::shared_ptr<UDPServerCommunication> server = std::make_shared<UDPServerCommunication>(io, "192.168.1.17", 12345);
+    RegistryManager registryManager(server);
+
+    try {
+        registerSystemsAndComponents(registryManager);
+    } catch (std::exception const &e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
+    }
+
     Timer timer;
-
-    try {
-        graphical->addTextures({
-            "assets/sprites/MainCharacters/MaskDude/Idle.png",
-            "assets/sprites/Terrain/Iron/Iron1.png",
-            "assets/sprites/Enemies/AngryPig/Idle.png",
-            "assets/sprites/Enemies/AngryPig/Idle.png"
-        });
-    } catch (std::exception const &e) {
-        std::cerr << e.what() << std::endl;
-        return 84;
-    }
-
-    try {
-        registryManager.addSystem(std::make_unique<PositionSystem>());
-        registryManager.addSystem(std::make_unique<DrawSystem>());
-        registryManager.addSystem(std::make_unique<ControlSystem>());
-        registryManager.addSystem(std::make_unique<CollisionSystem>());
-        registryManager.addSystem(std::make_unique<GravitySystem>());
-        registryManager.addSystem(std::make_unique<JumpSystem>());
-        registryManager.addSystem(std::make_unique<HealthSystem>());
-    } catch (std::exception const &e) {
-        std::cerr << e.what() << std::endl;
-        return 84;
-    }
-
-    try {
-        registryManager.registerComponent<comp::Position>();
-        registryManager.registerComponent<comp::Velocity>();
-        registryManager.registerComponent<comp::Drawable>();
-        registryManager.registerComponent<comp::Animable>();
-        registryManager.registerComponent<comp::Controllable>();
-        registryManager.registerComponent<comp::Collider>();
-        registryManager.registerComponent<comp::Gravity>();
-        registryManager.registerComponent<comp::Jumpable>();
-        registryManager.registerComponent<comp::Health>();
-    } catch (std::exception const &e) {
-        std::cerr << e.what() << std::endl;
-        return 84;
-    }
 
     Entity character = registryManager.spawnEntity();
     Entity block1 = registryManager.spawnEntity();
@@ -98,13 +89,10 @@ int main(void)
         return 84;
     }
 
-    graphical->openWindow("RRR-Type");
     timer.start();
 
-    while (graphical->isWindowOpen()) {
-
+    while (true) {
         auto elapsedTimeMs = timer.getElapsedTimeMs();
-        graphical->beginFrame();
 
         if (elapsedTimeMs >= 10) {
             timer.reset();
@@ -116,11 +104,7 @@ int main(void)
                 return 84;
             }
         }
-
-        graphical->endFrame();
     }
-
-    graphical->closeWindow();
 
     return 0;
 }

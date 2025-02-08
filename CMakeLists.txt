@@ -78,11 +78,11 @@ target_include_directories(${NETWORK} PUBLIC
 )
 
 # Link Asio library to the network library
-target_link_libraries(${NETWORK} PRIVATE asio::asio)
+target_link_libraries(${NETWORK} PUBLIC asio::asio)
 
 # Link against the Windows Sockets library for networking
 if(WIN32)
-    target_link_libraries(${NETWORK} PRIVATE ws2_32)
+    target_link_libraries(${NETWORK} PUBLIC ws2_32)
 endif()
 
 
@@ -106,89 +106,53 @@ target_include_directories(${GAME_ENGINE} PUBLIC
 )
 
 # Link SFML and network library to the game engine library
-target_link_libraries(${GAME_ENGINE} PRIVATE ${NETWORK} sfml-system sfml-network sfml-graphics sfml-window)
+target_link_libraries(${GAME_ENGINE} PUBLIC ${NETWORK} sfml-system sfml-network sfml-graphics sfml-window)
 
 
 
-# -------------------- Temp compilation --------------------
-# add_executable(game_test main.cpp)
-# target_link_libraries(game_test PRIVATE ${GAME_ENGINE} sfml-system sfml-network sfml-graphics sfml-window)
+# -------------------- Server compilation and linking --------------------
 
-# add_executable(server_test Network/server.cpp)
-# target_link_libraries(server_test PRIVATE asio::asio)
+# Find all server source files
+file(GLOB_RECURSE SERVER_SRC
+    ${CMAKE_SOURCE_DIR}/Game/serverMain.cpp
+)
 
-# add_executable(client_test Network/client.cpp)
-# target_link_libraries(client_test PRIVATE asio::asio)
+# Add server executable
+add_executable(${SERVER} ${SERVER_SRC})
 
-
-
-# # -------------------- Server compilation and linking --------------------
-
-# # Find all server source files
-# file(GLOB_RECURSE SERVER_SRC
-#     # Add your server source files here. GLOB_RECURSE will search for files
-#     # recursively so you don't need to list each subdirectory.
-#     # For example:
-#     # ${CMAKE_SOURCE_DIR}/network/*.cpp
-#     ${CMAKE_SOURCE_DIR}/Server/*.cpp
-#     ${CMAKE_SOURCE_DIR}/lib/Network/*.cpp
-#     ${CMAKE_SOURCE_DIR}/Utils/*.cpp
-# )
-
-# list(REMOVE_ITEM SERVER_SRC ${CMAKE_SOURCE_DIR}/Network/factory/PacketDeserializerClient.cpp)
-# list(REMOVE_ITEM SERVER_SRC ${CMAKE_SOURCE_DIR}/Server/ECS/RType.cpp)
-
-# # Add server executable
-# add_executable(${SERVER} ${SERVER_SRC})
-
-# # Link Asio and LZ4 libraries for the server
-# target_link_libraries(${SERVER} PRIVATE asio::asio)
-# target_link_libraries(${SERVER} PRIVATE lz4::lz4)
-
-# # Link the game engine library to the server
-# target_link_libraries(${SERVER} PRIVATE ${GAME_ENGINE})
-
-# if(WIN32)
-#     # Link against the Windows Sockets library for networking
-#     target_link_libraries(${SERVER} PRIVATE ws2_32)
-# endif()
+# Link game engine and network libraries to the server
+target_link_libraries(${SERVER} PRIVATE ${GAME_ENGINE} ${NETWORK})
 
 
 
-# # -------------------- Client compilation and linking --------------------
+# -------------------- Client compilation and linking --------------------
 
-# # Find all client source files
-# file(GLOB_RECURSE CLIENT_SRC
-#     # Add your client source files here. GLOB_RECURSE will search for files
-#     # recursively so you don't need to list each subdirectory.
-#     # For example:
-#     # ${CMAKE_SOURCE_DIR}/network/*.cpp
-#     ${CMAKE_SOURCE_DIR}/Client/*.cpp
-#     ${CMAKE_SOURCE_DIR}/lib/Network/*.cpp
-#     ${CMAKE_SOURCE_DIR}/Utils/*.cpp
-# )
+# Find all client source files
+file(GLOB_RECURSE CLIENT_SRC
+    ${CMAKE_SOURCE_DIR}/Game/clientMain*.cpp
+)
 
-# list(REMOVE_ITEM CLIENT_SRC ${CMAKE_SOURCE_DIR}/Network/factory/PacketDeserializerServer.cpp)
+# Add client executable
+add_executable(${CLIENT} ${CLIENT_SRC})
 
-# # Add client executable
-# add_executable(${CLIENT} ${CLIENT_SRC})
-
-# # Link SFML, Asio and lz4 libraries for the client
-# target_link_libraries(${CLIENT} PRIVATE sfml-system sfml-network sfml-graphics sfml-window)
-# target_link_libraries(${CLIENT} PRIVATE asio::asio)
-# target_link_libraries(${CLIENT} PRIVATE lz4::lz4)
-
-# # Link the game engine library to the client
-# target_link_libraries(${CLIENT} PRIVATE ${GAME_ENGINE})
-
-# if(WIN32)
-#     # Link against the Windows Sockets library for networking
-#     target_link_libraries(${CLIENT} PRIVATE ws2_32)
-# endif()
+# Link game engine and network libraries to the client
+target_link_libraries(${CLIENT} PRIVATE ${GAME_ENGINE} ${NETWORK})
 
 
 
 # -------------------- Custom commands --------------------
+
+# Build network library
+add_custom_target(network
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target ${NETWORK}
+    DEPENDS ${NETWORK}
+)
+
+# Build game engine library
+add_custom_target(game_engine
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target ${GAME_ENGINE}
+    DEPENDS ${GAME_ENGINE}
+)
 
 # Build server executable
 add_custom_target(server

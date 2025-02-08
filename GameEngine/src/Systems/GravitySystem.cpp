@@ -7,10 +7,11 @@
 
 #include "GravitySystem.hpp"
 
-void GravitySystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, uint64_t elapsedMs)
+void GravitySystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &networkCommunication, uint64_t elapsedMs)
 {
-    (void) elapsedMs;
     (void) graphical;
+    (void) networkCommunication;
+    (void) elapsedMs;
 
     try {
 

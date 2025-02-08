@@ -17,7 +17,7 @@ class JumpSystem : public ASystem
         JumpSystem() = default;
         ~JumpSystem() = default;
 
-        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, uint64_t elapsedMs) override;
+        void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &networkCommunication, uint64_t elapsedMs) override;
 
     private:
         void handleJump(std::shared_ptr<AGraphical> &graphical, comp::Jumpable &jmp, comp::Velocity &vel, comp::Controllable const &ctrl,

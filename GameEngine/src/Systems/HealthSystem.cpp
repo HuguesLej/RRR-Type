@@ -7,9 +7,10 @@
 
 #include "HealthSystem.hpp"
 
-void HealthSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, uint64_t elapsedMs)
+void HealthSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &networkCommunication, uint64_t elapsedMs)
 {
     (void) graphical;
+    (void) networkCommunication;
     (void) elapsedMs;
 
     try {

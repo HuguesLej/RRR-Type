@@ -21,6 +21,7 @@
     #include "ASystem.hpp"
     #include "SystemsRegistry.hpp"
     #include "AGraphical.hpp"
+    #include "ACommunication.hpp"
 
 class ASystem;
 
@@ -61,7 +62,9 @@ class RegistryManager
         };
 
 
-        RegistryManager(std::shared_ptr<AGraphical> graphical = nullptr);
+        RegistryManager(std::shared_ptr<AGraphical> graphical = nullptr, std::shared_ptr<ACommunication> networkCommunication = nullptr);
+        RegistryManager(std::shared_ptr<AGraphical> graphical);
+        RegistryManager(std::shared_ptr<ACommunication> networkCommunication);
         ~RegistryManager() = default;
 
         Entity spawnEntity();
@@ -69,6 +72,9 @@ class RegistryManager
 
         void addSystem(std::unique_ptr<ASystem> system);
         void updateSystems(uint64_t elapsedMs);
+
+        const std::unordered_map<std::type_index, std::any> &getComponentsRegistries() const;
+        void replaceComponent(ComponentsRegistry<std::any> registry);
 
 
         template <typename Component>
@@ -159,6 +165,7 @@ class RegistryManager
         std::unordered_map<std::type_index, std::function<void (RegistryManager &, Entity const &)>> _eraseFunctions;
         SystemsRegistry _systems;
         std::shared_ptr<AGraphical> _graphical;
+        std::shared_ptr<ACommunication> _networkCommunication;
 };
 
 #endif /* !REGISTRY_MANAGER_HPP_ */
