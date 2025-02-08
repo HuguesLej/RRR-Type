@@ -10,7 +10,7 @@
 
     #include <iostream>
 
-enum Keys
+enum class Keys
 {
     None,
     Unknown,

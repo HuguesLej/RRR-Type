@@ -137,37 +137,3 @@ add_executable(${CLIENT} ${CLIENT_SRC})
 
 # Link game engine and network libraries to the client
 target_link_libraries(${CLIENT} PRIVATE ${GAME_ENGINE} ${NETWORK})
-
-
-
-# -------------------- Custom commands --------------------
-
-# Build network library
-add_custom_target(network
-    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target ${NETWORK}
-    DEPENDS ${NETWORK}
-)
-
-# Build game engine library
-add_custom_target(game_engine
-    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target ${GAME_ENGINE}
-    DEPENDS ${GAME_ENGINE}
-)
-
-# Build server executable
-add_custom_target(server
-    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target ${SERVER}
-    DEPENDS ${SERVER}
-)
-
-# Build client executable
-add_custom_target(client
-    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target ${CLIENT}
-    DEPENDS ${CLIENT}
-)
-
-# Custom target to clean and rebuild
-add_custom_target(re
-    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target clean
-    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target all
-)
