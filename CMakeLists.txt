@@ -121,7 +121,7 @@ file(GLOB_RECURSE SERVER_SRC
 add_executable(${SERVER} ${SERVER_SRC})
 
 # Link game engine and network libraries to the server
-target_link_libraries(${SERVER} PRIVATE ${GAME_ENGINE})
+target_link_libraries(${SERVER} PRIVATE ${GAME_ENGINE} ${NETWORK})
 
 
 
@@ -136,7 +136,7 @@ file(GLOB_RECURSE CLIENT_SRC
 add_executable(${CLIENT} ${CLIENT_SRC})
 
 # Link game engine and network libraries to the client
-target_link_libraries(${CLIENT} PRIVATE ${GAME_ENGINE})
+target_link_libraries(${CLIENT} PRIVATE ${GAME_ENGINE} ${NETWORK})
 
 
 
