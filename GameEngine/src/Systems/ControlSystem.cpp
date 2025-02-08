@@ -40,7 +40,7 @@ void ControlSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical>
 
 void ControlSystem::updateVelocity(std::shared_ptr<AGraphical> const &graphical, std::pair<Keys, bool> &key, float &velocity, float const maxVelocity)
 {
-    if (key == Keys::Unknown) {
+    if (key.first == Keys::None || key.first == Keys::Unknown) {
         return;
     }
 
