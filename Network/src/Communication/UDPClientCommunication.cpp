@@ -78,15 +78,18 @@ void UDPClientCommunication::startSend()
 
 void UDPClientCommunication::sendData()
 {
+    std::unique_lock<std::mutex> lock(_sendMutex);
     if (_sendPackets.empty()) {
+        lock.unlock();
         startSend();
     } else {
-        _sendBuff.clear();
-        _sendBuff = std::string(_sendPackets[0].begin(), _sendPackets[0].end());
+        std::string data = std::string(_sendPackets[0].begin(), _sendPackets[0].end());
+
         _sendPackets.erase(_sendPackets.begin());
+        lock.unlock();
 
         _socket.async_send_to(
-            asio::buffer(_sendBuff),
+            asio::buffer(data),
             _endpoint,
             asio::bind_executor(
                 _sendStrand,

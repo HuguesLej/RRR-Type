@@ -11,6 +11,7 @@
     #include <asio.hpp>
     #include <any>
     #include <iostream>
+    #include <mutex>
     #include <optional>
     #include <thread>
     #include <vector>
@@ -35,7 +36,7 @@ class ACommunication
 
         asio::steady_timer _timer;
 
-        std::string _sendBuff;
+        std::mutex _sendMutex;
         std::vector<std::vector<uint8_t>> _sendPackets;
 
         std::vector<std::vector<uint8_t>> _recvPackets;
