@@ -86,12 +86,14 @@ int main(int ac, char **av)
         registryManager.addComponent(background, comp::Drawable{4, true});
 
         for (size_t i = 0; i < 20; i++) {
-            Entity invisibleBlock = registryManager.spawnEntity();
-            registryManager.addComponent(invisibleBlock, comp::Position{0.0f + (float) i * 45, 100.0f});
-            #ifdef DEBUG_INVISIBLE_WALLS
-                registryManager.addComponent(invisibleBlock, comp::Drawable{9});
-            #endif
-            registryManager.addComponent(invisibleBlock, comp::Collider{14, 45, 1, {}, 1});
+            if (i >= 10 && i <= 12) {
+                Entity invisibleBlock = registryManager.spawnEntity();
+                registryManager.addComponent(invisibleBlock, comp::Position{7.0f + (float) i * 45, 100.0f});
+                #ifdef DEBUG_INVISIBLE_WALLS
+                    registryManager.addComponent(invisibleBlock, comp::Drawable{9});
+                #endif
+                registryManager.addComponent(invisibleBlock, comp::Collider{14, 45, 1, {}, 1});
+            }
         }
     
         Entity block1 = registryManager.spawnEntity();
@@ -123,27 +125,48 @@ int main(int ac, char **av)
             registryManager.addComponent(block, comp::Collider{45, 14, 1, {}});
         }
 
-        // Entity block2 = registryManager.spawnEntity();
+        Entity enemy1 = registryManager.spawnEntity();
+        registryManager.addComponent(enemy1, comp::Position{400, -50});
+        registryManager.addComponent(enemy1, comp::Velocity{0, 0});
+        registryManager.addComponent(enemy1, comp::Drawable{13});
+        registryManager.addComponent(enemy1, comp::Animable{9, 120});
+        registryManager.addComponent(enemy1, comp::Collider{30, 26, 1, {1}, 1});
+        registryManager.addComponent(enemy1, comp::Gravity{1});
+        registryManager.addComponent(enemy1, comp::Health{1});
+
+        float y = 10.0f;
+        for (size_t i = 0; i < 10; i++) {
+            if (i % 2 == 0) {
+                y -= 50.0f;
+            }
+            Entity block = registryManager.spawnEntity();
+            registryManager.addComponent(block, comp::Position{750.0f + (float) i * 45, y});
+            registryManager.addComponent(block, comp::Drawable{5});
+            registryManager.addComponent(block, comp::Collider{45, 14, 1, {}});
+        }
+
+        Entity enemy2 = registryManager.spawnEntity();
+        registryManager.addComponent(enemy2, comp::Position{800, -150});
+        registryManager.addComponent(enemy2, comp::Velocity{0, 0});
+        registryManager.addComponent(enemy2, comp::Drawable{13});
+        registryManager.addComponent(enemy2, comp::Animable{9, 120});
+        registryManager.addComponent(enemy2, comp::Collider{30, 26, 1, {1}, 1});
+        registryManager.addComponent(enemy2, comp::Gravity{1});
+        registryManager.addComponent(enemy2, comp::Health{1});
+
+        Entity enemy3 = registryManager.spawnEntity();
+        registryManager.addComponent(enemy3, comp::Position{1020, -250});
+        registryManager.addComponent(enemy3, comp::Velocity{0, 0});
+        registryManager.addComponent(enemy3, comp::Drawable{13});
+        registryManager.addComponent(enemy3, comp::Animable{9, 120});
+        registryManager.addComponent(enemy3, comp::Collider{30, 26, 1, {1}, 1});
+        registryManager.addComponent(enemy3, comp::Gravity{1});
+        registryManager.addComponent(enemy3, comp::Health{1});
 
     } catch (std::exception const &e) {
         std::cerr << e.what() << std::endl;
         return 84;
     }
-
-    // Entity enemy = registryManager.spawnEntity();
-
-    // try {
-    //     registryManager.addComponent(enemy, comp::Position{200, -50});
-    //     registryManager.addComponent(enemy, comp::Velocity{0, 0});
-    //     registryManager.addComponent(enemy, comp::Drawable{7});
-    //     registryManager.addComponent(enemy, comp::Animable{9, 120});
-    //     registryManager.addComponent(enemy, comp::Collider{30, 26, 1, {1}, 1});
-    //     registryManager.addComponent(enemy, comp::Gravity{1});
-    //     registryManager.addComponent(enemy, comp::Health{1});
-    // } catch (std::exception const &e) {
-    //     std::cerr << e.what() << std::endl;
-    //     return 84;
-    // }
 
     timer.start();
 

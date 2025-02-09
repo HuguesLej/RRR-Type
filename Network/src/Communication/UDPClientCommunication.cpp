@@ -62,6 +62,7 @@ void UDPClientCommunication::startReceive()
     }
 
     std::shared_ptr<std::string> data = std::make_shared<std::string>();
+    // data->resize(8192);
     data->resize(4096);
 
     _socket.async_receive_from(
