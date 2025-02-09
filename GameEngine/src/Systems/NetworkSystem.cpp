@@ -120,7 +120,7 @@ void NetworkSystem::createNewPlayer(RegistryManager &manager, const std::string 
     Entity character = manager.spawnEntity();
 
     manager.addComponent(character, comp::Controllable{Keys::Q, Keys::D, Keys::None, Keys::None, Keys::Space, ip, port});
-    manager.addComponent(character, comp::Position{180, 100});
+    manager.addComponent(character, comp::Position{50, -50});
     manager.addComponent(character, comp::Velocity{1, 0});
     manager.addComponent(character, comp::Drawable{0});
     manager.addComponent(character, comp::Animable{11, 100});

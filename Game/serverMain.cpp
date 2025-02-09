@@ -57,7 +57,7 @@ int main(int ac, char **av)
         Entity block = registryManager.spawnEntity();
 
         try {
-            registryManager.addComponent(block, comp::Position{200 + i * 45, 200});
+            registryManager.addComponent(block, comp::Position{0 + i * 45, 0});
             registryManager.addComponent(block, comp::Drawable{1});
             registryManager.addComponent(block, comp::Collider{45, 14, 1, {}});
         } catch (std::exception const &e) {
@@ -69,7 +69,7 @@ int main(int ac, char **av)
     Entity enemy = registryManager.spawnEntity();
 
     try {
-        registryManager.addComponent(enemy, comp::Position{265, 150});
+        registryManager.addComponent(enemy, comp::Position{200, -50});
         registryManager.addComponent(enemy, comp::Velocity{0, 0});
         registryManager.addComponent(enemy, comp::Drawable{2});
         registryManager.addComponent(enemy, comp::Animable{9, 120});
