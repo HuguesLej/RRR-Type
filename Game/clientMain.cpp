@@ -95,15 +95,6 @@ int main(int ac, char **av)
 
     Timer timer;
 
-    // Entity character = registryManager.spawnEntity();
-
-    // try {
-    //     registryManager.addComponent(character, comp::Controllable{Keys::Q, Keys::D, Keys::None, Keys::None, Keys::Space});
-    // } catch (std::exception const &e) {
-    //     std::cerr << e.what() << std::endl;
-    //     return 84;
-    // }
-
     graphical->openWindow("RRR-Type");
     timer.start();
 
