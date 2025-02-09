@@ -25,7 +25,7 @@ void ControlSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical>
 
                 auto locale = networkCommunication->getLocalAddressAndPort();
 
-                if (locale.first == controllables[i]->address && locale.second == controllables[i]->port) {
+                if (locale.first == controllables[i]->localeAdress && locale.second == controllables[i]->localePort) {
                     updateKeyState(graphical, controllables[i]->left);
                     updateKeyState(graphical, controllables[i]->right);
                     updateKeyState(graphical, controllables[i]->up);
