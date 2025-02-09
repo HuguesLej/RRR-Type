@@ -40,8 +40,13 @@ void registerSystemsAndComponents(RegistryManager &registryManager)
 
 int main(int ac, char **av)
 {
+    if (ac != 3) {
+        std::cerr << "Usage: ./rrr-type_server <ip> <port>" << std::endl;
+        return 84;
+    }
+
     asio::io_context io;
-    std::shared_ptr<UDPServerCommunication> server = std::make_shared<UDPServerCommunication>(io, "192.168.1.17", 12345);
+    std::shared_ptr<UDPServerCommunication> server = std::make_shared<UDPServerCommunication>(io, av[1], std::stoi(av[2]));
     RegistryManager registryManager(server);
 
     try {

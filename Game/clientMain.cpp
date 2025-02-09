@@ -40,10 +40,15 @@ void registerSystemsAndComponents(RegistryManager &registryManager)
     registryManager.registerComponent<comp::Velocity>();
 }
 
-int main(void)
+int main(int ac, char **av)
 {
+    if (ac != 3) {
+        std::cerr << "Usage: ./rrr-type_client <ip> <port>" << std::endl;
+        return 84;
+    }
+
     asio::io_context io;
-    std::shared_ptr<UDPClientCommunication> client = std::make_shared<UDPClientCommunication>(io, "192.168.1.17", 12345);
+    std::shared_ptr<UDPClientCommunication> client = std::make_shared<UDPClientCommunication>(io, av[1], std::stoi(av[2]));
     std::shared_ptr<SFMLGraphical> graphical = std::make_shared<SFMLGraphical>();
     RegistryManager registryManager(graphical, client);
 
