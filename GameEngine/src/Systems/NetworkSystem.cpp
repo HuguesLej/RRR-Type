@@ -6,7 +6,6 @@
 */
 
 #include "NetworkSystem.hpp"
-#include <iostream>
 
 NetworkSystem::NetworkSystem()
 {
