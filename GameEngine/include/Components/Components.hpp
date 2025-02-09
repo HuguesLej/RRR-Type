@@ -71,6 +71,8 @@ namespace comp
         std::pair<Keys, bool> up;
         std::pair<Keys, bool> down;
         std::pair<Keys, bool> jump;
+        std::string localeAdress = "";
+        uint16_t localePort = 0;
 
         Controllable(Keys left, Keys right, Keys up, Keys down, Keys jump)
             : left({left, false}), right({right, false}), up({up, false}), down({down, false}), jump({jump, false}) {}
