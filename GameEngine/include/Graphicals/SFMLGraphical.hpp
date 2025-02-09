@@ -50,6 +50,8 @@ class SFMLGraphical : public AGraphical
         void drawSprite(comp::Position const &position, comp::Drawable const &drawable, comp::Animable &animable, uint64_t &elapsedMs) override;
         void drawSprite(comp::Position const &position, comp::Drawable const &drawable) override;
 
+        bool isTextureVisible(std::pair<float, float> const &renderedSize, std::pair<float, float> const &center) override;
+
         void setViewCenter(comp::Position const &position) override;
 
     private:
