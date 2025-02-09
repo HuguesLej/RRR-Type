@@ -53,19 +53,22 @@ int main(int ac, char **av)
 
     Timer timer;
 
-    Entity block1 = registryManager.spawnEntity();
-    Entity block2 = registryManager.spawnEntity();
+    for (size_t i = 0; i < 10; i++) {
+        Entity block = registryManager.spawnEntity();
+
+        try {
+            registryManager.addComponent(block, comp::Position{200 + i * 45, 200});
+            registryManager.addComponent(block, comp::Drawable{1});
+            registryManager.addComponent(block, comp::Collider{45, 14, 1, {}});
+        } catch (std::exception const &e) {
+            std::cerr << e.what() << std::endl;
+            return 84;
+        }
+    }
+
     Entity enemy = registryManager.spawnEntity();
 
     try {
-        registryManager.addComponent(block1, comp::Position{200, 200});
-        registryManager.addComponent(block1, comp::Drawable{1});
-        registryManager.addComponent(block1, comp::Collider{45, 14, 1, {1}});
-
-        registryManager.addComponent(block2, comp::Position{245, 200});
-        registryManager.addComponent(block2, comp::Drawable{1});
-        registryManager.addComponent(block2, comp::Collider{45, 14, 1, {1}});
-
         registryManager.addComponent(enemy, comp::Position{265, 150});
         registryManager.addComponent(enemy, comp::Velocity{0, 0});
         registryManager.addComponent(enemy, comp::Drawable{2});
