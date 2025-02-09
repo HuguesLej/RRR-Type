@@ -11,6 +11,7 @@ UDPClientCommunication::UDPClientCommunication(asio::io_context &io, std::string
     : ACommunication(io), _socket(io), _endpoint(asio::ip::make_address(ip), port)
 {
     _socket.open(asio::ip::udp::v4());
+    _socket.connect(_endpoint);
 
     startReceive();
     startSend();
