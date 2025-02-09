@@ -124,6 +124,21 @@ void SFMLGraphical::drawSprite(sf::Sprite &sprite, sf::IntRect &textureRect, com
 }
 
 
+void SFMLGraphical::drawBackground(comp::Drawable const &drawable)
+{
+    sf::Sprite sprite;
+    sf::Vector2u textureSize = _textures[drawable.textureId]->getSize();
+    std::pair<float, float> scale = {_window.getSize().x * 2 / textureSize.x, _window.getSize().y * 2 / textureSize.y};
+
+    sprite.setTexture(*_textures[drawable.textureId]);
+    sprite.setOrigin(textureSize.x / 2, textureSize.y / 2);
+    sprite.setPosition(_window.getView().getCenter());
+    sprite.setScale(scale.first, scale.second);
+
+    _window.draw(sprite);
+}
+
+
 bool SFMLGraphical::isTextureVisible(std::pair<float, float> const &renderedSize, std::pair<float, float> const &center)
 {
     sf::Vector2f viewCenter = _window.getView().getCenter();

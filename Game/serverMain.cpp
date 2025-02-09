@@ -77,12 +77,16 @@ int main(int ac, char **av)
 
     Timer timer;
 
+    Entity background = registryManager.spawnEntity();
+    registryManager.addComponent(background, comp::Position{});
+    registryManager.addComponent(background, comp::Drawable{4, true});
+
     for (size_t i = 0; i < 10; i++) {
         Entity block = registryManager.spawnEntity();
 
         try {
             registryManager.addComponent(block, comp::Position{0 + (float) i * 45, 0});
-            registryManager.addComponent(block, comp::Drawable{4});
+            registryManager.addComponent(block, comp::Drawable{5});
             registryManager.addComponent(block, comp::Collider{45, 14, 1, {}});
         } catch (std::exception const &e) {
             std::cerr << e.what() << std::endl;
@@ -95,7 +99,7 @@ int main(int ac, char **av)
     try {
         registryManager.addComponent(enemy, comp::Position{200, -50});
         registryManager.addComponent(enemy, comp::Velocity{0, 0});
-        registryManager.addComponent(enemy, comp::Drawable{5});
+        registryManager.addComponent(enemy, comp::Drawable{6});
         registryManager.addComponent(enemy, comp::Animable{9, 120});
         registryManager.addComponent(enemy, comp::Collider{30, 26, 1, {1}, 1});
         registryManager.addComponent(enemy, comp::Gravity{1});

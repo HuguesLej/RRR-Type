@@ -40,12 +40,14 @@ namespace comp
         float scaleX;
         float scaleY;
         float rotation;
+        bool isBackground;
 
         Drawable(uint32_t textureId, float scaleX = 1.0, float scaleY = 1.0, float rotation = 0)
-            : textureId(textureId), scaleX(scaleX), scaleY(scaleY), rotation(rotation) {}
+            : textureId(textureId), scaleX(scaleX), scaleY(scaleY), rotation(rotation), isBackground(false) {}
+        Drawable(uint32_t textureId, bool isBackground) : textureId(textureId), isBackground(isBackground) {}
 
         private:
-            Drawable() : textureId(0), scaleX(1.0), scaleY(1.0), rotation(0) {}
+            Drawable() : textureId(0), scaleX(1.0), scaleY(1.0), rotation(0), isBackground(false) {}
             friend ComponentsSerializer;
     };
 

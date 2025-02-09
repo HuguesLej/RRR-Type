@@ -60,12 +60,12 @@ void ComponentsSerializer::deserializeComponent(std::istringstream &iss, comp::V
 
 void ComponentsSerializer::serializeComponent(std::ostringstream &oss, const comp::Drawable &component)
 {
-    oss << component.textureId << " " << component.scaleX << " " << component.scaleY << " " << component.rotation << " ";
+    oss << component.textureId << " " << component.scaleX << " " << component.scaleY << " " << component.rotation << " " << component.isBackground << " ";
 }
 
 void ComponentsSerializer::deserializeComponent(std::istringstream &iss, comp::Drawable &component)
 {
-    iss >> component.textureId >> component.scaleX >> component.scaleY >> component.rotation;
+    iss >> component.textureId >> component.scaleX >> component.scaleY >> component.rotation >> component.isBackground;
 }
 
 
