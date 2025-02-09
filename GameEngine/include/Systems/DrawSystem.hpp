@@ -20,8 +20,10 @@ class DrawSystem : public ASystem
         void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &networkCommunication, uint64_t elapsedMs) override;
 
     private:
-        void handleDraw(std::shared_ptr<AGraphical> &graphical, ComponentsRegistry<comp::Position> const &positions,
-            ComponentsRegistry<comp::Drawable> const &drawables, ComponentsRegistry<comp::Animable> &animables, uint64_t &elapsedMs);
+        void handleDraw(std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &nComm, ComponentsRegistry<comp::Position> const &pos, 
+            ComponentsRegistry<comp::Drawable> const &draw, ComponentsRegistry<comp::Animable> &anim, ComponentsRegistry<comp::Controllable> &ctrl, uint64_t &elapsedMs)
+
+        ComponentsRegistry<comp::Controllable> getControllables(RegistryManager &manager);
 };
 
 #endif /* !DRAWSYSTEM_HPP_ */

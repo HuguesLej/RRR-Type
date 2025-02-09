@@ -120,6 +120,14 @@ void SFMLGraphical::drawSprite(sf::Sprite &sprite, sf::IntRect &textureRect, com
 }
 
 
+void SFMLGraphical::setViewCenter(comp::Position const &position)
+{
+    sf::View view = _window.getView();
+    view.setCenter(position.x, position.y);
+    _window.setView(view);
+}
+
+
 void SFMLGraphical::updateEvents()
 {
     sf::Event event;

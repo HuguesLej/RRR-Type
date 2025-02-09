@@ -9,8 +9,6 @@
 
 void DrawSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &networkCommunication, uint64_t elapsedMs)
 {
-    (void) networkCommunication;
-
     try {
 
         auto &positions = manager.getComponents<comp::Position>();
@@ -19,8 +17,9 @@ void DrawSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &g
         try {
 
             auto &animables = manager.getComponents<comp::Animable>();
+            auto controllables = getControllables(manager);
 
-            handleDraw(graphical, positions, drawables, animables, elapsedMs);
+            handleDraw(graphical, networkCommunication, positions, drawables, animables, controllables, elapsedMs);
 
         } catch (RegistryManager::ComponentError const &e) {
 
@@ -28,8 +27,9 @@ void DrawSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &g
 
             auto tmpAnimables = ComponentsRegistry<comp::Animable>();
             auto &animables = tmpAnimables;
+            auto controllables = getControllables(manager);
 
-            handleDraw(graphical, positions, drawables, animables, elapsedMs);
+            handleDraw(graphical, networkCommunication, positions, drawables, animables, controllables, elapsedMs);
 
         }
 
@@ -39,19 +39,45 @@ void DrawSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &g
     }
 }
 
-void DrawSystem::handleDraw(std::shared_ptr<AGraphical> &graphical, ComponentsRegistry<comp::Position> const &positions,
-    ComponentsRegistry<comp::Drawable> const &drawables, ComponentsRegistry<comp::Animable> &animables, uint64_t &elapsedMs)
+void DrawSystem::handleDraw(std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &nComm, ComponentsRegistry<comp::Position> const &pos, 
+    ComponentsRegistry<comp::Drawable> const &draw, ComponentsRegistry<comp::Animable> &anim, ComponentsRegistry<comp::Controllable> &ctrl, uint64_t &elapsedMs)
 {
-    for (std::size_t i = 0; i < positions->size(); i++) {
+    bool viewHasChanged = false;
 
-        if (!positions[i] || drawables->size() <= i || !drawables[i]) {
+    for (std::size_t i = 0; i < pos->size(); i++) {
+
+        if (!pos[i] || draw->size() <= i || !draw[i]) {
             continue;
         }
 
-        if (animables->size() > i && animables[i]) {
-            graphical->drawSprite(positions[i].value(), drawables[i].value(), animables[i].value(), elapsedMs);
-        } else {
-            graphical->drawSprite(positions[i].value(), drawables[i].value());
+        if (!viewHasChanged && ctrl->size() > i && ctrl[i]) {
+            if (nComm && !nComm->isServer()) {
+                auto local = nComm->getLocalAddressAndPort();
+
+                if (local.first == ctrl[i]->localAdress && local.second == ctrl[i]->localPort) {
+                    graphical->setViewCenter(pos[i].value());
+                    viewHasChanged = true;
+                }
+            } else {
+                graphical->setViewCenter(pos[i].value());
+                viewHasChanged = true;
+            }
         }
+
+        if (anim->size() > i && anim[i]) {
+            graphical->drawSprite(pos[i].value(), draw[i].value(), anim[i].value(), elapsedMs);
+        } else {
+            graphical->drawSprite(pos[i].value(), draw[i].value());
+        }
+    }
+}
+
+ComponentsRegistry<comp::Controllable> DrawSystem::getControllables(RegistryManager &manager)
+{
+    try {
+        return manager.getComponents<comp::Controllable>();
+    } catch (RegistryManager::ComponentError const &e) {
+        (void) e;
+        return ComponentsRegistry<comp::Controllable>();
     }
 }

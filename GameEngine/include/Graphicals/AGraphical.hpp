@@ -32,6 +32,8 @@ class AGraphical
         virtual void drawSprite(comp::Position const &position, comp::Drawable const &drawable, comp::Animable &animable, uint64_t &elapsedMs) = 0;
         virtual void drawSprite(comp::Position const &position, comp::Drawable const &drawable) = 0;
 
+        virtual void setViewCenter(comp::Position const &position) = 0;
+
         bool isKeyPressed(Keys key);
 
     protected:
