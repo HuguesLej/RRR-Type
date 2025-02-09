@@ -19,9 +19,9 @@ void JumpSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &g
         auto &controllables = manager.getComponents<comp::Controllable>();
         auto &colliders = manager.getComponents<comp::Collider>();
 
-        for (std::size_t i = 0; i < jumpables.size(); i++) {
+        for (std::size_t i = 0; i < jumpables->size(); i++) {
 
-            if (!jumpables[i] || velocities.size() <= i || controllables.size() <= i || colliders.size() <= i
+            if (!jumpables[i] || velocities->size() <= i || controllables->size() <= i || colliders->size() <= i
                 || !velocities[i] || !controllables[i] || !colliders[i]) {
                 continue;
             }

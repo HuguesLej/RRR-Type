@@ -42,13 +42,13 @@ void DrawSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &g
 void DrawSystem::handleDraw(std::shared_ptr<AGraphical> &graphical, ComponentsRegistry<comp::Position> const &positions,
     ComponentsRegistry<comp::Drawable> const &drawables, ComponentsRegistry<comp::Animable> &animables, uint64_t &elapsedMs)
 {
-    for (std::size_t i = 0; i < positions.size(); i++) {
+    for (std::size_t i = 0; i < positions->size(); i++) {
 
-        if (!positions[i] || drawables.size() <= i || !drawables[i]) {
+        if (!positions[i] || drawables->size() <= i || !drawables[i]) {
             continue;
         }
 
-        if (animables.size() > i && animables[i]) {
+        if (animables->size() > i && animables[i]) {
             graphical->drawSprite(positions[i].value(), drawables[i].value(), animables[i].value(), elapsedMs);
         } else {
             graphical->drawSprite(positions[i].value(), drawables[i].value());

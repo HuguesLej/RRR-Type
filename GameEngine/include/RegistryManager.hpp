@@ -78,7 +78,7 @@ class RegistryManager
 
 
         template <typename Component>
-        ComponentsRegistry<Component> &registerComponent()
+        ComponentsRegistry<Component> &registerComponent(bool sendOnce = false)
         {
             auto type = std::type_index(typeid(ComponentsRegistry<Component>));
 
@@ -86,7 +86,7 @@ class RegistryManager
                 throw ComponentError(ComponentError::ALREADY_REGISTERED, typeid(Component).name());
             }
 
-            _componentsRegistriesMap[type] = ComponentsRegistry<Component>();
+            _componentsRegistriesMap[type] = ComponentsRegistry<Component>(sendOnce);
             _eraseFunctions[type] = [](RegistryManager &manager, Entity const &entity) {
                 auto &array = manager.getComponents<Component>();
                 array[entity] = std::nullopt;
@@ -110,25 +110,12 @@ class RegistryManager
 
 
         template <typename Component>
-        ComponentsRegistry<Component> const &getComponents() const
-        {
-            auto type = std::type_index(typeid(ComponentsRegistry<Component>));
-
-            if (_componentsRegistriesMap.find(type) == _componentsRegistriesMap.end()) {
-                throw ComponentError(ComponentError::NOT_REGISTERED, typeid(Component).name());
-            }
-
-            return std::any_cast<ComponentsRegistry<Component> const &>(_componentsRegistriesMap.find(type)->second);
-        }
-
-
-        template <typename Component>
         std::optional<Component> addComponent(Entity const &to, Component &&c)
         {
             auto &array = getComponents<Component>();
 
-            if (to >= array.size()) {
-                array.resize(to + 1);
+            if (to >= array->size()) {
+                array->resize(to + 1);
             }
             array[to] = std::move(c);
             return array[to].value();
@@ -140,8 +127,8 @@ class RegistryManager
         {
             auto &array = getComponents<Component>();
 
-            if (to >= array.size()) {
-                array.resize(to + 1);
+            if (to >= array->size()) {
+                array->resize(to + 1);
             }
             array[to] = Component(std::forward<Params>(p)...);
             return array[to].value();
@@ -153,7 +140,7 @@ class RegistryManager
         {
             auto &array = getComponents<Component>();
 
-            if (from < array.size()) {
+            if (from < array->size()) {
                 array[from] = std::nullopt;
             }
         }
@@ -161,9 +148,12 @@ class RegistryManager
 
     private:
         Entity _nextEntity = 0;
+
         std::unordered_map<std::type_index, std::any> _componentsRegistriesMap;
         std::unordered_map<std::type_index, std::function<void (RegistryManager &, Entity const &)>> _eraseFunctions;
+
         SystemsRegistry _systems;
+
         std::shared_ptr<AGraphical> _graphical;
         std::shared_ptr<ACommunication> _networkCommunication;
 };

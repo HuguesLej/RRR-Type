@@ -18,9 +18,9 @@ void HealthSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> 
         auto &healths = manager.getComponents<comp::Health>();
         auto &colliders = manager.getComponents<comp::Collider>();
 
-        for (std::size_t i = 0; i < healths.size(); i++) {
+        for (std::size_t i = 0; i < healths->size(); i++) {
 
-            if (!healths[i] || colliders.size() <= i || !colliders[i]) {
+            if (!healths[i] || colliders->size() <= i || !colliders[i]) {
                 continue;
             }
 

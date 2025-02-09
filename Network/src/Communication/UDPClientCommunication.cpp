@@ -11,6 +11,7 @@ UDPClientCommunication::UDPClientCommunication(asio::io_context &io, std::string
     : ACommunication(io), _socket(io), _endpoint(asio::ip::make_address(ip), port)
 {
     _socket.open(asio::ip::udp::v4());
+    _socket.connect(_endpoint);
 
     startReceive();
     startSend();
@@ -42,6 +43,16 @@ UDPClientCommunication::~UDPClientCommunication()
 bool UDPClientCommunication::isServer()
 {
     return false;
+}
+
+std::unordered_map<asio::ip::udp::endpoint, bool> &UDPClientCommunication::getClients()
+{
+    throw Error(Error::OriginType::Client);
+}
+
+std::pair<std::string, uint16_t> UDPClientCommunication::getLocalAddressAndPort()
+{
+    return std::make_pair(_socket.local_endpoint().address().to_string(), _socket.local_endpoint().port());
 }
 
 void UDPClientCommunication::startReceive()

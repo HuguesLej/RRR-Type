@@ -71,9 +71,13 @@ namespace comp
         std::pair<Keys, bool> up;
         std::pair<Keys, bool> down;
         std::pair<Keys, bool> jump;
+        std::string localAdress = "";
+        uint16_t localPort = 0;
 
         Controllable(Keys left, Keys right, Keys up, Keys down, Keys jump)
             : left({left, false}), right({right, false}), up({up, false}), down({down, false}), jump({jump, false}) {}
+        Controllable(Keys left, Keys right, Keys up, Keys down, Keys jump, std::string localAdress, uint16_t localPort)
+            : left({left, false}), right({right, false}), up({up, false}), down({down, false}), jump({jump, false}), localAdress(localAdress), localPort(localPort) {}
 
         private:
             Controllable() : left({Keys::None, false}), right({Keys::None, false}), up({Keys::None, false}), down({Keys::None, false}), jump({Keys::None, false}) {}

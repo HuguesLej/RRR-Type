@@ -10,10 +10,12 @@
 
     #include <asio.hpp>
     #include <any>
+    #include <exception>
     #include <iostream>
     #include <mutex>
     #include <optional>
     #include <thread>
+    #include <unordered_map>
     #include <vector>
 
     #include "SerializerManager.hpp"
@@ -21,6 +23,25 @@
 class ACommunication
 {
     public:
+
+        class Error : public std::exception
+        {
+            public:
+                enum class OriginType
+                {
+                    Server = 0,
+                    Client = 1
+                };
+
+                Error(OriginType origin);
+                ~Error() = default;
+
+                const char *what() const noexcept override;
+
+            private:
+                std::string _msg;
+        };
+
         ACommunication(asio::io_context &io);
         virtual ~ACommunication() = default;
 
@@ -29,6 +50,10 @@ class ACommunication
         std::optional<std::any> getRecvData();
 
         virtual bool isServer() = 0;
+
+        virtual std::unordered_map<asio::ip::udp::endpoint, bool> &getClients() = 0;
+
+        virtual std::pair<std::string, uint16_t> getLocalAddressAndPort() = 0;
 
     protected:
         asio::io_context &_io;
