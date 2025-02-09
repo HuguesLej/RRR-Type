@@ -71,13 +71,12 @@ namespace comp
         std::pair<Keys, bool> up;
         std::pair<Keys, bool> down;
         std::pair<Keys, bool> jump;
-        float maxVelocity;
 
-        Controllable(Keys left, Keys right, Keys up, Keys down, Keys jump, float maxVelocity = 0)
-            : left({left, false}), right({right, false}), up({up, false}), down({down, false}), jump({jump, false}), maxVelocity(maxVelocity) {}
+        Controllable(Keys left, Keys right, Keys up, Keys down, Keys jump)
+            : left({left, false}), right({right, false}), up({up, false}), down({down, false}), jump({jump, false}) {}
 
         private:
-            Controllable() : left({Keys::None, false}), right({Keys::None, false}), up({Keys::None, false}), down({Keys::None, false}), jump({Keys::None, false}), maxVelocity(0) {}
+            Controllable() : left({Keys::None, false}), right({Keys::None, false}), up({Keys::None, false}), down({Keys::None, false}), jump({Keys::None, false}) {}
             friend ComponentsSerializer;
     };
 

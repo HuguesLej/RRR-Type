@@ -63,7 +63,6 @@ int main(int ac, char **av)
         registryManager.addComponent(character, comp::Velocity{0, 0});
         registryManager.addComponent(character, comp::Drawable{0});
         registryManager.addComponent(character, comp::Animable{11, 100});
-        registryManager.addComponent(character, comp::Controllable{Keys::Q, Keys::D, Keys::Z, Keys::S, Keys::Space, 1}); // Maybe move maxVelocity to Velocity component
         registryManager.addComponent(character, comp::Collider{32, 32, 1, {1}});
         registryManager.addComponent(character, comp::Gravity{1});
         registryManager.addComponent(character, comp::Jumpable{2, 300});

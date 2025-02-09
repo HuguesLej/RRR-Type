@@ -14,21 +14,19 @@ void ControlSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical>
 
     try {
 
-        auto &velocities = manager.getComponents<comp::Velocity>();
         auto &controllables = manager.getComponents<comp::Controllable>();
 
-        for (std::size_t i = 0; i < velocities.size(); i++) {
+        for (std::size_t i = 0; i < controllables.size(); i++) {
 
-            if (!velocities[i] || controllables.size() <= i || !controllables[i]) {
+            if (!controllables[i]) {
                 continue;
             }
 
-            updateVelocity(graphical, controllables[i]->left, velocities[i]->negX, controllables[i]->maxVelocity);
-            updateVelocity(graphical, controllables[i]->right, velocities[i]->posX, controllables[i]->maxVelocity);
-            updateVelocity(graphical, controllables[i]->up, velocities[i]->negY, controllables[i]->maxVelocity);
-            updateVelocity(graphical, controllables[i]->down, velocities[i]->posY, controllables[i]->maxVelocity);
-
-            // Add jump
+            updateKeyState(graphical, controllables[i]->left);
+            updateKeyState(graphical, controllables[i]->right);
+            updateKeyState(graphical, controllables[i]->up);
+            updateKeyState(graphical, controllables[i]->down);
+            updateKeyState(graphical, controllables[i]->jump);
 
         }
 
@@ -38,7 +36,7 @@ void ControlSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical>
     }
 }
 
-void ControlSystem::updateVelocity(std::shared_ptr<AGraphical> const &graphical, std::pair<Keys, bool> &key, float &velocity, float const maxVelocity)
+void ControlSystem::updateKeyState(std::shared_ptr<AGraphical> const &graphical, std::pair<Keys, bool> &key)
 {
     if (key.first == Keys::None || key.first == Keys::Unknown) {
         return;
@@ -46,9 +44,7 @@ void ControlSystem::updateVelocity(std::shared_ptr<AGraphical> const &graphical,
 
     if (graphical->isKeyPressed(key.first)) {
         key.second = true;
-        velocity = maxVelocity;
     } else {
         key.second = false;
-        velocity = 0;
     }
 }

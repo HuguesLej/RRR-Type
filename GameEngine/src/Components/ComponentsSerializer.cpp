@@ -87,7 +87,6 @@ void ComponentsSerializer::serializeComponent(std::ostringstream &oss, const com
     oss << static_cast<int>(component.up.first) << " " << component.up.second << " ";
     oss << static_cast<int>(component.down.first) << " " << component.down.second << " ";
     oss << static_cast<int>(component.jump.first) << " " << component.jump.second << " ";
-    oss << component.maxVelocity << " ";
 }
 
 void ComponentsSerializer::deserializeComponent(std::istringstream &iss, comp::Controllable &component)
@@ -103,7 +102,7 @@ void ComponentsSerializer::deserializeComponent(std::istringstream &iss, comp::C
     bool downBool;
     bool jumpBool;
 
-    iss >> leftKey >> leftBool >> rightKey >> rightBool >> upKey >> upBool >> downKey >> downBool >> jumpKey >> jumpBool >> component.maxVelocity;
+    iss >> leftKey >> leftBool >> rightKey >> rightBool >> upKey >> upBool >> downKey >> downBool >> jumpKey >> jumpBool;
     component.left = {static_cast<Keys>(leftKey), leftBool};
     component.right = {static_cast<Keys>(rightKey), rightBool};
     component.up = {static_cast<Keys>(upKey), upBool};

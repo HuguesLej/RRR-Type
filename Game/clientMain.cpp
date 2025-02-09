@@ -71,7 +71,7 @@ int main(void)
     Entity character = registryManager.spawnEntity();
 
     try {
-        registryManager.addComponent(character, comp::Controllable{Keys::Q, Keys::D, Keys::None, Keys::None, Keys::Space, 1}); // Maybe move maxVelocity to Velocity component
+        registryManager.addComponent(character, comp::Controllable{Keys::Q, Keys::D, Keys::None, Keys::None, Keys::Space});
     } catch (std::exception const &e) {
         std::cerr << e.what() << std::endl;
         return 84;

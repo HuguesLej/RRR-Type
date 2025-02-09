@@ -20,7 +20,7 @@ class ControlSystem : public ASystem
         void update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &networkCommunication, uint64_t elapsedMs) override;
 
     private:
-        void updateVelocity(std::shared_ptr<AGraphical> const &graphical, std::pair<Keys, bool> &key, float &velocity, float const maxVelocity);
+        void updateKeyState(std::shared_ptr<AGraphical> const &graphical, std::pair<Keys, bool> &key);
 };
 
 #endif /* !CONTROLSYSTEM_HPP_ */

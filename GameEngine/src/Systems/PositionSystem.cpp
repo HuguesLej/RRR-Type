@@ -16,23 +16,10 @@ void PositionSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical
 
         auto &positions = manager.getComponents<comp::Position>();
         auto &velocities = manager.getComponents<comp::Velocity>();
+        auto &colliders = getColliders(manager);
+        auto &controllables = getControllables(manager);
 
-        try {
-
-            auto &colliders = manager.getComponents<comp::Collider>();
-
-            handlePositions(positions, velocities, colliders, elapsedMs);
-
-        } catch (std::exception const &e) {
-
-            (void) e;
-
-            auto tmpColliders = ComponentsRegistry<comp::Collider>();
-            auto &colliders = tmpColliders;
-
-            handlePositions(positions, velocities, colliders, elapsedMs);
-
-        }
+        handlePositions(positions, velocities, colliders, controllables, elapsedMs);
 
     } catch (RegistryManager::ComponentError const &e) {
         (void) e;
@@ -41,7 +28,7 @@ void PositionSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical
 }
 
 void PositionSystem::handlePositions(ComponentsRegistry<comp::Position> &positions, ComponentsRegistry<comp::Velocity> const &velocities,
-    ComponentsRegistry<comp::Collider> const &colliders, uint64_t const &elapsedMs)
+    ComponentsRegistry<comp::Collider> const &colliders, ComponentsRegistry<comp::Controllable> const &controllables, uint64_t const &elapsedMs)
 {
     for (std::size_t i = 0; i < positions.size(); i++) {
 
@@ -53,6 +40,23 @@ void PositionSystem::handlePositions(ComponentsRegistry<comp::Position> &positio
         auto velNegX = velocities[i]->negX;
         auto velPosY = velocities[i]->posY;
         auto velNegY = velocities[i]->negY;
+
+        if (controllables.size() > i && controllables[i]) {
+
+            if (!controllables[i]->right) {
+                velPosX = 0;
+            }
+            if (!controllables[i]->left) {
+                velNegX = 0;
+            }
+            if (!controllables[i]->down) {
+                velPosY = 0;
+            }
+            if (!controllables[i]->up) {
+                velNegY = 0;
+            }
+
+        }
 
         if (colliders.size() > i && colliders[i]) {
 
@@ -74,5 +78,25 @@ void PositionSystem::handlePositions(ComponentsRegistry<comp::Position> &positio
         positions[i]->x += (velPosX - velNegX) * elapsedMs / 10;
         positions[i]->y += (velPosY - velNegY) * elapsedMs / 10;
 
+    }
+}
+
+ComponentsRegistry<comp::Collider> PositionSystem::getColliders(RegistryManager &manager)
+{
+    try {
+        return manager.getComponents<comp::Collider>();
+    } catch (RegistryManager::ComponentError const &e) {
+        (void) e;
+        return ComponentsRegistry<comp::Collider>();
+    }
+}
+
+ComponentsRegistry<comp::Controllable> PositionSystem::getControllables(RegistryManager &manager)
+{
+    try {
+        return manager.getComponents<comp::Controllable>();
+    } catch (RegistryManager::ComponentError const &e) {
+        (void) e;
+        return ComponentsRegistry<comp::Controllable>();
     }
 }
