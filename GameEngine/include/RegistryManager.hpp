@@ -78,7 +78,7 @@ class RegistryManager
 
 
         template <typename Component>
-        ComponentsRegistry<Component> &registerComponent()
+        ComponentsRegistry<Component> &registerComponent(bool sendOnce = false)
         {
             auto type = std::type_index(typeid(ComponentsRegistry<Component>));
 
@@ -86,7 +86,7 @@ class RegistryManager
                 throw ComponentError(ComponentError::ALREADY_REGISTERED, typeid(Component).name());
             }
 
-            _componentsRegistriesMap[type] = ComponentsRegistry<Component>();
+            _componentsRegistriesMap[type] = ComponentsRegistry<Component>(sendOnce);
             _eraseFunctions[type] = [](RegistryManager &manager, Entity const &entity) {
                 auto &array = manager.getComponents<Component>();
                 array[entity] = std::nullopt;

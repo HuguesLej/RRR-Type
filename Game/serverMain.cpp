@@ -27,10 +27,10 @@ void registerSystemsAndComponents(RegistryManager &registryManager)
     registryManager.addSystem(std::make_unique<NetworkSystem>());
     registryManager.addSystem(std::make_unique<PositionSystem>());
 
-    registryManager.registerComponent<comp::Animable>();
+    registryManager.registerComponent<comp::Animable>(true);
     registryManager.registerComponent<comp::Collider>();
-    registryManager.registerComponent<comp::Controllable>();
-    registryManager.registerComponent<comp::Drawable>();
+    registryManager.registerComponent<comp::Controllable>(true);
+    registryManager.registerComponent<comp::Drawable>(true);
     registryManager.registerComponent<comp::Gravity>();
     registryManager.registerComponent<comp::Health>();
     registryManager.registerComponent<comp::Jumpable>();

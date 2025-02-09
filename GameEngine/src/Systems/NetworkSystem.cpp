@@ -27,10 +27,39 @@ void NetworkSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical>
 void NetworkSystem::handleServerUpdate(RegistryManager &manager, std::shared_ptr<ACommunication> &networkCommunication)
 {
     auto controllableTypeId = std::type_index(typeid(ComponentsRegistry<comp::Controllable>));
+    auto animableTypeId = std::type_index(typeid(ComponentsRegistry<comp::Animable>));
+    auto drawableTypeId = std::type_index(typeid(ComponentsRegistry<comp::Drawable>));
 
     for (auto &registry : manager.getComponentsRegistries()) {
+
         if (registry.first == controllableTypeId) {
-            continue;
+            auto &controllables = manager.getComponents<comp::Controllable>();
+            if (controllables.sendOnce()) {
+                if (controllables.sent()) {
+                    continue;
+                }
+                controllables.sent(true);
+            }
+        }
+
+        if (registry.first == animableTypeId) {
+            auto &animables = manager.getComponents<comp::Animable>();
+            if (animables.sendOnce()) {
+                if (animables.sent()) {
+                    continue;
+                }
+                animables.sent(true);
+            }
+        }
+
+        if (registry.first == drawableTypeId) {
+            auto &drawables = manager.getComponents<comp::Drawable>();
+            if (drawables.sendOnce()) {
+                if (drawables.sent()) {
+                    continue;
+                }
+                drawables.sent(true);
+            }
         }
 
         networkCommunication->setSendData(registry.second);
