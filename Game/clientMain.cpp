@@ -68,14 +68,14 @@ int main(void)
 
     Timer timer;
 
-    Entity character = registryManager.spawnEntity();
+    // Entity character = registryManager.spawnEntity();
 
-    try {
-        registryManager.addComponent(character, comp::Controllable{Keys::Q, Keys::D, Keys::None, Keys::None, Keys::Space});
-    } catch (std::exception const &e) {
-        std::cerr << e.what() << std::endl;
-        return 84;
-    }
+    // try {
+    //     registryManager.addComponent(character, comp::Controllable{Keys::Q, Keys::D, Keys::None, Keys::None, Keys::Space});
+    // } catch (std::exception const &e) {
+    //     std::cerr << e.what() << std::endl;
+    //     return 84;
+    // }
 
     graphical->openWindow("RRR-Type");
     timer.start();
