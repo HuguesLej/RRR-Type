@@ -12,8 +12,6 @@ UDPClientCommunication::UDPClientCommunication(asio::io_context &io, std::string
 {
     _socket.open(asio::ip::udp::v4());
 
-    _recvBuff.resize(4096);
-
     startReceive();
     startSend();
 
@@ -44,22 +42,26 @@ bool UDPClientCommunication::isServer()
 
 void UDPClientCommunication::startReceive()
 {
+    std::shared_ptr<std::string> data = std::make_shared<std::string>();
+    data->resize(4096);
+
     _socket.async_receive_from(
-        asio::buffer(_recvBuff),
+        asio::buffer(*data),
         _endpoint,
         asio::bind_executor(
             _recvStrand,
-            std::bind(&UDPClientCommunication::handleReceive, this, asio::placeholders::error, asio::placeholders::bytes_transferred)
+            std::bind(&UDPClientCommunication::handleReceive, this, data, asio::placeholders::error, asio::placeholders::bytes_transferred)
         )
     );
 }
 
-void UDPClientCommunication::handleReceive(const std::error_code &error, std::size_t)
+void UDPClientCommunication::handleReceive(std::shared_ptr<std::string> &data, const std::error_code &error, std::size_t)
 {
     // std::cerr << "Received data from " << _endpoint.address().to_string() << ":" << std::to_string(_endpoint.port()) << std::endl;
     if (!error) {
-        _recvPackets.push_back(std::vector<uint8_t>(_recvBuff.begin(), _recvBuff.end()));
-        _recvBuff.clear();
+        // std::cerr << "Received: \"" << *data << "\"" << std::endl;
+
+        _recvPackets.push_back(std::vector<uint8_t>(data->begin(), data->end()));
 
         startReceive();
     }
@@ -83,7 +85,6 @@ void UDPClientCommunication::sendData()
         _sendBuff = std::string(_sendPackets[0].begin(), _sendPackets[0].end());
         _sendPackets.erase(_sendPackets.begin());
 
-        // std::cerr << "Sending data to " << _endpoint.address().to_string() << ":" << std::to_string(_endpoint.port()) << std::endl;
         _socket.async_send_to(
             asio::buffer(_sendBuff),
             _endpoint,
@@ -98,7 +99,6 @@ void UDPClientCommunication::sendData()
 void UDPClientCommunication::handleSend(const std::error_code &error, std::size_t, std::shared_ptr<std::atomic<size_t>>)
 {
     if (!error) {
-        // std::cerr << "Sent successfully" << std::endl;
         startSend();
     } else {
         std::cerr << "Error while sending data: " << error.message() << std::endl;

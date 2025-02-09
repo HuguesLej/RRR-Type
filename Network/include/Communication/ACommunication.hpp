@@ -38,7 +38,6 @@ class ACommunication
         std::string _sendBuff;
         std::vector<std::vector<uint8_t>> _sendPackets;
 
-        std::string _recvBuff;
         std::vector<std::vector<uint8_t>> _recvPackets;
 
         std::vector<std::thread> _workers;
@@ -49,7 +48,7 @@ class ACommunication
         virtual void handleSend(const std::error_code &error, std::size_t, std::shared_ptr<std::atomic<size_t>>) = 0;
 
         virtual void startReceive() = 0;
-        virtual void handleReceive(const std::error_code &error, std::size_t) = 0;
+        virtual void handleReceive(std::shared_ptr<std::string> &data, const std::error_code &error, std::size_t) = 0;
 };
 
 #endif /* !ACOMMUNICATION_HPP_ */

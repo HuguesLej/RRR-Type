@@ -12,8 +12,6 @@ UDPServerCommunication::UDPServerCommunication(asio::io_context &io, std::string
 {
     std::cerr << "Server is running on " << ip << ":" << std::to_string(port) << std::endl;
 
-    _recvBuff.resize(4096);
-
     startReceive();
     startSend();
 
@@ -44,22 +42,26 @@ bool UDPServerCommunication::isServer()
 
 void UDPServerCommunication::startReceive()
 {
+    std::shared_ptr<std::string> data = std::make_shared<std::string>();
+    data->resize(4096);
+
     _socket.async_receive_from(
-        asio::buffer(_recvBuff),
+        asio::buffer(*data),
         _endpoint,
         asio::bind_executor(
             _recvStrand,
-            std::bind(&UDPServerCommunication::handleReceive, this, asio::placeholders::error, asio::placeholders::bytes_transferred)
+            std::bind(&UDPServerCommunication::handleReceive, this, data, asio::placeholders::error, asio::placeholders::bytes_transferred)
         )
     );
 }
 
-void UDPServerCommunication::handleReceive(const std::error_code &error, std::size_t)
+void UDPServerCommunication::handleReceive(std::shared_ptr<std::string> &data, const std::error_code &error, std::size_t)
 {
     // std::cerr << "Received data from " << _endpoint.address().to_string() << ":" << std::to_string(_endpoint.port()) << std::endl;
     if (!error) {
-        _recvPackets.push_back(std::vector<uint8_t>(_recvBuff.begin(), _recvBuff.end()));
-        _recvBuff.clear();
+        // std::cerr << "Received: \"" << *data << "\"" << std::endl;
+
+        _recvPackets.push_back(std::vector<uint8_t>(data->begin(), data->end()));
 
         _clients.insert(_endpoint);
 
@@ -79,18 +81,15 @@ void UDPServerCommunication::startSend()
 void UDPServerCommunication::sendData()
 {
     if (_sendPackets.empty() || _clients.empty()) {
-        // std::cerr << "No data to send" << std::endl;
         startSend();
     } else {
         _sendBuff.clear();
         _sendBuff = std::string(_sendPackets[0].begin(), _sendPackets[0].end());
         _sendPackets.erase(_sendPackets.begin());
 
-        // std::cerr << "Sending data to " << _clients.size() << " clients" << std::endl;
         std::shared_ptr<std::atomic<size_t>> clientsCount = std::make_shared<std::atomic<size_t>>(_clients.size());
 
         for (const auto &client : _clients) {
-            // std::cerr << "Sending data to " << _endpoint.address().to_string() << ":" << std::to_string(_endpoint.port()) << std::endl;
             _socket.async_send_to(
                 asio::buffer(_sendBuff),
                 client,
@@ -106,7 +105,6 @@ void UDPServerCommunication::sendData()
 void UDPServerCommunication::handleSend(const std::error_code &error, std::size_t, std::shared_ptr<std::atomic<size_t>> clientsCount)
 {
     if (!error) {
-        // std::cerr << "Sent" << std::endl;
         if (clientsCount->load() <= 1) {
             startSend();
         } else {
