@@ -109,6 +109,10 @@ void SFMLGraphical::drawSprite(comp::Position const &position, comp::Drawable co
 
 void SFMLGraphical::drawSprite(sf::Sprite &sprite, sf::IntRect &textureRect, comp::Position const &position, comp::Drawable const &drawable)
 {
+    if (!isTextureVisible({textureRect.width, textureRect.height}, {position.x, position.y})) {
+        return;
+    }
+
     sprite.setTexture(*_textures[drawable.textureId]);
     sprite.setTextureRect(textureRect);
     sprite.setOrigin(textureRect.width / 2, textureRect.height / 2);
@@ -117,6 +121,18 @@ void SFMLGraphical::drawSprite(sf::Sprite &sprite, sf::IntRect &textureRect, com
     sprite.setRotation(drawable.rotation);
 
     _window.draw(sprite);
+}
+
+
+bool SFMLGraphical::isTextureVisible(std::pair<float, float> const &renderedSize, std::pair<float, float> const &center)
+{
+    sf::Vector2f viewCenter = _window.getView().getCenter();
+    sf::Vector2f viewSize = _window.getView().getSize();
+
+    sf::FloatRect textureBounds(center.first - renderedSize.first / 2.0f, center.second - renderedSize.second / 2.0f, renderedSize.first, renderedSize.second);
+    sf::FloatRect viewBounds(viewCenter - viewSize / 2.0f, viewSize);
+
+    return viewBounds.intersects(textureBounds);
 }
 
 

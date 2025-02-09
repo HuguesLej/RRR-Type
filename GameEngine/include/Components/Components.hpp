@@ -101,7 +101,10 @@ namespace comp
         uint32_t collisionTakenDamage = 0;
 
         Collider(float width, float height, uint32_t layer, std::vector<uint32_t> collidingLayers, uint32_t collisionGivenDamage = 0)
-            : width(width), height(height), layer(layer), collidingLayers(collidingLayers), collisionGivenDamage(collisionGivenDamage) {}
+            : width(width), height(height), layer(layer), collisionGivenDamage(collisionGivenDamage) {
+                this->collidingLayers = {layer};
+                this->collidingLayers.insert(this->collidingLayers.end(), collidingLayers.begin(), collidingLayers.end());
+            }
 
         private:
             Collider() : width(0), height(0), layer(0), collisionGivenDamage(0) {}
