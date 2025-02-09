@@ -6,6 +6,7 @@
 */
 
 #include "NetworkSystem.hpp"
+#include <iostream>
 
 NetworkSystem::NetworkSystem()
 {
@@ -26,48 +27,62 @@ void NetworkSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical>
 
 void NetworkSystem::handleServerUpdate(RegistryManager &manager, std::shared_ptr<ACommunication> &networkCommunication)
 {
+    auto controllableTypeId = std::type_index(typeid(ComponentsRegistry<comp::Controllable>));
+    auto animableTypeId = std::type_index(typeid(ComponentsRegistry<comp::Animable>));
+    auto drawableTypeId = std::type_index(typeid(ComponentsRegistry<comp::Drawable>));
+
+    bool hasNewClients = false;
     auto &clients = networkCommunication->getClients();
 
     for (auto &client : clients) {
         if (client.second) {
             createNewPlayer(manager);
             client.second = false;
+            hasNewClients = true;
         }
     }
-
-    auto controllableTypeId = std::type_index(typeid(ComponentsRegistry<comp::Controllable>));
-    auto animableTypeId = std::type_index(typeid(ComponentsRegistry<comp::Animable>));
-    auto drawableTypeId = std::type_index(typeid(ComponentsRegistry<comp::Drawable>));
 
     for (auto &registry : manager.getComponentsRegistries()) {
 
         if (registry.first == controllableTypeId) {
             auto &controllables = manager.getComponents<comp::Controllable>();
             if (controllables.sendOnce()) {
+                if (hasNewClients) {
+                    controllables.sent(false);
+                }
                 if (controllables.sent()) {
                     continue;
                 }
                 controllables.sent(true);
+                std::cerr << "Sending controllable" << std::endl;
             }
         }
 
         if (registry.first == animableTypeId) {
             auto &animables = manager.getComponents<comp::Animable>();
             if (animables.sendOnce()) {
+                if (hasNewClients) {
+                    animables.sent(false);
+                }
                 if (animables.sent()) {
                     continue;
                 }
                 animables.sent(true);
+                std::cerr << "Sending animable" << std::endl;
             }
         }
 
         if (registry.first == drawableTypeId) {
             auto &drawables = manager.getComponents<comp::Drawable>();
             if (drawables.sendOnce()) {
+                if (hasNewClients) {
+                    drawables.sent(false);
+                }
                 if (drawables.sent()) {
                     continue;
                 }
                 drawables.sent(true);
+                std::cerr << "Sending drawable" << std::endl;
             }
         }
 
