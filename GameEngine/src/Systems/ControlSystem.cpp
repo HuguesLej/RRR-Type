@@ -9,7 +9,6 @@
 
 void ControlSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &networkCommunication, uint64_t elapsedMs)
 {
-    (void) networkCommunication;
     (void) elapsedMs;
 
     try {
@@ -20,6 +19,22 @@ void ControlSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical>
 
             if (!controllables[i]) {
                 continue;
+            }
+
+            if (networkCommunication && !networkCommunication->isServer()) {
+
+                auto locale = networkCommunication->getLocalAddressAndPort();
+
+                if (locale.first == controllables[i]->address && locale.second == controllables[i]->port) {
+                    updateKeyState(graphical, controllables[i]->left);
+                    updateKeyState(graphical, controllables[i]->right);
+                    updateKeyState(graphical, controllables[i]->up);
+                    updateKeyState(graphical, controllables[i]->down);
+                    updateKeyState(graphical, controllables[i]->jump);
+                }
+
+                continue;
+
             }
 
             updateKeyState(graphical, controllables[i]->left);
