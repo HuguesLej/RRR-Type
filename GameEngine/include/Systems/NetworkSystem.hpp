@@ -26,7 +26,7 @@ class NetworkSystem : public ASystem
 
         void handlePacketsReceiving(RegistryManager &manager, std::shared_ptr<ACommunication> &networkCommunication);
 
-        void createNewPlayer(RegistryManager &manager);
+        void createNewPlayer(RegistryManager &manager, const std::string ip, const uint16_t port);
 };
 
 #endif /* !NETWORKSYSTEM_HPP_ */

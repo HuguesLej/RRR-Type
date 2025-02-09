@@ -76,6 +76,8 @@ namespace comp
 
         Controllable(Keys left, Keys right, Keys up, Keys down, Keys jump)
             : left({left, false}), right({right, false}), up({up, false}), down({down, false}), jump({jump, false}) {}
+        Controllable(Keys left, Keys right, Keys up, Keys down, Keys jump, std::string localeAdress, uint16_t localePort)
+            : left({left, false}), right({right, false}), up({up, false}), down({down, false}), jump({jump, false}), localeAdress(localeAdress), localePort(localePort) {}
 
         private:
             Controllable() : left({Keys::None, false}), right({Keys::None, false}), up({Keys::None, false}), down({Keys::None, false}), jump({Keys::None, false}) {}

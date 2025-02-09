@@ -35,7 +35,7 @@ void NetworkSystem::handleServerUpdate(RegistryManager &manager, std::shared_ptr
 
     for (auto &client : clients) {
         if (client.second) {
-            createNewPlayer(manager);
+            createNewPlayer(manager, client.first.address().to_string(), client.first.port());
             client.second = false;
             hasNewClients = true;
         }
@@ -115,11 +115,11 @@ void NetworkSystem::handlePacketsReceiving(RegistryManager &manager, std::shared
     }
 }
 
-void NetworkSystem::createNewPlayer(RegistryManager &manager)
+void NetworkSystem::createNewPlayer(RegistryManager &manager, const std::string ip, const uint16_t port)
 {
     Entity character = manager.spawnEntity();
 
-    manager.addComponent(character, comp::Controllable{Keys::Q, Keys::D, Keys::None, Keys::None, Keys::Space});
+    manager.addComponent(character, comp::Controllable{Keys::Q, Keys::D, Keys::None, Keys::None, Keys::Space, ip, port});
     manager.addComponent(character, comp::Position{180, 100});
     manager.addComponent(character, comp::Velocity{1, 0});
     manager.addComponent(character, comp::Drawable{0});
