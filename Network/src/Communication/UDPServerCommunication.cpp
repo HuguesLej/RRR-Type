@@ -76,7 +76,7 @@ void UDPServerCommunication::handleReceive(std::shared_ptr<std::string> &data, c
         _recvPackets.push_back(std::vector<uint8_t>(data->begin(), data->end()));
 
         if (_clients.find(_endpoint) == _clients.end()) {
-            _clients.insert(_endpoint, true);
+            _clients[_endpoint] = true;
         }
         lock.unlock();
 
