@@ -47,8 +47,27 @@ int main(int ac, char **av)
         return 84;
     }
 
+    for (auto c : std::string(av[1])) {
+        if ((c < '0' || c > '9') && c != '.') {
+            std::cerr << "Invalid IP: " << av[1] << std::endl;
+            return 84;
+        }
+    }
+    for (auto c : std::string(av[2])) {
+        if (c < '0' || c > '9') {
+            std::cerr << "Invalid port: " << av[2] << std::endl;
+            return 84;
+        }
+    }
+
     asio::io_context io;
-    std::shared_ptr<UDPClientCommunication> client = std::make_shared<UDPClientCommunication>(io, av[1], std::stoi(av[2]));
+    std::shared_ptr<UDPClientCommunication> client;
+    try {
+        client = std::make_shared<UDPClientCommunication>(io, av[1], std::stoi(av[2]));
+    } catch (std::exception const &e) {
+        std::cerr << e.what() << ": " << av[1] << ", " << av[2] << std::endl;
+        return 84;
+    }
     std::shared_ptr<SFMLGraphical> graphical = std::make_shared<SFMLGraphical>();
     RegistryManager registryManager(graphical, client);
 
