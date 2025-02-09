@@ -81,7 +81,7 @@ int main(int ac, char **av)
         Entity block = registryManager.spawnEntity();
 
         try {
-            registryManager.addComponent(block, comp::Position{0 + i * 45, 0});
+            registryManager.addComponent(block, comp::Position{0 + (float) i * 45, 0});
             registryManager.addComponent(block, comp::Drawable{4});
             registryManager.addComponent(block, comp::Collider{45, 14, 1, {}});
         } catch (std::exception const &e) {
