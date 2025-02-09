@@ -84,6 +84,15 @@ int main(int ac, char **av)
         Entity background = registryManager.spawnEntity();
         registryManager.addComponent(background, comp::Position{});
         registryManager.addComponent(background, comp::Drawable{4, true});
+
+        for (size_t i = 0; i < 20; i++) {
+            Entity invisibleBlock = registryManager.spawnEntity();
+            registryManager.addComponent(invisibleBlock, comp::Position{0.0f + (float) i * 45, 100.0f});
+            #ifdef DEBUG_INVISIBLE_WALLS
+                registryManager.addComponent(invisibleBlock, comp::Drawable{9});
+            #endif
+            registryManager.addComponent(invisibleBlock, comp::Collider{14, 45, 1, {}, 1});
+        }
     
         Entity block1 = registryManager.spawnEntity();
         registryManager.addComponent(block1, comp::Position{0, 0});
@@ -104,15 +113,6 @@ int main(int ac, char **av)
 
         for (size_t i = 0; i < 15; i++) {
 
-            if (i >= 8 && i <= 13) {
-                Entity invisibleBlock = registryManager.spawnEntity();
-                registryManager.addComponent(invisibleBlock, comp::Position{30.0f + (float) i * 45, 100.0f});
-                #ifdef DEBUG_INVISIBLE_WALLS
-                    registryManager.addComponent(invisibleBlock, comp::Drawable{9});
-                #endif
-                registryManager.addComponent(invisibleBlock, comp::Collider{14, 45, 1, {}, 1});
-            }
-
             if (i == 10 || i == 11) {
                 continue;
             }
@@ -122,6 +122,8 @@ int main(int ac, char **av)
             registryManager.addComponent(block, comp::Drawable{5});
             registryManager.addComponent(block, comp::Collider{45, 14, 1, {}});
         }
+
+        // Entity block2 = registryManager.spawnEntity();
 
     } catch (std::exception const &e) {
         std::cerr << e.what() << std::endl;
