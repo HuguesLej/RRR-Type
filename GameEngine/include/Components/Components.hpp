@@ -44,10 +44,10 @@ namespace comp
 
         Drawable(uint32_t textureId, float scaleX = 1.0, float scaleY = 1.0, float rotation = 0)
             : textureId(textureId), scaleX(scaleX), scaleY(scaleY), rotation(rotation), isBackground(false) {}
-        Drawable(uint32_t textureId, bool isBackground) : textureId(textureId), isBackground(isBackground) {}
+        Drawable(uint32_t textureId, bool isBackground) : textureId(textureId), scaleX(0), scaleY(0), rotation(0), isBackground(isBackground) {}
 
         private:
-            Drawable() : textureId(0), scaleX(1.0), scaleY(1.0), rotation(0), isBackground(false) {}
+            Drawable() : textureId(0), scaleX(0), scaleY(0), rotation(0), isBackground(false) {}
             friend ComponentsSerializer;
     };
 
@@ -109,7 +109,7 @@ namespace comp
             }
 
         private:
-            Collider() : width(0), height(0), layer(0), collisionGivenDamage(0) {}
+            Collider() : width(0), height(0), layer(0), collidingLayers({0}), collisionGivenDamage(0) {}
             friend ComponentsSerializer;
     };
 
