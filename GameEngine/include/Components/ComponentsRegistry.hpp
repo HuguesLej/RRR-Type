@@ -48,7 +48,7 @@ class ComponentsRegistry {
 
         void sent(bool sent)
         {
-            if (_sent) {
+            if (sent) {
                 _sentCount++;
                 if (_sentCount >= 20) {
                     _sent = true;
