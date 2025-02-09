@@ -18,6 +18,8 @@
 #include "SFMLGraphical.hpp"
 #include "Timer.hpp"
 
+#define DEBUG_INVISIBLE_WALLS
+
 void registerSystemsAndComponents(RegistryManager &registryManager)
 {
     registryManager.addSystem(std::make_unique<CollisionSystem>());
@@ -93,7 +95,6 @@ int main(int ac, char **av)
 
     for (size_t i = 0; i < 10; i++) {
         Entity block = registryManager.spawnEntity();
-
         try {
             registryManager.addComponent(block, comp::Position{0, -30.0f - (float) i * 45});
             registryManager.addComponent(block, comp::Drawable{6});
@@ -104,9 +105,27 @@ int main(int ac, char **av)
         }
     }
 
-    for (size_t i = 0; i < 10; i++) {
-        Entity block = registryManager.spawnEntity();
+    for (size_t i = 0; i < 15; i++) {
 
+        if (i >= 8 && i <= 13) {
+            Entity invisibleBlock = registryManager.spawnEntity();
+            try {
+                registryManager.addComponent(invisibleBlock, comp::Position{30.0f + (float) i * 45, 100.0f});
+                #ifdef DEBUG_INVISIBLE_WALLS
+                    registryManager.addComponent(invisibleBlock, comp::Drawable{9});
+                #endif
+                registryManager.addComponent(invisibleBlock, comp::Collider{14, 45, 1, {}, 1});
+            } catch (std::exception const &e) {
+                std::cerr << e.what() << std::endl;
+                return 84;
+            }
+        }
+
+        if (i == 10 || i == 11) {
+            continue;
+        }
+
+        Entity block = registryManager.spawnEntity();
         try {
             registryManager.addComponent(block, comp::Position{30.0f + (float) i * 45, 0});
             registryManager.addComponent(block, comp::Drawable{5});
@@ -115,6 +134,7 @@ int main(int ac, char **av)
             std::cerr << e.what() << std::endl;
             return 84;
         }
+
     }
 
     // Entity enemy = registryManager.spawnEntity();
