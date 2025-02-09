@@ -22,6 +22,11 @@ ACommunication::Error::Error(OriginType origin)
     _msg += " can not use this method.";
 }
 
+const char *ACommunication::Error::what() const noexcept
+{
+    return _msg.c_str();
+}
+
 
 ACommunication::ACommunication(asio::io_context &io) : _io(io), _recvStrand(asio::make_strand(io)), _sendStrand(asio::make_strand(io)), _timer(io)
 {
