@@ -74,6 +74,9 @@ int main(int ac, char **av)
     try {
         graphical->addTextures({
             "assets/sprites/MainCharacters/MaskDude/Idle.png",
+            "assets/sprites/MainCharacters/NinjaFrog/Idle.png",
+            "assets/sprites/MainCharacters/PinkMan/Idle.png",
+            "assets/sprites/MainCharacters/VirtualGuy/Idle.png",
             "assets/sprites/Terrain/Iron/Iron1.png",
             "assets/sprites/Enemies/AngryPig/Idle.png",
             "assets/sprites/Enemies/AngryPig/Idle.png"
