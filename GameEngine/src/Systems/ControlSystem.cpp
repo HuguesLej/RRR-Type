@@ -16,7 +16,7 @@ void ControlSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical>
 
         auto &controllables = manager.getComponents<comp::Controllable>();
 
-        for (std::size_t i = 0; i < controllables.size(); i++) {
+        for (std::size_t i = 0; i < controllables->size(); i++) {
 
             if (!controllables[i]) {
                 continue;

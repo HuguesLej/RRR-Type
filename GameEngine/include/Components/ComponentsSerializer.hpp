@@ -52,7 +52,7 @@ class ComponentsSerializer
                 ComponentsRegistry<Component> registry = std::any_cast<ComponentsRegistry<Component>>(data);
                 std::ostringstream oss;
 
-                for (auto &component : registry) {
+                for (auto &component : *registry) {
                     if (component.has_value()) {
                         oss << "1 ";
                         serializeComponent(oss, *component);
@@ -83,9 +83,9 @@ class ComponentsSerializer
                     if (hasValue == "1") {
                         Component component;
                         deserializeComponent(iss, component);
-                        registry.push_back(component);
+                        registry->push_back(component);
                     } else {
-                        registry.push_back(std::nullopt);
+                        registry->push_back(std::nullopt);
                     }
                 }
 

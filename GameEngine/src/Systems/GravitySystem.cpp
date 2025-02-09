@@ -19,9 +19,9 @@ void GravitySystem::update(RegistryManager &manager, std::shared_ptr<AGraphical>
         auto &velocities = manager.getComponents<comp::Velocity>();
         auto &colliders = manager.getComponents<comp::Collider>();
 
-        for (std::size_t i = 0; i < gravities.size(); i++) {
+        for (std::size_t i = 0; i < gravities->size(); i++) {
 
-            if (!gravities[i] || velocities.size() <= i || colliders.size() <= i || !velocities[i] || !colliders[i]) {
+            if (!gravities[i] || velocities->size() <= i || colliders->size() <= i || !velocities[i] || !colliders[i]) {
                 continue;
             }
 

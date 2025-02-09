@@ -19,9 +19,9 @@ void CollisionSystem::update(RegistryManager &manager, std::shared_ptr<AGraphica
         auto &velocities = manager.getComponents<comp::Velocity>();
         auto &colliders = manager.getComponents<comp::Collider>();
 
-        for (size_t i = 0; i < positions.size(); i++) {
+        for (size_t i = 0; i < positions->size(); i++) {
 
-            if (!positions[i] || colliders.size() <= i || !colliders[i]) {
+            if (!positions[i] || colliders->size() <= i || !colliders[i]) {
                 continue;
             }
 
@@ -31,9 +31,9 @@ void CollisionSystem::update(RegistryManager &manager, std::shared_ptr<AGraphica
             colliders[i]->collideNegY = false;
             colliders[i]->collisionTakenDamage = 0;
 
-            for (size_t j = 0; j < positions.size(); j++) {
+            for (size_t j = 0; j < positions->size(); j++) {
 
-                if (i == j || !positions[j] || colliders.size() <= j || !colliders[j]) {
+                if (i == j || !positions[j] || colliders->size() <= j || !colliders[j]) {
                     continue;
                 }
 
@@ -49,7 +49,7 @@ void CollisionSystem::update(RegistryManager &manager, std::shared_ptr<AGraphica
                     positions[j].value(),
                     colliders[i].value(),
                     colliders[j].value(),
-                    velocities.size() > i ? (velocities[i] ? &velocities[i].value() : nullptr) : nullptr
+                    velocities->size() > i ? (velocities[i] ? &velocities[i].value() : nullptr) : nullptr
                 );
 
             }

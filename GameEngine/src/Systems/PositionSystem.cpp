@@ -30,9 +30,9 @@ void PositionSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical
 void PositionSystem::handlePositions(ComponentsRegistry<comp::Position> &positions, ComponentsRegistry<comp::Velocity> const &velocities,
     ComponentsRegistry<comp::Collider> const colliders, ComponentsRegistry<comp::Controllable> const controllables, uint64_t const &elapsedMs)
 {
-    for (std::size_t i = 0; i < positions.size(); i++) {
+    for (std::size_t i = 0; i < positions->size(); i++) {
 
-        if (!positions[i] || velocities.size() <= i || !velocities[i]) {
+        if (!positions[i] || velocities->size() <= i || !velocities[i]) {
             continue;
         }
 
@@ -41,7 +41,7 @@ void PositionSystem::handlePositions(ComponentsRegistry<comp::Position> &positio
         auto velPosY = velocities[i]->posY;
         auto velNegY = velocities[i]->negY;
 
-        if (controllables.size() > i && controllables[i]) {
+        if (controllables->size() > i && controllables[i]) {
 
             if (controllables[i]->right.first != Keys::None && controllables[i]->right.first != Keys::Unknown && !controllables[i]->right.second) {
                 velPosX = 0;
@@ -58,7 +58,7 @@ void PositionSystem::handlePositions(ComponentsRegistry<comp::Position> &positio
 
         }
 
-        if (colliders.size() > i && colliders[i]) {
+        if (colliders->size() > i && colliders[i]) {
 
             if (colliders[i]->collidePosX) {
                 velPosX = 0;

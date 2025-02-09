@@ -93,7 +93,7 @@ void RegistryManager::replaceComponent(std::any registry)
     auto type = std::type_index(registry.type());
 
     if (_componentsRegistriesMap.find(type) == _componentsRegistriesMap.end()) {
-        throw ComponentError(ComponentError::NOT_REGISTERED, typeid(registry).name());
+        throw ComponentError(ComponentError::NOT_REGISTERED, type.name());
     }
 
     _componentsRegistriesMap[type] = registry;
