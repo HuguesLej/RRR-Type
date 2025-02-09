@@ -60,7 +60,7 @@ int main(int ac, char **av)
 
     try {
         registryManager.addComponent(character, comp::Position{180, 150});
-        registryManager.addComponent(character, comp::Velocity{0, 0});
+        registryManager.addComponent(character, comp::Velocity{1, 0});
         registryManager.addComponent(character, comp::Drawable{0});
         registryManager.addComponent(character, comp::Animable{11, 100});
         registryManager.addComponent(character, comp::Collider{32, 32, 1, {1}});
