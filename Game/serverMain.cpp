@@ -73,7 +73,7 @@ int main(int ac, char **av)
         registryManager.addComponent(enemy, comp::Velocity{0, 0});
         registryManager.addComponent(enemy, comp::Drawable{2});
         registryManager.addComponent(enemy, comp::Animable{9, 120});
-        registryManager.addComponent(enemy, comp::Collider{30, 30, 1, {1}, 1});
+        registryManager.addComponent(enemy, comp::Collider{30, 26, 1, {1}, 1});
         registryManager.addComponent(enemy, comp::Gravity{1});
         registryManager.addComponent(enemy, comp::Health{1});
     } catch (std::exception const &e) {
