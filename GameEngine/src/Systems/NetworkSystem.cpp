@@ -121,11 +121,11 @@ void NetworkSystem::createNewPlayer(RegistryManager &manager, const std::string 
 
     manager.addComponent(character, comp::Controllable{Keys::Q, Keys::D, Keys::None, Keys::None, Keys::Space, ip, port});
     manager.addComponent(character, comp::Position{50, -50});
-    manager.addComponent(character, comp::Velocity{1, 0});
+    manager.addComponent(character, comp::Velocity{2, 0});
     manager.addComponent(character, comp::Drawable{0});
     manager.addComponent(character, comp::Animable{11, 100});
     manager.addComponent(character, comp::Collider{32, 32, 1, {1}});
-    manager.addComponent(character, comp::Gravity{1});
-    manager.addComponent(character, comp::Jumpable{2, 300});
+    manager.addComponent(character, comp::Gravity{3});
+    manager.addComponent(character, comp::Jumpable{6, 300});
     manager.addComponent(character, comp::Health{1});
 }
