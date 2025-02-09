@@ -40,16 +40,43 @@ void registerSystemsAndComponents(RegistryManager &registryManager)
     registryManager.registerComponent<comp::Velocity>();
 }
 
-int main(void)
+int main(int ac, char **av)
 {
+    if (ac != 3) {
+        std::cerr << "Usage: ./rrr-type_client <ip> <port>" << std::endl;
+        return 84;
+    }
+
+    for (auto c : std::string(av[1])) {
+        if ((c < '0' || c > '9') && c != '.') {
+            std::cerr << "Invalid IP: " << av[1] << std::endl;
+            return 84;
+        }
+    }
+    for (auto c : std::string(av[2])) {
+        if (c < '0' || c > '9') {
+            std::cerr << "Invalid port: " << av[2] << std::endl;
+            return 84;
+        }
+    }
+
     asio::io_context io;
-    std::shared_ptr<UDPClientCommunication> client = std::make_shared<UDPClientCommunication>(io, "192.168.1.17", 12345);
+    std::shared_ptr<UDPClientCommunication> client;
+    try {
+        client = std::make_shared<UDPClientCommunication>(io, av[1], std::stoi(av[2]));
+    } catch (std::exception const &e) {
+        std::cerr << e.what() << ": " << av[1] << ", " << av[2] << std::endl;
+        return 84;
+    }
     std::shared_ptr<SFMLGraphical> graphical = std::make_shared<SFMLGraphical>();
     RegistryManager registryManager(graphical, client);
 
     try {
         graphical->addTextures({
             "assets/sprites/MainCharacters/MaskDude/Idle.png",
+            "assets/sprites/MainCharacters/NinjaFrog/Idle.png",
+            "assets/sprites/MainCharacters/PinkMan/Idle.png",
+            "assets/sprites/MainCharacters/VirtualGuy/Idle.png",
             "assets/sprites/Terrain/Iron/Iron1.png",
             "assets/sprites/Enemies/AngryPig/Idle.png",
             "assets/sprites/Enemies/AngryPig/Idle.png"

@@ -51,7 +51,7 @@ class ACommunication
 
         virtual bool isServer() = 0;
 
-        virtual std::unordered_map<asio::ip::udp::endpoint, bool> &getClients() = 0;
+        virtual std::vector<std::pair<asio::ip::udp::endpoint, bool>> &getClients() = 0;
 
         virtual std::pair<std::string, uint16_t> getLocalAddressAndPort() = 0;
 

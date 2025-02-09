@@ -92,7 +92,7 @@ void DrawSystem::handleView(std::shared_ptr<AGraphical> &graphical, std::shared_
     if (nComm && !nComm->isServer()) {
         auto local = nComm->getLocalAddressAndPort();
 
-        if (local.first == ctrl.localAdress && local.second == ctrl.localPort) {
+        if (local.first == ctrl.localAddress && local.second == ctrl.localPort) {
             graphical->setViewCenter(pos);
             viewHasChanged = true;
         }

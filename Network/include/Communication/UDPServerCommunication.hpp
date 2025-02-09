@@ -18,7 +18,7 @@ class UDPServerCommunication : public ACommunication
 
         bool isServer() override;
 
-        std::unordered_map<asio::ip::udp::endpoint, bool> &getClients() override;
+        std::vector<std::pair<asio::ip::udp::endpoint, bool>> &getClients() override;
 
         std::pair<std::string, uint16_t> getLocalAddressAndPort() override;
 
@@ -26,7 +26,7 @@ class UDPServerCommunication : public ACommunication
         asio::ip::udp::socket _socket;
         asio::ip::udp::endpoint _endpoint;
 
-        std::unordered_map<asio::ip::udp::endpoint, bool> _clients;
+        std::vector<std::pair<asio::ip::udp::endpoint, bool>> _clients;
 
         void startSend() override;
         void sendData() override;

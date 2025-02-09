@@ -40,8 +40,32 @@ void registerSystemsAndComponents(RegistryManager &registryManager)
 
 int main(int ac, char **av)
 {
+    if (ac != 3) {
+        std::cerr << "Usage: ./rrr-type_server <ip> <port>" << std::endl;
+        return 84;
+    }
+
+    for (auto c : std::string(av[1])) {
+        if ((c < '0' || c > '9') && c != '.') {
+            std::cerr << "Invalid IP: " << av[1] << std::endl;
+            return 84;
+        }
+    }
+    for (auto c : std::string(av[2])) {
+        if (c < '0' || c > '9') {
+            std::cerr << "Invalid port: " << av[2] << std::endl;
+            return 84;
+        }
+    }
+
     asio::io_context io;
-    std::shared_ptr<UDPServerCommunication> server = std::make_shared<UDPServerCommunication>(io, "192.168.1.17", 12345);
+    std::shared_ptr<UDPServerCommunication> server;
+    try {
+        server = std::make_shared<UDPServerCommunication>(io, av[1], std::stoi(av[2]));
+    } catch (std::exception const &e) {
+        std::cerr << e.what() << ": " << av[1] << ", " << av[2] << std::endl;
+        return 84;
+    }
     RegistryManager registryManager(server);
 
     try {
@@ -53,34 +77,27 @@ int main(int ac, char **av)
 
     Timer timer;
 
-    // Entity character = registryManager.spawnEntity();
-    Entity block1 = registryManager.spawnEntity();
-    Entity block2 = registryManager.spawnEntity();
+    for (size_t i = 0; i < 10; i++) {
+        Entity block = registryManager.spawnEntity();
+
+        try {
+            registryManager.addComponent(block, comp::Position{0 + (float) i * 45, 0});
+            registryManager.addComponent(block, comp::Drawable{4});
+            registryManager.addComponent(block, comp::Collider{45, 14, 1, {}});
+        } catch (std::exception const &e) {
+            std::cerr << e.what() << std::endl;
+            return 84;
+        }
+    }
+
     Entity enemy = registryManager.spawnEntity();
 
     try {
-        // registryManager.addComponent(character, comp::Position{180, 150});
-        // registryManager.addComponent(character, comp::Velocity{1, 0});
-        // registryManager.addComponent(character, comp::Drawable{0});
-        // registryManager.addComponent(character, comp::Animable{11, 100});
-        // registryManager.addComponent(character, comp::Collider{32, 32, 1, {1}});
-        // registryManager.addComponent(character, comp::Gravity{1});
-        // registryManager.addComponent(character, comp::Jumpable{2, 300});
-        // registryManager.addComponent(character, comp::Health{1});
-
-        registryManager.addComponent(block1, comp::Position{200, 200});
-        registryManager.addComponent(block1, comp::Drawable{1});
-        registryManager.addComponent(block1, comp::Collider{45, 14, 1, {1}});
-
-        registryManager.addComponent(block2, comp::Position{245, 200});
-        registryManager.addComponent(block2, comp::Drawable{1});
-        registryManager.addComponent(block2, comp::Collider{45, 14, 1, {1}});
-
-        registryManager.addComponent(enemy, comp::Position{265, 150});
+        registryManager.addComponent(enemy, comp::Position{200, -50});
         registryManager.addComponent(enemy, comp::Velocity{0, 0});
-        registryManager.addComponent(enemy, comp::Drawable{2});
+        registryManager.addComponent(enemy, comp::Drawable{5});
         registryManager.addComponent(enemy, comp::Animable{9, 120});
-        registryManager.addComponent(enemy, comp::Collider{30, 30, 1, {1}, 1});
+        registryManager.addComponent(enemy, comp::Collider{30, 26, 1, {1}, 1});
         registryManager.addComponent(enemy, comp::Gravity{1});
         registryManager.addComponent(enemy, comp::Health{1});
     } catch (std::exception const &e) {

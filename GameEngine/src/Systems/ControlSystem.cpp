@@ -25,12 +25,14 @@ void ControlSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical>
 
                 auto local = networkCommunication->getLocalAddressAndPort();
 
-                if (local.first == controllables[i]->localAdress && local.second == controllables[i]->localPort) {
+                if (local.first == controllables[i]->localAddress && local.second == controllables[i]->localPort) {
                     updateKeyState(graphical, controllables[i]->left);
                     updateKeyState(graphical, controllables[i]->right);
                     updateKeyState(graphical, controllables[i]->up);
                     updateKeyState(graphical, controllables[i]->down);
                     updateKeyState(graphical, controllables[i]->jump);
+                } else {
+                    controllables[i] = std::nullopt;
                 }
 
                 continue;

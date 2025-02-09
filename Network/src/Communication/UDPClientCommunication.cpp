@@ -45,7 +45,7 @@ bool UDPClientCommunication::isServer()
     return false;
 }
 
-std::unordered_map<asio::ip::udp::endpoint, bool> &UDPClientCommunication::getClients()
+std::vector<std::pair<asio::ip::udp::endpoint, bool>> &UDPClientCommunication::getClients()
 {
     throw Error(Error::OriginType::Client);
 }

@@ -33,12 +33,14 @@ void NetworkSystem::handleServerUpdate(RegistryManager &manager, std::shared_ptr
     bool hasNewClients = false;
     auto &clients = networkCommunication->getClients();
 
+    uint16_t count = 0;
     for (auto &client : clients) {
         if (client.second) {
-            createNewPlayer(manager, client.first.address().to_string(), client.first.port());
+            createNewPlayer(manager, client.first.address().to_string(), client.first.port(), count);
             client.second = false;
             hasNewClients = true;
         }
+        count++;
     }
 
     for (auto &registry : manager.getComponentsRegistries()) {
@@ -115,17 +117,17 @@ void NetworkSystem::handlePacketsReceiving(RegistryManager &manager, std::shared
     }
 }
 
-void NetworkSystem::createNewPlayer(RegistryManager &manager, const std::string ip, const uint16_t port)
+void NetworkSystem::createNewPlayer(RegistryManager &manager, const std::string ip, const uint16_t port, uint16_t textureId)
 {
     Entity character = manager.spawnEntity();
 
     manager.addComponent(character, comp::Controllable{Keys::Q, Keys::D, Keys::None, Keys::None, Keys::Space, ip, port});
-    manager.addComponent(character, comp::Position{180, 100});
-    manager.addComponent(character, comp::Velocity{1, 0});
-    manager.addComponent(character, comp::Drawable{0});
+    manager.addComponent(character, comp::Position{50, -50});
+    manager.addComponent(character, comp::Velocity{2, 0});
+    manager.addComponent(character, comp::Drawable{textureId});
     manager.addComponent(character, comp::Animable{11, 100});
-    manager.addComponent(character, comp::Collider{32, 32, 1, {1}});
-    manager.addComponent(character, comp::Gravity{1});
-    manager.addComponent(character, comp::Jumpable{2, 300});
+    manager.addComponent(character, comp::Collider{20, 26, 1, {1}});
+    manager.addComponent(character, comp::Gravity{3});
+    manager.addComponent(character, comp::Jumpable{6, 300});
     manager.addComponent(character, comp::Health{1});
 }
