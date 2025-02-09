@@ -79,7 +79,9 @@ int main(int ac, char **av)
             "assets/sprites/MainCharacters/VirtualGuy/Idle.png",
             "assets/sprites/Background/Green.png",
             "assets/sprites/Terrain/Iron/Iron1.png",
-            "assets/sprites/Enemies/AngryPig/Idle.png",
+            "assets/sprites/Terrain/Iron/Iron2.png",
+            "assets/sprites/Terrain/Iron/Iron3.png",
+            "assets/sprites/Terrain/Iron/Iron4.png",
             "assets/sprites/Enemies/AngryPig/Idle.png"
         });
     } catch (std::exception const &e) {
