@@ -16,8 +16,8 @@ void PositionSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical
 
         auto &positions = manager.getComponents<comp::Position>();
         auto &velocities = manager.getComponents<comp::Velocity>();
-        auto &colliders = getColliders(manager);
-        auto &controllables = getControllables(manager);
+        auto colliders = getColliders(manager);
+        auto controllables = getControllables(manager);
 
         handlePositions(positions, velocities, colliders, controllables, elapsedMs);
 
@@ -28,7 +28,7 @@ void PositionSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical
 }
 
 void PositionSystem::handlePositions(ComponentsRegistry<comp::Position> &positions, ComponentsRegistry<comp::Velocity> const &velocities,
-    ComponentsRegistry<comp::Collider> const &colliders, ComponentsRegistry<comp::Controllable> const &controllables, uint64_t const &elapsedMs)
+    ComponentsRegistry<comp::Collider> const colliders, ComponentsRegistry<comp::Controllable> const controllables, uint64_t const &elapsedMs)
 {
     for (std::size_t i = 0; i < positions.size(); i++) {
 

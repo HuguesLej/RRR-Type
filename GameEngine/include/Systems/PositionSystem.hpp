@@ -21,10 +21,10 @@ class PositionSystem : public ASystem
 
     private:
         void handlePositions(ComponentsRegistry<comp::Position> &positions, ComponentsRegistry<comp::Velocity> const &velocities,
-            ComponentsRegistry<comp::Collider> const &colliders, ComponentsRegistry<comp::Controllable> const &controllables, uint64_t const &elapsedMs);
+            ComponentsRegistry<comp::Collider> const colliders, ComponentsRegistry<comp::Controllable> const controllables, uint64_t const &elapsedMs);
 
-        ComponentsRegistry<comp::Collider> &getColliders(RegistryManager &manager);
-        ComponentsRegistry<comp::Controllable> &getControllables(RegistryManager &manager);
+        ComponentsRegistry<comp::Collider> getColliders(RegistryManager &manager);
+        ComponentsRegistry<comp::Controllable> getControllables(RegistryManager &manager);
 };
 
 #endif /* !POSITIONSYSTEM_HPP_ */
