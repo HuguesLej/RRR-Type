@@ -17,9 +17,8 @@ void DrawSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &g
         try {
 
             auto &animables = manager.getComponents<comp::Animable>();
-            auto controllables = getControllables(manager);
 
-            handleDraw(graphical, networkCommunication, positions, drawables, animables, controllables, elapsedMs);
+            handleDraw(manager, graphical, networkCommunication, positions, drawables, animables, elapsedMs);
 
         } catch (RegistryManager::ComponentError const &e) {
 
@@ -27,9 +26,8 @@ void DrawSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &g
 
             auto tmpAnimables = ComponentsRegistry<comp::Animable>();
             auto &animables = tmpAnimables;
-            auto controllables = getControllables(manager);
 
-            handleDraw(graphical, networkCommunication, positions, drawables, animables, controllables, elapsedMs);
+            handleDraw(manager, graphical, networkCommunication, positions, drawables, animables, elapsedMs);
 
         }
 
@@ -39,9 +37,11 @@ void DrawSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &g
     }
 }
 
-void DrawSystem::handleDraw(std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &nComm, ComponentsRegistry<comp::Position> const &pos, 
-    ComponentsRegistry<comp::Drawable> const &draw, ComponentsRegistry<comp::Animable> &anim, ComponentsRegistry<comp::Controllable> &ctrl, uint64_t &elapsedMs)
+void DrawSystem::handleDraw(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &nComm, ComponentsRegistry<comp::Position> const &pos, 
+    ComponentsRegistry<comp::Drawable> draw, ComponentsRegistry<comp::Animable> &anim, uint64_t &elapsedMs)
 {
+    auto controllables = getControllables(manager);
+    auto velocities = getVelocities(manager);
     bool viewHasChanged = false;
 
     for (std::size_t i = 0; i < pos->size(); i++) {
@@ -51,16 +51,12 @@ void DrawSystem::handleDraw(std::shared_ptr<AGraphical> &graphical, std::shared_
         }
 
         if (!viewHasChanged && ctrl->size() > i && ctrl[i]) {
-            if (nComm && !nComm->isServer()) {
-                auto local = nComm->getLocalAddressAndPort();
+            handleView(graphical, nComm, pos[i].value(), ctrl[i].value(), viewHasChanged);
+        }
 
-                if (local.first == ctrl[i]->localAdress && local.second == ctrl[i]->localPort) {
-                    graphical->setViewCenter(pos[i].value());
-                    viewHasChanged = true;
-                }
-            } else {
-                graphical->setViewCenter(pos[i].value());
-                viewHasChanged = true;
+        if (velocities->size() > i && velocities[i]) {
+            if (velocities[i]->negX > 0) {
+                draw[i]->scaleX *= -1;
             }
         }
 
@@ -72,6 +68,22 @@ void DrawSystem::handleDraw(std::shared_ptr<AGraphical> &graphical, std::shared_
     }
 }
 
+void DrawSystem::handleView(std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &nComm, comp::Position const &pos,
+    comp::Controllable const &ctrl, bool &viewHasChanged)
+{
+    if (nComm && !nComm->isServer()) {
+        auto local = nComm->getLocalAddressAndPort();
+
+        if (local.first == ctrl.localAdress && local.second == ctrl.localPort) {
+            graphical->setViewCenter(pos);
+            viewHasChanged = true;
+        }
+    } else {
+        graphical->setViewCenter(pos);
+        viewHasChanged = true;
+    }
+}
+
 ComponentsRegistry<comp::Controllable> DrawSystem::getControllables(RegistryManager &manager)
 {
     try {
@@ -79,5 +91,15 @@ ComponentsRegistry<comp::Controllable> DrawSystem::getControllables(RegistryMana
     } catch (RegistryManager::ComponentError const &e) {
         (void) e;
         return ComponentsRegistry<comp::Controllable>();
+    }
+}
+
+ComponentsRegistry<comp::Velocity> DrawSystem::getVelocities(RegistryManager &manager)
+{
+    try {
+        return manager.getComponents<comp::Velocity>();
+    } catch (RegistryManager::ComponentError const &e) {
+        (void) e;
+        return ComponentsRegistry<comp::Velocity>();
     }
 }
