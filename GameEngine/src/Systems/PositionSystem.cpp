@@ -43,16 +43,16 @@ void PositionSystem::handlePositions(ComponentsRegistry<comp::Position> &positio
 
         if (controllables.size() > i && controllables[i]) {
 
-            if (!controllables[i]->right) {
+            if (!controllables[i]->right.second) {
                 velPosX = 0;
             }
-            if (!controllables[i]->left) {
+            if (!controllables[i]->left.second) {
                 velNegX = 0;
             }
-            if (!controllables[i]->down) {
+            if (!controllables[i]->down.second) {
                 velPosY = 0;
             }
-            if (!controllables[i]->up) {
+            if (!controllables[i]->up.second) {
                 velNegY = 0;
             }
 
