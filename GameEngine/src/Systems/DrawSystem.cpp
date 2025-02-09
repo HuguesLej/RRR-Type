@@ -11,8 +11,8 @@ void DrawSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &g
 {
     try {
 
-        auto &positions = manager.getComponents<comp::Position>();
         auto &drawables = manager.getComponents<comp::Drawable>();
+        auto &positions = manager.getComponents<comp::Position>();
 
         try {
 
@@ -47,6 +47,11 @@ void DrawSystem::handleDraw(RegistryManager &manager, std::shared_ptr<AGraphical
     for (std::size_t i = 0; i < pos->size(); i++) {
 
         if (!pos[i] || draw->size() <= i || !draw[i]) {
+            continue;
+        }
+
+        if (draw[i]->isBackground) {
+            graphical->drawBackground(draw[i].value());
             continue;
         }
 

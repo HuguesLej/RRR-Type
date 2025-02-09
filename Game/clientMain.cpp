@@ -77,8 +77,15 @@ int main(int ac, char **av)
             "assets/sprites/MainCharacters/NinjaFrog/Idle.png",
             "assets/sprites/MainCharacters/PinkMan/Idle.png",
             "assets/sprites/MainCharacters/VirtualGuy/Idle.png",
+            "assets/sprites/Background/Green.png",
             "assets/sprites/Terrain/Iron/Iron1.png",
-            "assets/sprites/Enemies/AngryPig/Idle.png",
+            "assets/sprites/Terrain/Iron/Iron2.png",
+            "assets/sprites/Terrain/Iron/Iron3.png",
+            "assets/sprites/Terrain/Iron/Iron4.png",
+            "assets/sprites/Terrain/Gold/Gold1.png",
+            "assets/sprites/Terrain/Gold/Gold2.png",
+            "assets/sprites/Terrain/Gold/Gold3.png",
+            "assets/sprites/Terrain/Gold/Gold4.png",
             "assets/sprites/Enemies/AngryPig/Idle.png"
         });
     } catch (std::exception const &e) {
@@ -94,15 +101,6 @@ int main(int ac, char **av)
     }
 
     Timer timer;
-
-    // Entity character = registryManager.spawnEntity();
-
-    // try {
-    //     registryManager.addComponent(character, comp::Controllable{Keys::Q, Keys::D, Keys::None, Keys::None, Keys::Space});
-    // } catch (std::exception const &e) {
-    //     std::cerr << e.what() << std::endl;
-    //     return 84;
-    // }
 
     graphical->openWindow("RRR-Type");
     timer.start();
