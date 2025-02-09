@@ -53,21 +53,11 @@ int main(int ac, char **av)
 
     Timer timer;
 
-    // Entity character = registryManager.spawnEntity();
     Entity block1 = registryManager.spawnEntity();
     Entity block2 = registryManager.spawnEntity();
     Entity enemy = registryManager.spawnEntity();
 
     try {
-        // registryManager.addComponent(character, comp::Position{180, 150});
-        // registryManager.addComponent(character, comp::Velocity{1, 0});
-        // registryManager.addComponent(character, comp::Drawable{0});
-        // registryManager.addComponent(character, comp::Animable{11, 100});
-        // registryManager.addComponent(character, comp::Collider{32, 32, 1, {1}});
-        // registryManager.addComponent(character, comp::Gravity{1});
-        // registryManager.addComponent(character, comp::Jumpable{2, 300});
-        // registryManager.addComponent(character, comp::Health{1});
-
         registryManager.addComponent(block1, comp::Position{200, 200});
         registryManager.addComponent(block1, comp::Drawable{1});
         registryManager.addComponent(block1, comp::Collider{45, 14, 1, {1}});
