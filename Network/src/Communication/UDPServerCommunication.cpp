@@ -82,6 +82,7 @@ void UDPServerCommunication::sendData()
 {
     std::unique_lock<std::mutex> lock(_sendMutex);
     if (_sendPackets.empty() || _clients.empty()) {
+        _sendPackets.clear();
         lock.unlock();
         startSend();
     } else {
