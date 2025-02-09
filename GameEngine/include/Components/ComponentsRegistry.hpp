@@ -48,7 +48,15 @@ class ComponentsRegistry {
 
         void sent(bool sent)
         {
-            _sent = sent;
+            if (_sent) {
+                _sentCount++;
+                if (_sentCount >= 20) {
+                    _sent = true;
+                }
+            } else {
+                _sent = sent;
+                _sentCount = 0;
+            }
         }
 
 
@@ -95,6 +103,7 @@ class ComponentsRegistry {
 
         bool _sendOnce;
         bool _sent = false;
+        size_t _sentCount = 0;
 };
 
 #endif /* !COMPONENTS_REGISTRY_HPP_ */
