@@ -11,7 +11,7 @@ ASystem::SystemError::SystemError(const std::string systemName, const std::vecto
 {
     _msg = systemName + " needs the following components: ";
 
-    for (size_t i = 0; i < componentsName.size() - 1; i++) {
+    for (size_t i = 0; i < componentsName.size(); i++) {
         _msg += componentsName[i];
 
         if (i < componentsName.size() - 2) {
