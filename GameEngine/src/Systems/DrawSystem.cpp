@@ -50,8 +50,8 @@ void DrawSystem::handleDraw(RegistryManager &manager, std::shared_ptr<AGraphical
             continue;
         }
 
-        if (!viewHasChanged && ctrl->size() > i && ctrl[i]) {
-            handleView(graphical, nComm, pos[i].value(), ctrl[i].value(), viewHasChanged);
+        if (!viewHasChanged && controllables->size() > i && controllables[i]) {
+            handleView(graphical, nComm, pos[i].value(), controllables[i].value(), viewHasChanged);
         }
 
         if (velocities->size() > i && velocities[i]) {
