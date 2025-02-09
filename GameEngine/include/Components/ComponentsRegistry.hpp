@@ -21,6 +21,7 @@ class ComponentsRegistry {
 
         bool sendOnce()
         {
+            return _sendOnce;
         }
 
         void sendOnce(bool sendOnce)
