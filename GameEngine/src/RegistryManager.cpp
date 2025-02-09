@@ -87,20 +87,14 @@ const std::unordered_map<std::type_index, std::any> &RegistryManager::getCompone
     return _componentsRegistriesMap;
 }
 
-void RegistryManager::replaceComponent(ComponentsRegistry<std::any> registry)
+
+void RegistryManager::replaceComponent(std::any registry)
 {
-    for (auto &component : registry) {
-        if (!component.has_value()) {
-            continue;
-        }
+    auto type = std::type_index(registry.type());
 
-        auto type = std::type_index(typeid(component));
-
-        if (_componentsRegistriesMap.find(type) == _componentsRegistriesMap.end()) {
-            throw ComponentError(ComponentError::NOT_REGISTERED, typeid(component).name());
-        }
-
-        _componentsRegistriesMap[type] = registry;
-        break;
+    if (_componentsRegistriesMap.find(type) == _componentsRegistriesMap.end()) {
+        throw ComponentError(ComponentError::NOT_REGISTERED, typeid(registry).name());
     }
+
+    _componentsRegistriesMap[type] = registry;
 }

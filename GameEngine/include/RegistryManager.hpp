@@ -74,13 +74,13 @@ class RegistryManager
         void updateSystems(uint64_t elapsedMs);
 
         const std::unordered_map<std::type_index, std::any> &getComponentsRegistries() const;
-        void replaceComponent(ComponentsRegistry<std::any> registry);
+        void replaceComponent(std::any registry);
 
 
         template <typename Component>
         ComponentsRegistry<Component> &registerComponent()
         {
-            auto type = std::type_index(typeid(Component));
+            auto type = std::type_index(typeid(ComponentsRegistry<Component>));
 
             if (_componentsRegistriesMap.find(type) != _componentsRegistriesMap.end()) {
                 throw ComponentError(ComponentError::ALREADY_REGISTERED, typeid(Component).name());
@@ -99,7 +99,7 @@ class RegistryManager
         template <typename Component>
         ComponentsRegistry<Component> &getComponents()
         {
-            auto type = std::type_index(typeid(Component));
+            auto type = std::type_index(typeid(ComponentsRegistry<Component>));
 
             if (_componentsRegistriesMap.find(type) == _componentsRegistriesMap.end()) {
                 throw ComponentError(ComponentError::NOT_REGISTERED, typeid(Component).name());
@@ -112,7 +112,7 @@ class RegistryManager
         template <typename Component>
         ComponentsRegistry<Component> const &getComponents() const
         {
-            auto type = std::type_index(typeid(Component));
+            auto type = std::type_index(typeid(ComponentsRegistry<Component>));
 
             if (_componentsRegistriesMap.find(type) == _componentsRegistriesMap.end()) {
                 throw ComponentError(ComponentError::NOT_REGISTERED, typeid(Component).name());
