@@ -93,14 +93,24 @@ void RegistryManager::replaceComponent(std::any registry)
     auto newRegistryType = std::type_index(registry.type());
     auto controllableType = std::type_index(typeid(ComponentsRegistry<comp::Controllable>));
 
-    if (_componentsRegistriesMap.find(controllableType) != _componentsRegistriesMap.end() && newRegistryType == controllableType) {
-        auto &controllables = std::any_cast<ComponentsRegistry<comp::Controllable>&>(registry);
-        controllables.sendOnce(true);
-        controllables.setAlreadySent();
-    }
-
     if (_componentsRegistriesMap.find(newRegistryType) == _componentsRegistriesMap.end()) {
         throw ComponentError(ComponentError::NOT_REGISTERED, newRegistryType.name());
+    }
+
+    if (_networkCommunication != nullptr && _networkCommunication->isServer()) {
+        if (_componentsRegistriesMap.find(controllableType) != _componentsRegistriesMap.end() && newRegistryType == controllableType) {
+            auto newControllables = std::any_cast<ComponentsRegistry<comp::Controllable>>(registry);
+            auto &controllables = std::any_cast<ComponentsRegistry<comp::Controllable> &>(_componentsRegistriesMap[controllableType]);
+
+            for (std::size_t i = 0; i < controllables->size(); i++) {
+                if (!newControllables[i]) {
+                    continue;
+                }
+                controllables[i] = newControllables[i];
+            }
+
+            return;
+        }
     }
 
     _componentsRegistriesMap[newRegistryType] = registry;
