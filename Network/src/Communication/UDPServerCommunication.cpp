@@ -49,6 +49,11 @@ std::unordered_map<asio::ip::udp::endpoint, bool> &UDPServerCommunication::getCl
     return _clients;
 }
 
+std::pair<std::string, uint16_t> UDPServerCommunication::getLocalAddressAndPort()
+{
+    return std::make_pair(_socket.local_endpoint().address().to_string(), _socket.local_endpoint().port());
+}
+
 void UDPServerCommunication::startReceive()
 {
     if (_stop) {

@@ -53,6 +53,8 @@ class ACommunication
 
         virtual std::unordered_map<asio::ip::udp::endpoint, bool> &getClients() = 0;
 
+        virtual std::pair<std::string, uint16_t> getLocalAddressAndPort() = 0;
+
     protected:
         asio::io_context &_io;
 
