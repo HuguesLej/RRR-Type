@@ -31,6 +31,8 @@ class ACommunication
         virtual bool isServer() = 0;
 
     protected:
+        asio::io_context &_io;
+
         asio::strand<asio::io_context::executor_type> _recvStrand;
         asio::strand<asio::io_context::executor_type> _sendStrand;
 
@@ -43,6 +45,7 @@ class ACommunication
         std::vector<std::vector<uint8_t>> _recvPackets;
 
         std::vector<std::thread> _workers;
+        std::atomic<bool> _stop = false;
 
     private:
         virtual void startSend() = 0;

@@ -30,6 +30,10 @@ UDPClientCommunication::UDPClientCommunication(asio::io_context &io, std::string
 
 UDPClientCommunication::~UDPClientCommunication()
 {
+    _stop = true;
+
+    _io.stop();
+
     for (auto &worker : _workers) {
         worker.join();
     }
@@ -42,6 +46,10 @@ bool UDPClientCommunication::isServer()
 
 void UDPClientCommunication::startReceive()
 {
+    if (_stop) {
+        return;
+    }
+
     std::shared_ptr<std::string> data = std::make_shared<std::string>();
     data->resize(4096);
 
@@ -69,6 +77,10 @@ void UDPClientCommunication::handleReceive(std::shared_ptr<std::string> &data, c
 
 void UDPClientCommunication::startSend()
 {
+    if (_stop) {
+        return;
+    }
+
     _timer.expires_after(std::chrono::milliseconds(1));
     _timer.async_wait(asio::bind_executor(
         _sendStrand,
@@ -78,6 +90,10 @@ void UDPClientCommunication::startSend()
 
 void UDPClientCommunication::sendData()
 {
+    if (_stop) {
+        return;
+    }
+
     std::unique_lock<std::mutex> lock(_sendMutex);
     if (_sendPackets.empty()) {
         lock.unlock();

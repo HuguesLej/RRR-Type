@@ -7,7 +7,7 @@
 
 #include "ACommunication.hpp"
 
-ACommunication::ACommunication(asio::io_context &io) : _recvStrand(asio::make_strand(io)), _sendStrand(asio::make_strand(io)), _timer(io)
+ACommunication::ACommunication(asio::io_context &io) : _io(io), _recvStrand(asio::make_strand(io)), _sendStrand(asio::make_strand(io)), _timer(io)
 {
 }
 
