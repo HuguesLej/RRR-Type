@@ -44,6 +44,11 @@ bool UDPServerCommunication::isServer()
     return true;
 }
 
+std::unordered_map<asio::ip::udp::endpoint, bool> &UDPServerCommunication::getClients()
+{
+    return _clients;
+}
+
 void UDPServerCommunication::startReceive()
 {
     if (_stop) {
@@ -70,7 +75,9 @@ void UDPServerCommunication::handleReceive(std::shared_ptr<std::string> &data, c
         std::unique_lock<std::mutex> lock(_recvMutex);
         _recvPackets.push_back(std::vector<uint8_t>(data->begin(), data->end()));
 
-        _clients.insert(_endpoint);
+        if (_clients.find(_endpoint) == _clients.end()) {
+            _clients.insert(_endpoint, true);
+        }
         lock.unlock();
 
         startReceive();
@@ -112,7 +119,7 @@ void UDPServerCommunication::sendData()
         for (const auto &client : _clients) {
             _socket.async_send_to(
                 asio::buffer(data),
-                client,
+                client.first,
                 asio::bind_executor(
                     _sendStrand,
                     std::bind(&UDPServerCommunication::handleSend, this, asio::placeholders::error, asio::placeholders::bytes_transferred, clientsCount)

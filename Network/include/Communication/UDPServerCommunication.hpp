@@ -8,7 +8,7 @@
 #ifndef UDP_SERVER_COMMUNICATION_HPP_
     #define UDP_SERVER_COMMUNICATION_HPP_
 
-    #include <unordered_set>
+    #include <unordered_map>
 
     #include "ACommunication.hpp"
 
@@ -20,11 +20,13 @@ class UDPServerCommunication : public ACommunication
 
         bool isServer() override;
 
+        std::unordered_map<asio::ip::udp::endpoint, bool> &getClients();
+
     private:
         asio::ip::udp::socket _socket;
         asio::ip::udp::endpoint _endpoint;
 
-        std::unordered_set<asio::ip::udp::endpoint> _clients;
+        std::unordered_map<asio::ip::udp::endpoint, bool> _clients;
 
         void startSend() override;
         void sendData() override;
