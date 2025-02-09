@@ -31,6 +31,8 @@ void ControlSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical>
                     updateKeyState(graphical, controllables[i]->up);
                     updateKeyState(graphical, controllables[i]->down);
                     updateKeyState(graphical, controllables[i]->jump);
+                } else {
+                    controllables[i] = std::nullopt;
                 }
 
                 continue;
