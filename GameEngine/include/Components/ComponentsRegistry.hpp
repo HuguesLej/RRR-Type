@@ -19,7 +19,13 @@ class ComponentsRegistry {
         }
         ~ComponentsRegistry() = default;
 
+
         bool sendOnce()
+        {
+            return _sendOnce;
+        }
+
+        bool sendOnce() const
         {
             return _sendOnce;
         }
@@ -29,7 +35,13 @@ class ComponentsRegistry {
             _sendOnce = sendOnce;
         }
 
+
         bool sent()
+        {
+            return _sent;
+        }
+
+        bool sent() const
         {
             return _sent;
         }
@@ -39,20 +51,39 @@ class ComponentsRegistry {
             _sent = sent;
         }
 
+
         std::vector<std::optional<Component>>* operator->()
         {
             return &_components;
         }
+
+        const std::vector<std::optional<Component>>* operator->() const
+        {
+            return &_components;
+        }
+
 
         std::vector<std::optional<Component>>& operator*()
         {
             return _components;
         }
 
+        std::vector<std::optional<Component>> const& operator*() const
+        {
+            return _components;
+        }
+
+
         std::optional<Component>& operator[](std::size_t index)
         {
             return _components[index];
         }
+
+        std::optional<Component> const& operator[](std::size_t index) const
+        {
+            return _components[index];
+        }
+
 
         void operator=(std::vector<std::optional<Component>> components)
         {
