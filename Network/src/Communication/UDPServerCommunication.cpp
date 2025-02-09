@@ -44,7 +44,7 @@ bool UDPServerCommunication::isServer()
     return true;
 }
 
-std::unordered_map<asio::ip::udp::endpoint, bool> &UDPServerCommunication::getClients()
+std::vector<std::pair<asio::ip::udp::endpoint, bool>> &UDPServerCommunication::getClients()
 {
     return _clients;
 }
@@ -80,8 +80,12 @@ void UDPServerCommunication::handleReceive(std::shared_ptr<std::string> &data, c
         std::unique_lock<std::mutex> lock(_recvMutex);
         _recvPackets.push_back(std::vector<uint8_t>(data->begin(), data->end()));
 
-        if (_clients.find(_endpoint) == _clients.end()) {
-            _clients[_endpoint] = true;
+        auto it = std::find_if(_clients.begin(), _clients.end(),
+            [this] (const auto &client) {
+                return client.first.address() == _endpoint.address() && client.first.port() == _endpoint.port();
+            });
+        if (it == _clients.end()) {
+            _clients.push_back(std::make_pair(_endpoint, true));
         }
         lock.unlock();
 
