@@ -44,6 +44,11 @@ bool UDPClientCommunication::isServer()
     return false;
 }
 
+std::unordered_map<asio::ip::udp::endpoint, bool> &UDPClientCommunication::getClients()
+{
+    throw Error(Error::OriginType::Client);
+}
+
 void UDPClientCommunication::startReceive()
 {
     if (_stop) {

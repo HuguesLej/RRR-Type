@@ -8,8 +8,6 @@
 #ifndef UDP_SERVER_COMMUNICATION_HPP_
     #define UDP_SERVER_COMMUNICATION_HPP_
 
-    #include <unordered_map>
-
     #include "ACommunication.hpp"
 
 class UDPServerCommunication : public ACommunication
@@ -20,7 +18,7 @@ class UDPServerCommunication : public ACommunication
 
         bool isServer() override;
 
-        std::unordered_map<asio::ip::udp::endpoint, bool> &getClients();
+        std::unordered_map<asio::ip::udp::endpoint, bool> &getClients() override;
 
     private:
         asio::ip::udp::socket _socket;

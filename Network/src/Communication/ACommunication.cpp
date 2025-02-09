@@ -7,6 +7,22 @@
 
 #include "ACommunication.hpp"
 
+
+ACommunication::Error::Error(OriginType origin)
+{
+    switch (origin) {
+        case OriginType::Server:
+            _msg = "Server ";
+            break;
+        case OriginType::Client:
+            _msg = "Client ";
+            break;
+    }
+
+    _msg += " can not use this method.";
+}
+
+
 ACommunication::ACommunication(asio::io_context &io) : _io(io), _recvStrand(asio::make_strand(io)), _sendStrand(asio::make_strand(io)), _timer(io)
 {
 }
