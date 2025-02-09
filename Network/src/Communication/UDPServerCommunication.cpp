@@ -57,13 +57,13 @@ void UDPServerCommunication::startReceive()
 
 void UDPServerCommunication::handleReceive(std::shared_ptr<std::string> &data, const std::error_code &error, std::size_t)
 {
-    // std::cerr << "Received data from " << _endpoint.address().to_string() << ":" << std::to_string(_endpoint.port()) << std::endl;
     if (!error) {
-        // std::cerr << "Received: \"" << *data << "\"" << std::endl;
 
+        std::unique_lock<std::mutex> lock(_recvMutex);
         _recvPackets.push_back(std::vector<uint8_t>(data->begin(), data->end()));
 
         _clients.insert(_endpoint);
+        lock.unlock();
 
         startReceive();
     }
@@ -90,8 +90,6 @@ void UDPServerCommunication::sendData()
 
         _sendPackets.erase(_sendPackets.begin());
         lock.unlock();
-
-        // std::cerr << "Sending: \"" << data << "\"" << std::endl;
 
         std::shared_ptr<std::atomic<size_t>> clientsCount = std::make_shared<std::atomic<size_t>>(_clients.size());
 

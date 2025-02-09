@@ -39,6 +39,7 @@ class ACommunication
         std::mutex _sendMutex;
         std::vector<std::vector<uint8_t>> _sendPackets;
 
+        std::mutex _recvMutex;
         std::vector<std::vector<uint8_t>> _recvPackets;
 
         std::vector<std::thread> _workers;

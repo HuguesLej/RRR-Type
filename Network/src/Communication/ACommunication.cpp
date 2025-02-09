@@ -13,28 +13,27 @@ ACommunication::ACommunication(asio::io_context &io) : _recvStrand(asio::make_st
 
 void ACommunication::setSendData(const std::any &data)
 {
-    // std::cerr << "start setSendData" << std::endl;
     try {
         auto packet = SerializerManager::serialize(data);
-        // std::cerr << "start push_back" << std::endl;
         std::unique_lock<std::mutex> lock(_sendMutex);
         _sendPackets.push_back(packet);
         lock.unlock();
-        // std::cerr << "end push_back" << std::endl;
     } catch (const SerializerManager::Error &e) {
         std::cerr << e.what() << std::endl;
     }
-    // std::cerr << "end setSendData" << std::endl;
 }
 
 std::optional<std::any> ACommunication::getRecvData()
 {
+    std::unique_lock<std::mutex> lock(_recvMutex);
     if (_recvPackets.empty()) {
+        lock.unlock();
         return std::nullopt;
     }
 
     auto data = _recvPackets.front();
     _recvPackets.erase(_recvPackets.begin());
+    lock.unlock();
 
     try {
         return SerializerManager::deserialize(data);
