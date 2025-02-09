@@ -6,7 +6,6 @@
 */
 
 #include "SerializerManager.hpp"
-#include <iostream>
 
 std::unordered_map<std::type_index,
     std::pair<std::function<std::vector<uint8_t>(const std::any &)>, std::function<std::any(const std::vector<uint8_t> &)>>> SerializerManager::_serializers;
