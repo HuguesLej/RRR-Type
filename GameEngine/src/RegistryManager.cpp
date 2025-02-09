@@ -90,11 +90,18 @@ const std::unordered_map<std::type_index, std::any> &RegistryManager::getCompone
 
 void RegistryManager::replaceComponent(std::any registry)
 {
-    auto type = std::type_index(registry.type());
+    auto newRegistryType = std::type_index(registry.type());
+    auto controllableType = std::type_index(typeid(ComponentsRegistry<comp::Controllable>));
 
-    if (_componentsRegistriesMap.find(type) == _componentsRegistriesMap.end()) {
-        throw ComponentError(ComponentError::NOT_REGISTERED, type.name());
+    if (_componentsRegistriesMap.find(controllableType) != _componentsRegistriesMap.end() && newRegistryType == controllableType) {
+        auto &controllables = std::any_cast<ComponentsRegistry<comp::Controllable>&>(registry);
+        controllables.sendOnce(true);
+        controllables.setAlreadySent();
     }
 
-    _componentsRegistriesMap[type] = registry;
+    if (_componentsRegistriesMap.find(newRegistryType) == _componentsRegistriesMap.end()) {
+        throw ComponentError(ComponentError::NOT_REGISTERED, newRegistryType.name());
+    }
+
+    _componentsRegistriesMap[newRegistryType] = registry;
 }

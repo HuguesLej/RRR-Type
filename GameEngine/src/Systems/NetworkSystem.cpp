@@ -54,7 +54,6 @@ void NetworkSystem::handleServerUpdate(RegistryManager &manager, std::shared_ptr
                     continue;
                 }
                 controllables.sent(true);
-                std::cerr << "Sending controllable" << std::endl;
             }
         }
 
@@ -68,7 +67,6 @@ void NetworkSystem::handleServerUpdate(RegistryManager &manager, std::shared_ptr
                     continue;
                 }
                 animables.sent(true);
-                std::cerr << "Sending animable" << std::endl;
             }
         }
 
@@ -82,7 +80,6 @@ void NetworkSystem::handleServerUpdate(RegistryManager &manager, std::shared_ptr
                     continue;
                 }
                 drawables.sent(true);
-                std::cerr << "Sending drawable" << std::endl;
             }
         }
 

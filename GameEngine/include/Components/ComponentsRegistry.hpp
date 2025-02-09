@@ -60,6 +60,12 @@ class ComponentsRegistry {
         }
 
 
+        void setAlreadySent()
+        {
+            _sent = true;
+        }
+
+
         std::vector<std::optional<Component>>* operator->()
         {
             return &_components;
