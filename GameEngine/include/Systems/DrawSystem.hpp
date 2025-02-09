@@ -21,7 +21,7 @@ class DrawSystem : public ASystem
 
     private:
         void handleDraw(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &nComm, ComponentsRegistry<comp::Position> const &pos, 
-            ComponentsRegistry<comp::Drawable> draw, ComponentsRegistry<comp::Animable> &anim, uint64_t &elapsedMs);
+            ComponentsRegistry<comp::Drawable> &draw, ComponentsRegistry<comp::Animable> &anim, uint64_t &elapsedMs);
 
         void handleView(std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &nComm, comp::Position const &position,
             comp::Controllable const &controllable, bool &viewHasChanged);

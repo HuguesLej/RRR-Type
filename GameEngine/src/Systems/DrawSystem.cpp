@@ -38,7 +38,7 @@ void DrawSystem::update(RegistryManager &manager, std::shared_ptr<AGraphical> &g
 }
 
 void DrawSystem::handleDraw(RegistryManager &manager, std::shared_ptr<AGraphical> &graphical, std::shared_ptr<ACommunication> &nComm, ComponentsRegistry<comp::Position> const &pos, 
-    ComponentsRegistry<comp::Drawable> draw, ComponentsRegistry<comp::Animable> &anim, uint64_t &elapsedMs)
+    ComponentsRegistry<comp::Drawable> &draw, ComponentsRegistry<comp::Animable> &anim, uint64_t &elapsedMs)
 {
     auto controllables = getControllables(manager);
     auto velocities = getVelocities(manager);
@@ -50,15 +50,33 @@ void DrawSystem::handleDraw(RegistryManager &manager, std::shared_ptr<AGraphical
             continue;
         }
 
-        if (!viewHasChanged && controllables->size() > i && controllables[i]) {
-            handleView(graphical, nComm, pos[i].value(), controllables[i].value(), viewHasChanged);
-        }
-
-        if (velocities->size() > i && velocities[i]) {
-            if (velocities[i]->negX > 0) {
-                draw[i]->scaleX *= -1;
+        if (controllables->size() > i && controllables[i]) {
+            if (!viewHasChanged) {
+                handleView(graphical, nComm, pos[i].value(), controllables[i].value(), viewHasChanged);
+            }
+            if (controllables[i]->left.second) {
+                if (draw[i]->scaleX > 0) {
+                    draw[i]->scaleX *= -1;
+                }
+            } else if (controllables[i]->right.second) {
+                if (draw[i]->scaleX < 0) {
+                    draw[i]->scaleX *= -1;
+                }
+            }
+        } else {
+            if (velocities->size() > i && velocities[i]) {
+                if (velocities[i]->negX > 0) {
+                    if (draw[i]->scaleX > 0) {
+                        draw[i]->scaleX *= -1;
+                    }
+                } else if (velocities[i]->posX > 0) {
+                    if (draw[i]->scaleX < 0) {
+                        draw[i]->scaleX *= -1;
+                    }
+                }
             }
         }
+
 
         if (anim->size() > i && anim[i]) {
             graphical->drawSprite(pos[i].value(), draw[i].value(), anim[i].value(), elapsedMs);
